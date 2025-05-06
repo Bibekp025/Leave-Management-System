@@ -5,7 +5,8 @@ from django.contrib.auth.models import AbstractUser
 class User(AbstractUser):
     choices=[
         ('Student','STUDENT'),
-        ('Faculty','FACULTY'),
+        ('Teacher','TEACHER'),
+        ('Staff','STAFF'),
         ('Admin','ADMIN')
     ]
     category=models.CharField(choices=choices, max_length=10, null=False)
