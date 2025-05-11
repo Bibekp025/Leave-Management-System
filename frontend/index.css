@@ -1,0 +1,64 @@
+/* General reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+  }
+  
+  /* Navbar styling */
+  .navbar-brand {
+    display: inline-block;
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    padding: 20px;
+    text-decoration: none;
+  }
+  
+  /* Toggler button */
+  .navbar-toggler {
+    display: none; /* You can use media queries to show this on small screens */
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 10px;
+  }
+  
+  .navbar-toggler span {
+    display: block;
+    width: 25px;
+    height: 3px;
+    margin: 4px 0;
+    background-color: #333;
+  }
+  
+  /* Menu */
+  .navbar-menu {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 20px;
+    background-color: #fff;
+    border-top: 1px solid #ddd;
+  }
+  
+  .navbar-menu li a {
+    text-decoration: none;
+    color: #333;
+    font-size: 16px;
+  }
+  
+  .navbar-menu a button {
+    padding: 8px 16px;
+    font-size: 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    background
+  

@@ -1,5 +1,6 @@
-from rest_framework.throttling import UserRateThrottle
+from rest_framework.pagination import PageNumberPagination
 
-class UpdateThrottle(UserRateThrottle):
-    scope='update'
-    rate='10/min'
+class ListPagination(PageNumberPagination):
+    page_size=1
+    page_query_param='p'
+    max_page_size=100
