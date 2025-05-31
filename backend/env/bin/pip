@@ -1,4 +1,4 @@
-#!/home/ellis/Desktop/leave_management_system/Leave-Management-System/backend/env/bin/python3
+#!/Users/eliskandel/Documents/lms/Leave-Management-System/backend/env/bin/python
 # -*- coding: utf-8 -*-
 import re
 import sys
