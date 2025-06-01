@@ -41,11 +41,11 @@ class UserUpdateView(UpdateAPIView):
     
 class UserListView(ListAPIView):
     serializer_class=UserSerializer
-    pagination_class=ListPagination
-    filter_backends=[filters.SearchFilter, DjangoFilterBackend]
-    search_fields=['username','email']
+    # pagination_class=ListPagination
+    # filter_backends=[filters.SearchFilter, DjangoFilterBackend]
+    # search_fields=['username','email']
     
-    filterset_fields=['username', 'email']
+    # filterset_fields=['username', 'email']
     queryset=User.objects.all()
 
 class UserRetrieveView(RetrieveAPIView):

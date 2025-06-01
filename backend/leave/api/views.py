@@ -21,10 +21,10 @@ class LeaveListCreateView(generics.ListCreateAPIView):
     queryset = Leave.objects.all()
     serializer_class = LeaveSerializer
 
-    def get_permissions(self):
-        if self.request.method == 'POST':
-            return [IsStudent() or IsTeacher()]
-        return [permissions.IsAuthenticated()]
+    # def get_permissions(self):
+    #     if self.request.method == 'POST':
+    #         return [IsStudent() or IsTeacher()]
+    #     return [permissions.IsAuthenticated()]
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
@@ -34,13 +34,13 @@ class LeaveRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Leave.objects.all()
     serializer_class = LeaveSerializer
 
-    def get_permissions(self):
-        if self.request.method in ['PUT', 'PATCH']:
-            return [IsTeacher() or IsAdmin()]
-        return [permissions.IsAuthenticated()]
+    # def get_permissions(self):
+    #     if self.request.method in ['PUT', 'PATCH']:
+    #         return [IsTeacher() or IsAdmin()]
+    #     return [permissions.IsAuthenticated()]
 
     def perform_update(self, serializer):
-        if self.request.user.category in ['teacher', 'admin']:
+        if self.request.user.category in ['teacher', 'admin','Teacher', 'Admin']:
             serializer.save(
                 approved_by=self.request.user,
                 approved_on=now()
