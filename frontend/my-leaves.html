@@ -6,9 +6,8 @@
   <title>Apply for Leave</title>
   <link rel="stylesheet" href="./css/index.css">
   <link rel="stylesheet" href="./css/my-leaves.css" />
-  <style>
-    /* Include the full balanced CSS here or link externally */
-  </style>
+   <script src="./js/auth-check.js"></script> 
+  
 </head>
 <body>
 
@@ -29,48 +28,21 @@
   </ul>
 </nav>
 
-<section class="my-leaves-section">
-  <h2>My Leaves</h2>
-
-  <table class="leaves-table" aria-label="List of your leave requests">
-    <thead>
-      <tr>
-        <th>Leave Type</th>
-        <th>From</th>
-        <th>To</th>
-        <th>Reason</th>
-        <th>Status</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>Casual Leave</td>
-        <td>2025-06-10</td>
-        <td>2025-06-12</td>
-        <td>Family function</td>
-        <td class="status approved">Approved</td>
-      </tr>
-      <tr>
-        <td>Sick Leave</td>
-        <td>2025-06-15</td>
-        <td>2025-06-17</td>
-        <td>Flu and fever</td>
-        <td class="status pending">Pending</td>
-      </tr>
-      <tr>
-        <td>Earned Leave</td>
-        <td>2025-07-01</td>
-        <td>2025-07-05</td>
-        <td>Vacation trip</td>
-        <td class="status rejected">Rejected</td>
-      </tr>
-      <!-- More rows as needed -->
-    </tbody>
-  </table>
-
-  <!-- Optional: A message if no leaves exist -->
-  <!-- <p class="no-leaves">You have not applied for any leaves yet.</p> -->
-</section>
+<table class="leaves-table" aria-label="List of your leave requests">
+  <thead>
+    <tr>
+      <th>Leave Type</th>
+      <th>From</th>
+      <th>To</th>
+      <th>Reason</th>
+      <th>Status</th>
+    </tr>
+  </thead>
+  <tbody id="leaveTableBody">
+    <!-- Leave rows will be injected here -->
+  </tbody>
+</table>
+<script src="./js/my-leaves.js"></script>
 
 </body>
 </html>

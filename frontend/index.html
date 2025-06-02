@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Leave Management System</title>
   <link rel="stylesheet" href="./css/index.css" />
-  
+   <script src="./js/auth-check.js"></script> 
 </head>
 <body>
 
@@ -22,7 +22,7 @@
     <li role="none"><a href="index.html" role="menuitem" tabindex="0">Home</a></li>
     <li role="none"><a href="my-leaves.html" role="menuitem" tabindex="0">My Leaves</a></li>
     <li role="none"><a href="apply-leave.html" role="menuitem" tabindex="0">Apply</a></li>
-    <li role="none"><a href="login.html"><button class="btn-logout" type="button">Logout</button></a></li>
+    <li role="none"><a href="login.html"><button class="btn-logout" type="button" id="logoutBtn">Logout</button></a></li>
   </ul>
 </nav>
 
@@ -40,7 +40,18 @@
     menu.classList.toggle('active');
   });
 
+  document.addEventListener("DOMContentLoaded", function () {
+    const logoutBtn = document.getElementById("logoutBtn");
 
+    if (logoutBtn) {
+        logoutBtn.addEventListener("click", function () {
+            // Remove the token
+            localStorage.removeItem("token");
+
+        });
+    }
+});
   </script>
+
 </body>
 </html>

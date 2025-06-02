@@ -6,6 +6,7 @@
   <title>Apply for Leave</title>
   <link rel="stylesheet" href="./css/index.css">
   <link rel="stylesheet" href="./css/apply-leave.css" />
+   <script src="./js/auth-check.js"></script> 
   <style>
     /* Include the full balanced CSS here or link externally */
   </style>
@@ -23,37 +24,41 @@
 
   <ul class="navbar-menu" id="navbarMenu" role="menubar">
     <li role="none"><a href="index.html" role="menuitem" tabindex="0">Home</a></li>
-    <li role="none"><a href="" role="menuitem" tabindex="0">My Leaves</a></li>
+    <li role="none"><a href="my-leaves.html" role="menuitem" tabindex="0">My Leaves</a></li>
     <li role="none"><a href="apply-leave.html" role="menuitem" tabindex="0">Apply</a></li>
     <li role="none"><a href="login.html"><button class="btn-logout" type="button">Logout</button></a></li>
   </ul>
 </nav>
 
-<!-- Apply Leave Section -->
 <section class="apply-leave-section" aria-labelledby="applyLeaveHeading">
   <h2 id="applyLeaveHeading">Apply for Leave</h2>
-  <form class="leave-form" action="/submit-leave" method="POST">
+  <form class="leave-form" action="#" method="POST">
+    
     <label for="leaveType">Leave Type:</label>
-    <select id="leaveType" name="leaveType" required>
+    <select id="leaveType" name="leave_type_id" required>
       <option value="" disabled selected>Select Type</option>
-      <option value="casual">Casual Leave</option>
-      <option value="sick">Sick Leave</option>
-      <option value="earned">Earned Leave</option>
-      <option value="maternity">Maternity Leave</option>
+      
     </select>
+    
+    <div class="error-message" id="error-leaveType" style="color: red;"></div>
 
     <label for="fromDate">From Date:</label>
-    <input type="date" id="fromDate" name="fromDate" required />
+    <input type="date" id="fromDate" name="start_date" required />
+    <div class="error-message" id="error-fromDate" style="color: red;"></div>
 
     <label for="toDate">To Date:</label>
-    <input type="date" id="toDate" name="toDate" required />
+    <input type="date" id="toDate" name="end_date" required />
+    <div class="error-message" id="error-toDate" style="color: red;"></div>
 
     <label for="reason">Reason:</label>
     <textarea id="reason" name="reason" rows="4" placeholder="Enter reason..." required></textarea>
+    <div class="error-message" id="error-reason" style="color: red;"></div>
 
     <button type="submit" class="btn-apply">Apply Now</button>
   </form>
 </section>
+
+
   <!-- Script for Mobile Menu Toggle -->
   <script>
     function toggleMenu() {
@@ -61,6 +66,9 @@
       menu.classList.toggle("active");
     }
   </script>
+  <script src="./js/apply-leave.js"></script>
+  <script src="./js/leave-type.js"></script>
+
 
 </body>
 </html>
