@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Apply for Leave</title>
+  <link rel="stylesheet" href="./css/apply-leave.css" />
+  <style>
+    /* Include the full balanced CSS here or link externally */
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+<nav class="navbar" role="navigation" aria-label="Primary Navigation">
+  <a href="#" class="navbar-brand" aria-label="Leave Portal Home">Leave Portal</a>
+
+  <button class="navbar-toggler" aria-controls="navbarMenu" aria-expanded="false" aria-label="Toggle navigation" onclick="toggleMenu()">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+
+  <ul class="navbar-menu" id="navbarMenu" role="menubar">
+    <li role="none"><a href="#" role="menuitem" tabindex="0">Home</a></li>
+    <li role="none"><a href="#" role="menuitem" tabindex="0">My Leaves</a></li>
+    <li role="none"><a href="#" role="menuitem" tabindex="0">Apply</a></li>
+    <li role="none"><a href="#" role="menuitem" tabindex="0">Settings</a></li>
+    <li role="none"><button class="btn-logout" type="button">Logout</button></li>
+  </ul>
+</nav>
+
+
+  <!-- Apply Leave Section -->
+  <section class="apply-leave-section">
+    <h2>Apply for Leave</h2>
+    <form class="leave-form" action="/submit-leave" method="POST">
+      <label for="leaveType">Leave Type:</label>
+      <select id="leaveType" name="leaveType" required>
+        <option value="">Select Type</option>
+        <option value="casual">Casual Leave</option>
+        <option value="sick">Sick Leave</option>
+        <option value="earned">Earned Leave</option>
+        <option value="maternity">Maternity Leave</option>
+      </select>
+
+      <label for="fromDate">From Date:</label>
+      <input type="date" id="fromDate" name="fromDate" required />
+
+      <label for="toDate">To Date:</label>
+      <input type="date" id="toDate" name="toDate" required />
+
+      <label for="reason">Reason:</label>
+      <textarea id="reason" name="reason" rows="4" placeholder="Enter reason..." required></textarea>
+
+      <button type="submit" class="btn-apply">Apply Now</button>
+    </form>
+  </section>
+
+  <!-- Script for Mobile Menu Toggle -->
+  <script>
+    function toggleMenu() {
+      const menu = document.getElementById("navbarMenu");
+      menu.classList.toggle("active");
+    }
+  </script>
+
+</body>
+</html>
