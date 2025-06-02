@@ -2,11 +2,13 @@ from ..models import User
 from django.contrib.auth.hashers import make_password,check_password
 from rest_framework.response import Response
 from rest_framework import serializers
+from rest_framework import status
 
 class UserWriteSerializer(serializers.ModelSerializer):
     class Meta:
         fields='__all__'
         model=User
+        
 
     def create(self, validated_data):
         password=validated_data.pop('password')
@@ -16,7 +18,6 @@ class UserWriteSerializer(serializers.ModelSerializer):
         user.set_password(password)
         user.save()
         return user
-    
     def update(self, instance, validated_data):
         
         old_password=instance.password

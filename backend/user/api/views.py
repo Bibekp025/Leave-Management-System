@@ -23,13 +23,32 @@ from .throttling import UpdateThrottle
 from .pagination import ListPagination
 from rest_framework import filters 
 from django_filters.rest_framework import DjangoFilterBackend
-
+from rest_framework import status
 
 
 
 
 class UserCreateView(CreateAPIView):
     serializer_class=UserWriteSerializer
+    queryset = User.objects.all()  # Required for DRF safety
+
+
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"message": "User created successfully"}, status=status.HTTP_201_CREATED)
+        else:
+            # Collect all error messages into one string
+            error_messages = []
+            for field, errors in serializer.errors.items():
+                error_messages.extend(errors)
+            return Response(
+                {"message": " ".join(error_messages)},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+    
 
 class UserUpdateView(UpdateAPIView):
     serializer_class=UserWriteSerializer

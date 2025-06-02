@@ -20,11 +20,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
       // ✅ Check if login was successful by inspecting `message` and `token`
       if (response.ok && data.message === 'Successfully Logged In' && data.token) {
-        alert('Login successful!');
         
         // Store the token in localStorage (or cookie if preferred)
         localStorage.setItem('token', data.token);
-
+        console.log(data.token)
         // Redirect to dashboard or homepage
         window.location.href = 'index.html';
       } else {

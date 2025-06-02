@@ -1,0 +1,83 @@
+.apply-leave-section {
+  background: rgba(255, 255, 255, 0.9);
+  max-width: 600px;
+  margin: 4rem auto 2rem;
+  padding: 2.5rem 3rem;
+  border-radius: 18px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  backdrop-filter: blur(8px);
+  transition: box-shadow 0.3s ease;
+}
+
+.apply-leave-section:hover {
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.12);
+}
+
+.apply-leave-section h2 {
+  font-size: 2.2rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 2rem;
+  color: #1a374d; /* a nice dark blue */
+  letter-spacing: 0.5px;
+}
+
+.leave-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.4rem;
+}
+
+.leave-form label {
+  font-weight: 600;
+  color: #34495e;
+  font-size: 1rem;
+}
+
+.leave-form select,
+.leave-form input[type="date"],
+.leave-form textarea {
+  padding: 12px 15px;
+  border: 1.8px solid #ccc;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-family: inherit;
+  background-color: #fdfdfd;
+  box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.05);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.leave-form select:focus,
+.leave-form input[type="date"]:focus,
+.leave-form textarea:focus {
+  border-color: #1abc9c;
+  outline: none;
+  box-shadow: 0 0 8px rgba(26, 188, 156, 0.4);
+}
+
+.leave-form textarea {
+  resize: vertical;
+  min-height: 100px;
+  font-family: inherit;
+}
+
+.btn-apply {
+  margin-top: 1rem;
+  background: linear-gradient(90deg, #1abc9c, #16a085);
+  color: white;
+  font-weight: 700;
+  border: none;
+  padding: 14px 0;
+  font-size: 1.1rem;
+  border-radius: 12px;
+  cursor: pointer;
+  box-shadow: 0 5px 15px rgba(22, 160, 133, 0.4);
+  transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+}
+
+.btn-apply:hover,
+.btn-apply:focus {
+  background: linear-gradient(90deg, #16a085, #13856b);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(19, 133, 107, 0.6);
+}

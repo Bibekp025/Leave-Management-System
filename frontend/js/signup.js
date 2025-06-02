@@ -1,7 +1,8 @@
 document.getElementById("signupForm").addEventListener("submit", async function (e) {
   e.preventDefault();
-
-  const fullname = document.getElementById("fullname").value.trim();
+  console.log('hello');
+  
+  const fullName = document.getElementById("fullname").value.trim();
   const email = document.getElementById("email").value.trim();
   const username = document.getElementById("username").value.trim();
   const password = document.getElementById("password").value;
@@ -13,33 +14,46 @@ document.getElementById("signupForm").addEventListener("submit", async function 
     return;
   }
 
-  const data = {
-    first_name: fullname,
-    email: email,
+  const payload = {
+ 
     username: username,
     password: password,
-    category: category,
+    category: category
   };
+  console.log("Payload to send:", payload);
+
 
   try {
-    const response = await fetch("https://your-api.com/api/register", {
+    const response = await fetch("http://127.0.0.1:8000/user/create/", {  // <-- Fixed URL here
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
+        "Content-Type": "application/json"
       },
-      body: JSON.stringify(data),
+      body: JSON.stringify(payload)
     });
 
-    const result = await response.json();
-
     if (response.ok) {
-      alert("Registration successful!");
+      const data = await response.json();  // safely parse JSON response
+      alert(data.message || "Registration successful!");
       window.location.href = "login.html";
     } else {
-      alert("Error: " + (result.message || "Registration failed"));
+      // Try to parse error response JSON safely
+      let errorMessage = "Registration failed";
+      console.log("Payload to send:", payload);
+
+      try {
+        const errorText = await response.text();
+        if (errorText) {
+          const errorData = JSON.parse(errorText);
+          errorMessage = errorData.message || errorMessage;
+        }
+      } catch {
+        // Parsing failed, keep generic message
+      }
+      alert("Error: " + errorMessage);
     }
   } catch (error) {
+    console.error("Network error:", error);
     alert("Network error. Please try again later.");
-    console.error(error);
   }
 });
