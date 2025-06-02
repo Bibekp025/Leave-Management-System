@@ -15,7 +15,8 @@ document.getElementById("signupForm").addEventListener("submit", async function 
   }
 
   const payload = {
- 
+    first_name:fullName,
+    email:email,
     username: username,
     password: password,
     category: category

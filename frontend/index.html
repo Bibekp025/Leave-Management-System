@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Leave Management System</title>
   <link rel="stylesheet" href="./css/index.css" />
-   <script src="./js/auth-check.js"></script> 
+    <script src="./js/auth-check.js"></script>
 </head>
 <body>
 
@@ -25,6 +25,45 @@
     <li role="none"><a href="login.html"><button class="btn-logout" type="button" id="logoutBtn">Logout</button></a></li>
   </ul>
 </nav>
+<main>
+  <!-- About the App Section -->
+  <section class="about-section">
+    <h2>About Our App</h2>
+    <p>
+      The Leave Management System is a user-friendly platform designed to streamline the process of applying for and approving leaves within an organization. 
+      It ensures efficient communication between employees and supervisors, tracks leave balances, and maintains a transparent approval process.
+    </p>
+  </section>
+
+  <!-- Meet the Developers Section -->
+  <!-- Meet the Developers Section -->
+<section class="developers-section">
+  <h2>Meet Our Developers</h2>
+  <div class="developer-cards">
+    <div class="developer-card">
+      <img src="./img/elis.jpeg" alt="Developer 1 photo" />
+      <h3>Elis Kandel</h3>
+      <p>Backend Developer • Django & REST APIs • Testing & Bug Fixing</p>
+    </div>
+    <div class="developer-card">
+      <img src="./img/sagar.jpeg" alt="Developer 2 photo" />
+      <h3>Sagar Kandel</h3>
+      <p>Frontend Developer • JavaScript & UI Design</p>
+    </div>
+    <div class="developer-card">
+      <img src="./img/img.jpeg" alt="Developer 3 photo" />
+      <h3>Pawan Poudel</h3>
+      <p>Full Stack Developer • DevOps & Integration</p>
+    </div>
+    <div class="developer-card">
+      <img src="./img/img.jpeg" alt="Developer 4 photo" />
+      <h3>Bibek Poudel</h3>
+      <p>Frontend Developer • JavaScript & UI Design</p>
+    </div>
+  </div>
+</section>
+
+</main>
 
 
 
@@ -46,7 +85,7 @@
     if (logoutBtn) {
         logoutBtn.addEventListener("click", function () {
             // Remove the token
-            localStorage.removeItem("token");
+            localStorage.removeItem("authToken");
 
         });
     }

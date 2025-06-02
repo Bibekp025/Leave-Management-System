@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
     const leaveTypeSelect = document.getElementById("leaveType");
 
-    const token = localStorage.getItem("token"); // Replace "token" with your actual key
+    const token = localStorage.getItem("authToken"); // Replace "token" with your actual key
 
     fetch("http://127.0.0.1:8000/leave/leave-types/", {
       headers: {

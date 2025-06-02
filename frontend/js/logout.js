@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", function () {
     if (logoutBtn) {
         logoutBtn.addEventListener("click", function () {
             // ✅ Remove token
-            localStorage.removeItem("token");
+            localStorage.removeItem("authToken");
 
             // ✅ Redirect to login page
             window.location.href = "login.html";

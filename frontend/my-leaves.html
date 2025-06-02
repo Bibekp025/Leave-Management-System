@@ -6,7 +6,8 @@
   <title>Apply for Leave</title>
   <link rel="stylesheet" href="./css/index.css">
   <link rel="stylesheet" href="./css/my-leaves.css" />
-   <script src="./js/auth-check.js"></script> 
+    <script src="./js/auth-check.js"></script>
+
   
 </head>
 <body>
@@ -30,14 +31,16 @@
 
 <table class="leaves-table" aria-label="List of your leave requests">
   <thead>
-    <tr>
-      <th>Leave Type</th>
-      <th>From</th>
-      <th>To</th>
-      <th>Reason</th>
-      <th>Status</th>
-    </tr>
-  </thead>
+  <tr>
+    <th>Leave Type</th>
+    <th>From</th>
+    <th>To</th>
+    <th>Reason</th>
+    <th>Status</th>
+    <th>Actions</th> <!-- Add this column -->
+  </tr>
+</thead>
+
   <tbody id="leaveTableBody">
     <!-- Leave rows will be injected here -->
   </tbody>

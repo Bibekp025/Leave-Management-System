@@ -1,45 +1,57 @@
+document.addEventListener("DOMContentLoaded", function () {
+  const token = localStorage.getItem("authToken");
+  const tableBody = document.getElementById("leaveTableBody");
 
-  document.addEventListener("DOMContentLoaded", function () {
-    const token = localStorage.getItem("token");
-    const tableBody = document.getElementById("leaveTableBody");
+  if (!token) {
+    tableBody.innerHTML = '<tr><td colspan="6">Please log in to view your leaves.</td></tr>';
+    return;
+  }
 
-    if (!token) {
-      console.error("No token found in localStorage. User might not be logged in.");
-      tableBody.innerHTML = `<tr><td colspan="5">Please log in to view your leaves.</td></tr>`;
-      return;
+  fetch("http://127.0.0.1:8000/leave/leaves/", {
+    headers: {
+      "Authorization": `Token ${token}`,
+      "Content-Type": "application/json"
     }
-
-    fetch("http://127.0.0.1:8000/leave/leaves/", {
-      headers: {
-        "Authorization": `Token ${token}`, // Or `Token ${token}` if using DRF TokenAuth
-        "Content-Type": "application/json"
-      }
-    })
+  })
     .then(response => {
-      console.log("Leave API response:", response);
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
+      if (!response.ok) throw new Error("Failed to fetch leave data");
       return response.json();
     })
     .then(leaves => {
-      console.log("Fetched leaves:", leaves);
-      if (!Array.isArray(leaves) || leaves.length === 0) {
-        tableBody.innerHTML = `<tr><td colspan="5">You have not applied for any leaves yet.</td></tr>`;
+      if (leaves.length === 0) {
+        tableBody.innerHTML = '<tr><td colspan="6">You have not applied for any leaves yet.</td></tr>';
         return;
       }
-
-      tableBody.innerHTML = ""; // Clear any placeholders
+      
+      tableBody.innerHTML = ""; // clear existing rows
 
       leaves.forEach(leave => {
         const row = document.createElement("tr");
 
+        let actionButtons = "";
+
+        
+          if (leave.status === "pending") {
+          actionButtons = `
+            <button onclick="updateLeaveStatus(${leave.id}, 'approved')">Approve</button>
+            <button onclick="updateLeaveStatus(${leave.id}, 'rejected')">Reject</button>
+          `;
+        }
+        
+        if (leave.approved_by) {
+          const actionLabel = leave.status === "approved" ? "Approved" : "Rejected";
+          actionButtons = `<small>✔ ${actionLabel} by: ${leave.approved_by}</small>`;
+        }
+      
+
         row.innerHTML = `
-          <td>${leave.leave_type?.name || "N/A"}</td>
+          <td>${leave.leave_type.name}</td>
           <td>${leave.start_date}</td>
           <td>${leave.end_date}</td>
           <td>${leave.reason}</td>
           <td class="status ${leave.status}">${capitalize(leave.status)}</td>
+
+          <td>${actionButtons}</td>
         `;
 
         tableBody.appendChild(row);
@@ -47,11 +59,37 @@
     })
     .catch(error => {
       console.error("Error fetching leaves:", error);
-      tableBody.innerHTML = `<tr><td colspan="5">Error loading leave data. Check console for details.</td></tr>`;
+      tableBody.innerHTML = '<tr><td colspan="6">Unable to load leaves. Please try again later.</td></tr>';
     });
 
-    function capitalize(str) {
-      return str.charAt(0).toUpperCase() + str.slice(1);
-    }
-  });
+  window.updateLeaveStatus = function (leaveId, status) {
+    fetch(`http://127.0.0.1:8000/leave/leaves/${leaveId}/`, {
+      method: "PATCH",
+      headers: {
+        "Authorization": `Token ${token}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ status: status })
+    })
+      .then(async res => {
+        if (!res.ok) {
+          const errorText = await res.text();
+          console.error("Error response:", errorText);
+          throw new Error("Failed to update status");
+        }
+        return res.json();  // ensure backend sends a response body
+      })
+      .then(data => {
+        alert(`Leave ${status}`);
+        location.reload();
+      })
+      .catch(error => {
+        console.error("Error updating leave status:", error);
+        alert("Error updating leave status.");
+      });
+  };
 
+  function capitalize(str) {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  }
+});

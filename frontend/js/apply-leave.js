@@ -25,7 +25,7 @@ document.querySelector('.leave-form').addEventListener('submit', async function 
       method: 'POST',
       headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Token ${localStorage.getItem('token')}`
+      'Authorization': `Token ${localStorage.getItem('authToken')}`
     },
     body: JSON.stringify(formData)
     });

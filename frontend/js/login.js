@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', function () {
       if (response.ok && data.message === 'Successfully Logged In' && data.token) {
         
         // Store the token in localStorage (or cookie if preferred)
-        localStorage.setItem('token', data.token);
+        localStorage.setItem('authToken', data.token);
         console.log(data.token)
         // Redirect to dashboard or homepage
         window.location.href = 'index.html';
