@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>User Profile</title>
+  <link rel="stylesheet" href="./css/index.css">
+  <link rel="stylesheet" href="./css/profile.css">
+  <script src="./js/profile.js" defer></script>
+  <script src="js/auth-check.js"></script>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar" role="navigation" aria-label="Primary Navigation">
+    <a href="index.html" class="navbar-brand" aria-label="Leave Portal Home">Leave Portal</a>
+
+    <button class="navbar-toggler" aria-controls="navbarMenu" aria-expanded="false" aria-label="Toggle navigation" onclick="toggleMenu()">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+    <ul class="navbar-menu" id="navbarMenu" role="menubar">
+      <li role="none"><a href="index.html" role="menuitem">Home</a></li>
+      <li role="none"><a href="my-leaves.html" role="menuitem">My Leaves</a></li>
+      <li role="none"><a href="apply-leave.html" role="menuitem">Apply</a></li>
+      <li class="user-dropdown-container" role="none">
+        <button class="user-dropdown-btn" id="userDropdownBtn" aria-haspopup="true" aria-expanded="false">
+          <img id="profileImage" src="./img/Default_pfp.jpg" alt="Profile" class="profile-avatar" />
+          <span id="userFirstName">User</span>
+        </button>
+
+        <ul class="user-dropdown-menu" id="userDropdownMenu" role="menu" hidden>
+          <li role="none"><button id="profileBtn" role="menuitem">Profile</button></li>
+          <li role="none"><button id="logoutBtn" role="menuitem">Logout</button></li>
+        </ul>
+      </li>
+    </ul>
+  </nav>
+
+  <!-- Profile Section -->
+  <main>
+    <section class="profile-section">
+      <h2>User Profile</h2>
+      <div id="profileInfo" class="profile-card">
+        <!-- User info will be populated here by JS -->
+      </div>
+    </section>
+  </main>
+
+ 
+</body>
+</html>

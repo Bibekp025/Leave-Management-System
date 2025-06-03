@@ -5,11 +5,13 @@ from .views import (
     UserLoginView,
     UserLogoutView,
     UserRetrieveView,
-    UserUpdateView
+    UserUpdateView,
+    UserSelfView
 )
 urlpatterns = [
     path('create/',UserCreateView.as_view()),
     path('',UserListView.as_view()),
+    path('self/',UserSelfView.as_view()),
     path('login/',UserLoginView.as_view()),
     path('logout/',UserLogoutView.as_view()),
     path('<int:pk>/',UserRetrieveView.as_view()),

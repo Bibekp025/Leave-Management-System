@@ -67,6 +67,13 @@ class UserListView(ListAPIView):
     # filterset_fields=['username', 'email']
     queryset=User.objects.all()
 
+class UserSelfView(RetrieveAPIView):
+    serializer_class = UserSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self):
+        return self.request.user
+
 class UserRetrieveView(RetrieveAPIView):
     serializer_class=UserSerializer
     queryset=User.objects.all()
