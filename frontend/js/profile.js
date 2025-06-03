@@ -17,14 +17,24 @@ document.addEventListener("DOMContentLoaded", () => {
     })
     .then(user => {
       document.getElementById("profileInfo").innerHTML = `
-        <div class="profile-info-line"><strong>Username:</strong> ${user.username}</div>
-        <div class="profile-info-line"><strong>First Name:</strong> ${user.first_name}</div>
-        <div class="profile-info-line"><strong>Last Name:</strong> ${user.last_name}</div>
-        <div class="profile-info-line"><strong>Category:</strong> ${user.category || "N/A"}</div>
+        <p><strong>Username:</strong> ${user.username}</p>
+        <p><strong>First Name:</strong> ${user.first_name}</p>
+        <p><strong>Last Name:</strong> ${user.last_name}</p>
+        <p><strong>Email:</strong> ${user.email || "N/A"}</p>
+        <p><strong>Phone:</strong> ${user.phone || "N/A"}</p>
+        <p><strong>Category:</strong> ${user.category || "N/A"}</p>
+        <p><strong>Date Joined:</strong> ${new Date(user.date_joined).toLocaleDateString()}</p>
       `;
     })
     .catch(err => {
       console.error(err);
       document.getElementById("profileInfo").innerText = "Error loading profile.";
     });
+
+  const editBtn = document.getElementById("editProfileBtn");
+  if (editBtn) {
+    editBtn.addEventListener("click", () => {
+      window.location.href = "edit-profile.html";
+    });
+  }
 });
