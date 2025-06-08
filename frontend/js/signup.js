@@ -36,7 +36,7 @@ document.getElementById("signupForm").addEventListener("submit", async function 
     if (response.ok) {
       const data = await response.json();  // safely parse JSON response
       alert(data.message || "Registration successful!");
-      window.location.href = "login.html";
+      window.location.href = "/frontend/login.html";
     } else {
       // Try to parse error response JSON safely
       let errorMessage = "Registration failed";

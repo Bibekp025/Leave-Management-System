@@ -161,8 +161,9 @@ document.addEventListener("DOMContentLoaded", function () {
         if (userCategory === "teacher") {
           if (leave.status === "pending") {
             actionButtons = `
-              <button onclick="updateLeaveStatus(${leave.id}, 'approved')">Approve</button>
-              <button onclick="updateLeaveStatus(${leave.id}, 'rejected')">Reject</button>
+              <button class="btn-approve" onclick="updateLeaveStatus(${leave.id}, 'approved')">Approve</button>
+<button class="btn-reject" onclick="updateLeaveStatus(${leave.id}, 'rejected')">Reject</button>
+
             `;
           } else if (leave.approved_by) {
             const actionLabel = leave.status === "approved" ? "Approved" : "Rejected";

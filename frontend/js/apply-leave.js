@@ -54,7 +54,7 @@ document.querySelector('.leave-form').addEventListener('submit', async function 
 
   } catch (error) {
     console.error('Error submitting leave:', error);
-    alert('An error occurred. Please try again later.');
+    
     console.log(formData);
   }
 });

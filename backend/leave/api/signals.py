@@ -3,13 +3,17 @@ from django.dispatch import receiver
 from ..models import Leave
 from django.core.mail import send_mail
 from django.conf import settings
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 @receiver(post_save, sender=Leave)
-def notify_assigned_teachers(sender, instance, created, **kwargs):
+def notify_all_teachers(sender, instance, created, **kwargs):
     if created:
-        teachers = instance.assigned_teachers.all()
+
+        teachers = User.objects.filter(category='teacher')
         emails = [teacher.email for teacher in teachers if teacher.email]
-        
+
         if emails:
             send_mail(
                 subject='New Leave Request Submitted',

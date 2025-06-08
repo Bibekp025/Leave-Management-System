@@ -72,3 +72,37 @@
   color: #7f8c8d;
   margin-top: 1rem;
 }
+/* Base Button Style */
+button.btn-approve,
+button.btn-reject {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  margin: 0 4px;
+}
+
+/* Approve Button */
+.btn-approve {
+  background-color: #28a745;
+  color: white;
+}
+
+.btn-approve:hover {
+  background-color: #218838;
+  transform: scale(1.05);
+}
+
+/* Reject Button */
+.btn-reject {
+  background-color: #dc3545;
+  color: white;
+}
+
+.btn-reject:hover {
+  background-color: #c82333;
+  transform: scale(1.05);
+}

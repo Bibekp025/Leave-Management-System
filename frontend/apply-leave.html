@@ -24,12 +24,24 @@
 
   <ul class="navbar-menu" id="navbarMenu" role="menubar">
     <li role="none"><a href="index.html" role="menuitem" tabindex="0">Home</a></li>
-    <li role="none"><a href="my-leaves.html" role="menuitem" tabindex="0">My Leaves</a></li>
+    <li role="none"><a href="my-leaves.html" role="menuitem" tabindex="0">Applied Leaves</a></li>
     <li role="none"><a href="apply-leave.html" role="menuitem" tabindex="0">Apply</a></li>
-    <li role="none"><a href="login.html"><button class="btn-logout" type="button">Logout</button></a></li>
+    <li class="user-dropdown-container" role="none">
+      <button class="user-dropdown-btn" id="userDropdownBtn" aria-haspopup="true" aria-expanded="false">
+        <img id="profileImage" src="./img/Default_pfp.jpg" alt="Profile" class="profile-avatar" />
+        <span id="userFirstName">User</span>
+      </button>
+
+      <ul class="user-dropdown-menu" id="userDropdownMenu" role="menu" hidden>
+        <li role="none"><button id="profileBtn" role="menuitem">Profile</button></li>
+        <li role="none"><button id="logoutBtn" role="menuitem">Logout</button></li>
+      </ul>
+    </li>
+
+
+
   </ul>
 </nav>
-
 <section class="apply-leave-section" aria-labelledby="applyLeaveHeading">
   <h2 id="applyLeaveHeading">Apply for Leave</h2>
   <form class="leave-form" action="#" method="POST">
@@ -64,10 +76,12 @@
     function toggleMenu() {
       const menu = document.getElementById("navbarMenu");
       menu.classList.toggle("active");
+      
     }
   </script>
   <script src="./js/apply-leave.js"></script>
   <script src="./js/leave-type.js"></script>
+  <script src="./js/index.js"></script>
 
 
 </body>
