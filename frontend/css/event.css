@@ -5,10 +5,13 @@ body {
   background-color: #f0f2f5;
   color: #333;
 }
+section{
+  margin-top: 80px;
+}
 .events-section {
   position: relative;
   width: 100vw;
-  min-height: 100vh;
+  min-height: 80vh;
   padding: 2rem;
   background-color: #f9f9f9;
   text-align: center;
