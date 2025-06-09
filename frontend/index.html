@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Leave Management System</title>
   <link rel="stylesheet" href="./css/index.css" />
+  <link rel="stylesheet" href="./css/event.css">
     <script src="./js/auth-check.js"></script>
     <script src="js/index.js"></script>
 </head>
@@ -41,14 +42,34 @@
 </nav>
 <main>
   <!-- About the App Section -->
-  <section class="about-section">
+  
+<section class="events-section">
+  <h2>Upcoming Events</h2>
+  
+  <button class="scroll-now-btn" onclick="scrollToEvents()" aria-label="Scroll to events">
+    Scroll Now &#8595;
+  </button>
+
+  <div id="eventsContainer" class="event-cards">
+    <!-- Event cards injected here -->
+  </div>
+</section>
+
+<!-- Modal (outside section) -->
+<div id="imageModal" class="modal" onclick="closeModal()">
+  <span class="modal-close">&times;</span>
+  <img class="modal-content" id="modalImg" />
+</div>
+
+
+
+<section class="about-section">
     <h2>About Our App</h2>
     <p>
       The Leave Management System is a user-friendly platform designed to streamline the process of applying for and approving leaves within an organization. 
       It ensures efficient communication between employees and supervisors, tracks leave balances, and maintains a transparent approval process.
     </p>
   </section>
-
   <!-- Meet the Developers Section -->
   <!-- Meet the Developers Section -->
 <section class="developers-section">
@@ -105,6 +126,6 @@
     }
 });
   </script>
-
+  <script src="./js/event.js"></script>
 </body>
 </html>

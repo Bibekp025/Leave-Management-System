@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'leave',
+    'events',
+    
 ]
 
 MIDDLEWARE = [
@@ -155,3 +157,9 @@ EMAIL_PORT = 587
 EMAIL_HOST_USER = 'alishkandel2062@gmail.com'
 EMAIL_HOST_PASSWORD = 'pbch epjo fcyw adko'
 DEFAULT_FOR_EMAIL=EMAIL_HOST_USER
+
+
+import os
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

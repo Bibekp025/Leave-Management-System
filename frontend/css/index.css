@@ -14,6 +14,10 @@ body {
   color: #2c3e50;
   scroll-behavior: smooth;
 }
+.section {
+  scroll-margin-top: 100px; /* Useful when clicking nav links */
+}
+
 
 /* Navbar */
 .navbar {
@@ -376,3 +380,5 @@ body {
     border-left: none;
   }
 }
+/**/
+

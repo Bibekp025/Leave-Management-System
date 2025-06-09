@@ -158,24 +158,21 @@ document.addEventListener("DOMContentLoaded", function () {
 
         let actionButtons = "";
 
-        if (userCategory === "teacher") {
-          if (leave.status === "pending") {
-            actionButtons = `
-              <button class="btn-approve" onclick="updateLeaveStatus(${leave.id}, 'approved')">Approve</button>
-<button class="btn-reject" onclick="updateLeaveStatus(${leave.id}, 'rejected')">Reject</button>
+        if (userCategory === "teacher" && leave.status === "pending") {
+  actionButtons = `
+    <button class="btn-approve" onclick="updateLeaveStatus(${leave.id}, 'approved')">Approve</button>
+    <button class="btn-reject" onclick="updateLeaveStatus(${leave.id}, 'rejected')">Reject</button>
+  `;
+} else {
+  if (leave.status === "approved" && leave.approved_by) {
+    actionButtons = `<small>✔ Approved by: ${leave.approved_by}</small>`;
+  } else if (leave.status === "rejected" && leave.approved_by) {
+    actionButtons = `<small>❌ Rejected by: ${leave.approved_by}</small>`;
+  } else {
+    actionButtons = "<small>⌛ Pending</small>";
+  }
+}
 
-            `;
-          } else if (leave.approved_by) {
-            const actionLabel = leave.status === "approved" ? "Approved" : "Rejected";
-            actionButtons = `<small>✔ ${actionLabel} by: ${leave.approved_by}</small>`;
-          }
-        } else {
-          actionButtons = leave.status === "approved"
-            ? "<small>✔ Approved</small>"
-            : leave.status === "rejected"
-              ? "<small>❌ Rejected</small>"
-              : "<small>⌛ Pending</small>";
-        }
 
         row.innerHTML = `
           <td>${leave.leave_type.name}</td>
