@@ -103,8 +103,9 @@ document.addEventListener("DOMContentLoaded", function () {
               ? "<small>❌ Rejected</small>"
               : "<small>⌛ Pending</small>";
         }
-
+        console.log(leave.user)
         row.innerHTML = `
+        
           <td>${leave.leave_type.name}</td>
           <td>${leave.start_date}</td>
           <td>${leave.end_date}</td>
@@ -175,6 +176,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
         row.innerHTML = `
+        <td>${leave.user}</td>
           <td>${leave.leave_type.name}</td>
           <td>${leave.start_date}</td>
           <td>${leave.end_date}</td>
