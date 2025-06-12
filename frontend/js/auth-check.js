@@ -1,4 +1,5 @@
- const token = localStorage.getItem('authToken'); // Change this to your auth token source
+ const token = localStorage.getItem('authToken'); 
 if (!token) {
-    window.location.href = "/frontend/login.html"; // Replace with your login page
+    window.location.href = "/frontend/login.html"; 
+    alert("Please Login to visit this page");
 }

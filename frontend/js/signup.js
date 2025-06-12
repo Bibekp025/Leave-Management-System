@@ -34,11 +34,11 @@ document.getElementById("signupForm").addEventListener("submit", async function 
     });
 
     if (response.ok) {
-      const data = await response.json();  // safely parse JSON response
+      const data = await response.json();  
       alert(data.message || "Registration successful!");
       window.location.href = "/frontend/login.html";
     } else {
-      // Try to parse error response JSON safely
+      
       let errorMessage = "Registration failed";
       console.log("Payload to send:", payload);
 
@@ -49,7 +49,7 @@ document.getElementById("signupForm").addEventListener("submit", async function 
           errorMessage = errorData.message || errorMessage;
         }
       } catch {
-        // Parsing failed, keep generic message
+       
       }
       alert("Error: " + errorMessage);
     }

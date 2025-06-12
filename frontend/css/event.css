@@ -23,8 +23,8 @@ section{
 
 .scroll-now-btn {
   position: absolute;
-  bottom: 20px;  /* move to bottom */
-  right: 20px;   /* stay on right */
+  bottom: 20px;  
+  right: 20px;   
   padding: 0.6rem 1.2rem;
   font-size: 1rem;
   background: linear-gradient(90deg, #007bff, #00c6ff);
@@ -60,10 +60,10 @@ section{
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-/* Make event cards container span max width */
+
 .event-cards {
   width: 100%;
-  max-width: 1400px; /* Keeps cards from stretching too wide */
+  max-width: 1400px; 
   display: flex;
   flex-wrap: wrap;
   gap: 2rem;
@@ -72,7 +72,7 @@ section{
   box-sizing: border-box;
 }
 
-/* Event card */
+
 .event-card {
   background: linear-gradient(145deg, #ffffff, #f4f4f4);
   border-radius: 16px;
@@ -126,7 +126,7 @@ section{
   background-color: #0056b3;
 }
 
-/* Modal styling */
+
 .modal {
   display: none;
   position: fixed;

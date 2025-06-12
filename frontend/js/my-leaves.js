@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", function () {
     return;
   }
 
-  // First fetch user info to get the category
+  
   fetch("http://127.0.0.1:8000//user/self/", {
     headers: {
       "Authorization": `Token ${token}`,
@@ -19,9 +19,9 @@ document.addEventListener("DOMContentLoaded", function () {
       return res.json();
     })
     .then(user => {
-      const userCategory = user.category; // e.g., "teacher" or "student"
+      const userCategory = user.category; 
       console.log(userCategory)
-      // Now fetch the leaves
+      
       return fetch("http://127.0.0.1:8000/leave/leaves/", {
         headers: {
           "Authorization": `Token ${token}`,
@@ -38,7 +38,7 @@ document.addEventListener("DOMContentLoaded", function () {
         return;
       }
 
-      tableBody.innerHTML = ""; // clear existing rows
+      tableBody.innerHTML = ""; 
 document.addEventListener("DOMContentLoaded", function () {
   const token = localStorage.getItem("authToken");
   const tableBody = document.getElementById("leaveTableBody");
@@ -48,7 +48,7 @@ document.addEventListener("DOMContentLoaded", function () {
     return;
   }
 
-  // First fetch user info to get the category
+  
   fetch("http://127.0.0.1:8000//user/", {
     headers: {
       "Authorization": `Token ${token}`,
@@ -60,9 +60,8 @@ document.addEventListener("DOMContentLoaded", function () {
       return res.json();
     })
     .then(user => {
-      const userCategory = user.category; // e.g., "teacher" or "student"
+      const userCategory = user.category; 
       console.log(userCategory)
-      // Now fetch the leaves
       return fetch("http://127.0.0.1:8000/leave/leaves/", {
         headers: {
           "Authorization": `Token ${token}`,
@@ -79,7 +78,7 @@ document.addEventListener("DOMContentLoaded", function () {
         return;
       }
 
-      tableBody.innerHTML = ""; // clear existing rows
+      tableBody.innerHTML = ""; 
 
       leaves.forEach(leave => {
         const row = document.createElement("tr");

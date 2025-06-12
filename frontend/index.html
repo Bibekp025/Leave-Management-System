@@ -41,7 +41,6 @@
   </ul>
 </nav>
 <main>
-  <!-- About the App Section -->
   
 <section class="events-section">
   <h2>Upcoming Events</h2>
@@ -51,11 +50,9 @@
   </button>
 
   <div id="eventsContainer" class="event-cards">
-    <!-- Event cards injected here -->
   </div>
 </section>
 
-<!-- Modal (outside section) -->
 <div id="imageModal" class="modal" onclick="closeModal()">
   <span class="modal-close">&times;</span>
   <img class="modal-content" id="modalImg" />
@@ -70,8 +67,7 @@
       It ensures efficient communication between employees and supervisors, tracks leave balances, and maintains a transparent approval process.
     </p>
   </section>
-  <!-- Meet the Developers Section -->
-  <!-- Meet the Developers Section -->
+ 
 <section class="developers-section">
   <h2>Meet Our Developers</h2>
   <div class="developer-cards">
@@ -119,7 +115,7 @@
 
     if (logoutBtn) {
         logoutBtn.addEventListener("click", function () {
-            // Remove the token
+         
             localStorage.removeItem("authToken");
 
         });

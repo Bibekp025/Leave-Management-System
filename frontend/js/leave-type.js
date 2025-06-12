@@ -1,11 +1,10 @@
 document.addEventListener("DOMContentLoaded", function () {
     const leaveTypeSelect = document.getElementById("leaveType");
 
-    const token = localStorage.getItem("authToken"); // Replace "token" with your actual key
-
+    const token = localStorage.getItem("authToken"); 
     fetch("http://127.0.0.1:8000/leave/leave-types/", {
       headers: {
-        "Authorization": `Token ${token}`, // or `Token ${token}` for DRF TokenAuth
+        "Authorization": `Token ${token}`, 
         "Content-Type": "application/json"
       }
     })
@@ -18,8 +17,8 @@ document.addEventListener("DOMContentLoaded", function () {
       .then(data => {
         data.forEach(item => {
           const option = document.createElement("option");
-          option.value = item.id; // assuming API returns "id"
-          option.textContent = item.name; // assuming API returns "name"
+          option.value = item.id; 
+          option.textContent = item.name; 
           leaveTypeSelect.appendChild(option);
         });
       })
