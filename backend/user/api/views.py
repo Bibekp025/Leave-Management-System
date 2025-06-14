@@ -27,6 +27,7 @@ from rest_framework import status
 
 
 
+
 class UserCreateView(CreateAPIView):
     serializer_class=UserWriteSerializer
     queryset = User.objects.all()  # Required for DRF safety
@@ -58,7 +59,8 @@ class UserUpdateView(UpdateAPIView):
     
 class UserListView(ListAPIView):
     serializer_class=UserSerializer
-    
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['category']
     queryset=User.objects.all()
 
 class UserSelfView(RetrieveAPIView):

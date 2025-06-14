@@ -1,66 +1,49 @@
-from django.db.models.signals import pre_save, post_save
+from django.db.models.signals import post_save
 from django.dispatch import receiver
-from ..models import Leave
 from django.core.mail import send_mail
 from django.conf import settings
-from django.contrib.auth import get_user_model
+from ..models import Leave  # Adjust import if needed
 
-User = get_user_model()
 
-# Step 1: Store the old status before saving
-@receiver(pre_save, sender=Leave)
-def store_previous_status(sender, instance, **kwargs):
-    if instance.pk:
-        try:
-            old_instance = Leave.objects.get(pk=instance.pk)
-            instance._previous_status = old_instance.status
-        except Leave.DoesNotExist:
-            instance._previous_status = None
-    else:
-        instance._previous_status = None
-
-# Step 2: Handle notifications after saving
 @receiver(post_save, sender=Leave)
-def notify_users_on_leave(sender, instance, created, **kwargs):
-    # New leave request submitted — notify teachers
+def leave_created_or_updated(sender, instance, created, **kwargs):
+    # Send email when leave is created to assigned teacher(s)
     if created:
-        teachers = User.objects.filter(category='teacher')
-        emails = [teacher.email for teacher in teachers if teacher.email]
+        teachers = instance.assigned_teachers.all()  # Assuming ManyToMany or ForeignKey
+        teacher_emails = [teacher.email for teacher in teachers if teacher.email]
 
-        if emails:
+        if teacher_emails:
             send_mail(
-                subject='New Leave Request Submitted',
+                subject=f"New Leave Request from {instance.student.get_full_name()}",
                 message=(
                     f"Dear Teacher,\n\n"
-                    f"{instance.user.get_full_name() or instance.user.username} has submitted a leave request.\n\n"
-                    f"📅 Start Date: {instance.start_date}\n"
-                    f"📅 End Date: {instance.end_date}\n"
-                    f"📝 Reason: {instance.reason}\n\n"
-                    f"Please log in to the portal to review and take action.\n\n"
-                    f"Regards,\n"
-                    f"Leave Management System"
+                    f"A new leave request has been submitted by {instance.student.get_full_name()}.\n"
+                    f"Leave Type: {instance.leave_type}\n"
+                    f"From: {instance.start_date}\n"
+                    f"To: {instance.end_date}\n"
+                    f"Reason: {instance.reason}\n\n"
+                    "Please review the request in the system."
                 ),
                 from_email=settings.DEFAULT_FROM_EMAIL,
-                recipient_list=emails,
+                recipient_list=teacher_emails,
                 fail_silently=False,
             )
-
-    # Existing leave updated — check if status changed to approved or rejected
     else:
-        old_status = getattr(instance, '_previous_status', None)
-        new_status = instance.status
-
-        if old_status != new_status and new_status in ['approved', 'rejected']:
-            send_mail(
-                subject=f'Your Leave Request has been {new_status.capitalize()}',
-                message=(
-                    f"Dear {instance.user.get_full_name() or instance.user.username},\n\n"
-                    f"Your leave request from {instance.start_date} to {instance.end_date} has been {new_status}.\n\n"
-                    f"📝 Reason: {instance.reason}\n\n"
-                    f"Regards,\n"
-                    f"Leave Management System"
-                ),
-                from_email=settings.DEFAULT_FROM_EMAIL,
-                recipient_list=[instance.user.email],
-                fail_silently=False,
-            )
+        # Leave updated - check if status changed to accepted or rejected
+        if instance.status in ['accepted', 'rejected']:
+            # Notify the student about the status update
+            student_email = instance.student.email
+            if student_email:
+                send_mail(
+                    subject=f"Your leave request has been {instance.status}",
+                    message=(
+                        f"Dear {instance.student.get_full_name()},\n\n"
+                        f"Your leave request from {instance.start_date} to {instance.end_date} "
+                        f"has been {instance.status}.\n\n"
+                        f"Comments: {instance.admin_comments or 'No comments'}\n\n"
+                        "Thank you."
+                    ),
+                    from_email=settings.DEFAULT_FROM_EMAIL,
+                    recipient_list=[student_email],
+                    fail_silently=False,
+                )

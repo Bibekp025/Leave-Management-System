@@ -165,9 +165,9 @@ document.addEventListener("DOMContentLoaded", function () {
   `;
 } else {
   if (leave.status === "approved" && leave.approved_by) {
-    actionButtons = `<small>✔ Approved by: ${leave.approved_by}</small>`;
+    actionButtons = `<small>✔ Approved by: ${leave.approved_by.username}</small>`;
   } else if (leave.status === "rejected" && leave.approved_by) {
-    actionButtons = `<small>❌ Rejected by: ${leave.approved_by}</small>`;
+    actionButtons = `<small>❌ Rejected by: ${leave.approved_by.username}</small>`;
   } else {
     actionButtons = "<small>⌛ Pending</small>";
   }
@@ -175,7 +175,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
         row.innerHTML = `
-        <td>${leave.user}</td>
+        <td>${leave.user.username}</td>
           <td>${leave.leave_type.name}</td>
           <td>${leave.start_date}</td>
           <td>${leave.end_date}</td>
