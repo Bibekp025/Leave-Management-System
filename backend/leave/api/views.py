@@ -1,7 +1,6 @@
 from rest_framework import generics, permissions
 from .serializers import LeaveSerializer, LeaveTypeSerializer
 from ..models import Leave, LeaveType
-from .permissions import IsStudent, IsTeacher, IsAdmin
 from django.utils.timezone import now
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.response import Response
@@ -45,14 +44,6 @@ class LeaveListCreateView(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
-
-
-# from rest_framework import generics, permissions
-# from django.utils.timezone import now
-
-
-# from rest_framework import status
-# from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.exceptions import ValidationError

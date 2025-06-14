@@ -19,8 +19,7 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 
 from rest_framework.authtoken.models import Token
-from .throttling import UpdateThrottle
-from .pagination import ListPagination
+
 from rest_framework import filters 
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status
@@ -52,7 +51,6 @@ class UserCreateView(CreateAPIView):
 
 class UserUpdateView(UpdateAPIView):
     serializer_class=UserWriteSerializer
-    throttle_classes=[UpdateThrottle]
     authentication_classes=[TokenAuthentication]
     permission_classes=[IsAuthenticated]
     def get_object(self):
@@ -60,11 +58,7 @@ class UserUpdateView(UpdateAPIView):
     
 class UserListView(ListAPIView):
     serializer_class=UserSerializer
-    # pagination_class=ListPagination
-    # filter_backends=[filters.SearchFilter, DjangoFilterBackend]
-    # search_fields=['username','email']
     
-    # filterset_fields=['username', 'email']
     queryset=User.objects.all()
 
 class UserSelfView(RetrieveAPIView):
