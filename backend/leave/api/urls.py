@@ -1,14 +1,10 @@
+# urls.py
 from django.urls import path
-from .views import (
-    LeaveTypeListCreateView,
-    LeaveTypeRetrieveUpdateDestroyView,
-    LeaveListCreateView,
-    LeaveRetrieveUpdateDestroyView,
-)
+from .views import LeaveListCreateView, LeaveDetailView
+from .views import LeaveTypeListCreateView
 
 urlpatterns = [
     path('leave-types/', LeaveTypeListCreateView.as_view(), name='leave-type-list-create'),
-    path('leave-types/<int:pk>/', LeaveTypeRetrieveUpdateDestroyView.as_view(), name='leave-type-detail'),
     path('leaves/', LeaveListCreateView.as_view(), name='leave-list-create'),
-    path('leaves/<int:pk>/', LeaveRetrieveUpdateDestroyView.as_view(), name='leave-detail'),
+    path('leaves/<int:pk>/', LeaveDetailView.as_view(), name='leave-detail'),
 ]
