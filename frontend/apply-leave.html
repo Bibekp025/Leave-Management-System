@@ -65,10 +65,9 @@
     <label for="reason">Reason:</label>
     <textarea id="reason" name="reason" rows="4" placeholder="Enter reason..." required></textarea>
     <div class="error-message" id="error-reason" style="color: red;"></div>
-    <label for="assignedTeachers">Assign Teachers:</label>
-      <select id="assignedTeachers" name="assigned_teachers" multiple size="4" required>
-        <!-- Options populated by JS -->
-      </select>
+    <label id="assignedLabel" for="assignedTeachers">Assigned To</label>
+<select id="assignedTeachers" multiple></select>
+
 <div class="error-message" id="error-assignedTeachers" style="color: red;"></div>
 
 

@@ -1,28 +1,63 @@
-// 1. Load teachers from API and populate the select box
-async function loadTeachers() {
-  try {
-    const response = await fetch('http://127.0.0.1:8000/user/?category=teacher'); // API endpoint
-    if (!response.ok) throw new Error('Failed to fetch teachers');
 
-    const teachers = await response.json();
+async function getCurrentUser() {
+  try {
+    const response = await fetch('http://127.0.0.1:8000/user/self/', {
+      headers: {
+        'Authorization': `Token ${localStorage.getItem('authToken')}`
+      }
+    });
+    if (!response.ok) throw new Error('Failed to fetch current user');
+    return await response.json();
+  } catch (error) {
+    console.error('Error fetching current user:', error);
+    return null;
+  }
+}
+
+// 1. Load teachers or HRs from API and populate the select box
+async function loadAssignedUsers() {
+  try {
+    const currentUser = await getCurrentUser();
+    if (!currentUser) return;
+
+    let url = '';
+    if (currentUser.category === 'student') {
+      url = 'http://127.0.0.1:8000/user/?category=teacher';
+      document.getElementById('assignedLabel').textContent = "Select Teacher(s)";
+    } else if (currentUser.category === 'teacher') {
+      url = 'http://127.0.0.1:8000/user/?category=hr';
+      document.getElementById('assignedLabel').textContent = "Select HR(s)";
+    } else {
+      console.warn('Unknown category:', currentUser.category);
+      return;
+    }
+
+    const response = await fetch(url, {
+      headers: {
+        'Authorization': `Token ${localStorage.getItem('authToken')}`
+      }
+    });
+    if (!response.ok) throw new Error('Failed to fetch users');
+
+    const users = await response.json();
 
     const select = document.getElementById('assignedTeachers');
     select.innerHTML = ''; // Clear old options
 
-    teachers.forEach(teacher => {
+    users.forEach(user => {
       const option = document.createElement('option');
-      option.value = teacher.id;
-      option.textContent = teacher.username;
+      option.value = user.id;
+      option.textContent = user.username;
       select.appendChild(option);
     });
   } catch (error) {
-    console.error('Error loading teachers:', error);
+    console.error('Error loading assigned users:', error);
   }
 }
 
-window.addEventListener('DOMContentLoaded', loadTeachers);
+window.addEventListener('DOMContentLoaded', loadAssignedUsers);
 
-// 2. Handle leave form submission with multiple teachers
+// 2. Handle leave form submission with multiple teachers/HRs
 document.querySelector('.leave-form').addEventListener('submit', async function (e) {
   e.preventDefault();
 
@@ -35,7 +70,6 @@ document.querySelector('.leave-form').addEventListener('submit', async function 
   const toDate = document.getElementById('toDate').value;
   const reason = document.getElementById('reason').value;
 
-  // Get multiple selected teachers
   const selectedOptions = document.getElementById('assignedTeachers').selectedOptions;
   const assignedTeachers = Array.from(selectedOptions).map(option => option.value);
 
@@ -79,7 +113,7 @@ document.querySelector('.leave-form').addEventListener('submit', async function 
         document.getElementById('error-reason').textContent = data.reason[0];
       }
       if (data.assigned_teachers) {
-        alert('Teacher selection error: ' + data.assigned_teachers.join(', '));
+        alert('Selection error: ' + data.assigned_teachers.join(', '));
       }
     }
 
@@ -88,3 +122,4 @@ document.querySelector('.leave-form').addEventListener('submit', async function 
     console.log('Submitted Data:', formData);
   }
 });
+

@@ -2,13 +2,13 @@ from rest_framework import generics, permissions
 from ..models import Leave, LeaveType
 from .serializers import LeaveSerializer, LeaveTypeSerializer
 from .permissions import IsStudentOrTeacherCreateLeave, CanUpdateLeaveStatus
-from rest_framework.permissions import IsAdminUser
+from rest_framework.permissions import IsAdminUser,IsAuthenticated
 
 
 class LeaveTypeListCreateView(generics.ListCreateAPIView):
     queryset = LeaveType.objects.all()
     serializer_class = LeaveTypeSerializer
-    permission_classes = [IsAdminUser]  # Only admin can create leave types
+    permission_classes = [IsAuthenticated]  # Only admin can create leave types
 
 
 class LeaveListCreateView(generics.ListCreateAPIView):
