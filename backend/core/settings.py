@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'user',
     'django_filters',
     'corsheaders',
+    'drf_spectacular',
     'rest_framework',
     'rest_framework.authtoken',
     'leave',
@@ -111,11 +112,17 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
     ],
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
     # 'DEFAULT_PERMISSION_CLASSES': [
     #     'rest_framework.permissions.IsAuthenticated',
     # ],
 }
 
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Leave Management System API',
+    'DESCRIPTION': 'API documentation for the LMS project',
+    'VERSION': '1.0.0',
+}
 
 
 # Internationalization
@@ -146,6 +153,7 @@ CORS_ALLOW_ALL_ORIGINS = True
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000"
+    
 ]
 
 CORS_ALLOW_CREDENTIALS = True
