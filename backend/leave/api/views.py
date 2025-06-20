@@ -1,69 +1,58 @@
-from rest_framework import generics, permissions
-from ..models import Leave, LeaveType
+from rest_framework import permissions
 from .serializers import LeaveSerializer, LeaveTypeSerializer
-from .permissions import IsStudentOrTeacherCreateLeave, CanUpdateLeaveStatus
-from rest_framework.permissions import IsAdminUser,IsAuthenticated
+from ..models import Leave, LeaveType
+from rest_framework import generics
+from rest_framework.response import Response
+from rest_framework import status
+from django.contrib.auth import get_user_model
+from .permissions import CanCreateLeavePermission, CanViewLeavePermission, CanUpdateLeavePermission, CanCreateLeaveTypePermission
+from notification.models import Notification
 
+User = get_user_model()
 
-class LeaveTypeListCreateView(generics.ListCreateAPIView):
-    queryset = LeaveType.objects.all()
+class LeaveTypeListCreateAPIView(generics.ListCreateAPIView):
     serializer_class = LeaveTypeSerializer
-    permission_classes = [IsAuthenticated]  # Only admin can create leave types
+    permission_classes = [CanCreateLeaveTypePermission]
+    queryset = LeaveType.objects.all()
 
-
-class LeaveListCreateView(generics.ListCreateAPIView):
+class UserLeaveListCreateAPIView(generics.ListCreateAPIView):
     serializer_class = LeaveSerializer
-    permission_classes = [permissions.IsAuthenticated, IsStudentOrTeacherCreateLeave]
-
-    def get_queryset(self):
-        user = self.request.user
-
-        if user.category == 'student':
-            # Students see only their own leaves
-            return Leave.objects.filter(user=user)
-
-        elif user.category == 'teacher':
-            # Teachers see:
-            # - their own leaves
-            # - leaves of students assigned to them
-            student_leaves = Leave.objects.filter(user__category='student', assigned_teachers=user)
-            own_leaves = Leave.objects.filter(user=user)
-            return (student_leaves | own_leaves).distinct()
-
-        elif user.category == 'hr':
-            # HRs see leaves of teachers assigned to them
-            return Leave.objects.filter(user__category='teacher', assigned_hrs=user)
-
-        else:
-            # For any other user, no leaves visible
-            return Leave.objects.none()
-
+    permission_classes = [CanCreateLeaveTypePermission]
+    queryset = Leave.objects.all()
+    def get_permissions(self):
+        if self.request.method == 'POST':
+            return [CanCreateLeavePermission()]
+        return [CanViewLeavePermission]
     def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
+        leave = serializer.save(user=self.request.user)
+
+        # Notify assigned teachers
+        for teacher in leave.assigned_teachers.all():
+            Notification.objects.create(
+                recipient=teacher,
+                sender=self.request.user,
+                notification_type='leave',
+                title=f"New Leave Request from {self.request.user.username}",
+                message=f"{self.request.user.username} has requested leave from {leave.from_date} to {leave.to_date}.",
+                link=f"/leaves/{leave.id}/"
+            )
 
 
-class LeaveDetailView(generics.RetrieveUpdateAPIView):
+class UserLeaveRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = LeaveSerializer
-    permission_classes = [permissions.IsAuthenticated, CanUpdateLeaveStatus]
+    permission_classes = [CanUpdateLeavePermission]
+    queryset = Leave.objects.all()
+    def perform_update(self, serializer):
+        leave = serializer.save()
 
-    def get_queryset(self):
-        user = self.request.user
+        # Notify the leave owner about status update
+        Notification.objects.create(
+            recipient=leave.user,
+            sender=self.request.user,
+            notification_type='leave',
+            title="Your Leave Request was Updated",
+            message=f"{self.request.user.username} has updated your leave request.",
+            link=f"/leaves/{leave.id}/"
+        )
 
-        if user.category == 'student':
-            # Students can view their own leaves only
-            return Leave.objects.filter(user=user)
-
-        elif user.category == 'teacher':
-            # Teachers can view:
-            # - their own leaves
-            # - leaves assigned to them (student leaves)
-            student_leaves = Leave.objects.filter(user__category='student', assigned_teachers=user)
-            own_leaves = Leave.objects.filter(user=user)
-            return (student_leaves | own_leaves).distinct()
-
-        elif user.category == 'hr':
-            # HRs can view leaves of teachers assigned to them
-            return Leave.objects.filter(user__category='teacher', assigned_hrs=user)
-
-        else:
-            return Leave.objects.none()
+    

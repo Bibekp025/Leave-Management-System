@@ -24,6 +24,8 @@ urlpatterns = [
     
         path("user/", include("user.api.urls")),
         path("leave/", include("leave.api.urls")),
+        path("events/", include("events.api.urls")),
+        path(f"notification/", include("notification.api.urls")),
 ]   
     
 
