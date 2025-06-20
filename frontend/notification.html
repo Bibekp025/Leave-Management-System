@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div style="position: relative;" id="notification-wrapper">
+  <button id="notification-button" style="position: relative;">
+    🔔
+    <span id="notification-count"
+          style="position: absolute; top: -5px; right: -5px;
+                 background: red; color: white; border-radius: 50%;
+                 padding: 2px 6px; font-size: 12px; display: none;">
+    </span>
+  </button>
+
+  <!-- Dropdown List -->
+  <ul id="notification-list"
+      style="display: none; position: absolute; right: 0; top: 35px;
+             background: white; box-shadow: 0 0 10px rgba(0,0,0,0.2);
+             list-style: none; padding: 10px; width: 300px; max-height: 400px; overflow-y: auto; z-index: 1000;">
+  </ul>
+</div>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const token = localStorage.getItem('authToken'); // or use from context/session
+  const notifBtn = document.getElementById('notification-button');
+  const notifList = document.getElementById('notification-list');
+  const notifCount = document.getElementById('notification-count');
+
+  let notifications = [];
+
+  function fetchNotifications() {
+    fetch('http://127.0.0.1:8000/notification/', {
+      headers: {
+        'Authorization': 'Token ' + token,
+        'Content-Type': 'application/json',
+      }
+    })
+    .then(response => response.json())
+    .then(data => {
+      notifications = data;
+      renderNotifications();
+    })
+    .catch(err => console.error('Error fetching notifications:', err));
+  }
+
+  function renderNotifications() {
+    notifList.innerHTML = '';
+    const unread = notifications.filter(n => !n.is_read);
+    if (unread.length > 0) {
+      notifCount.style.display = 'inline-block';
+      notifCount.textContent = unread.length;
+    } else {
+      notifCount.style.display = 'none';
+    }
+
+    if (notifications.length === 0) {
+      notifList.innerHTML = '<li>No notifications.</li>';
+    } else {
+      notifications.forEach(notif => {
+        const item = document.createElement('li');
+        item.innerHTML = `
+          <a href="${notif.link}" style="text-decoration:none; color:black; display:block; padding:5px;"
+             data-id="${notif.id}">
+            <strong>${notif.title}</strong><br>
+            <small>${notif.message}</small>
+          </a>
+        `;
+        notifList.appendChild(item);
+      });
+    }
+  }
+
+  // Toggle dropdown
+  notifBtn.addEventListener('click', function () {
+    notifList.style.display = notifList.style.display === 'none' ? 'block' : 'none';
+  });
+
+  // Mark as read when clicked
+  notifList.addEventListener('click', function (e) {
+    const anchor = e.target.closest('a');
+    if (anchor && anchor.dataset.id) {
+      const notifId = anchor.dataset.id;
+      fetch(`/api/notifications/${notifId}/read/`, {
+        method: 'PATCH',
+        headers: {
+          'Authorization': 'Bearer ' + token,
+          'Content-Type': 'application/json',
+        }
+      }).then(() => {
+        fetchNotifications(); // Refresh list
+      });
+    }
+  });
+
+  fetchNotifications(); // Initial load
+});
+</script>
+
+</body>
+</html><!-- Notification Bell -->
