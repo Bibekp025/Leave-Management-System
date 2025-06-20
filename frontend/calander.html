@@ -506,15 +506,16 @@
             dayEl.title = monthData.holidays[day];
           }
 
-          if (
-            monthData.englishYear === currentADYear &&
-            monthData.englishMonth === englishMonths[currentADMonth] &&
-            day === currentADDay
-          ) {
-            dayEl.classList.add('today');
-            nepaliTodayDisplay.textContent = `Today: ${monthData.nepaliMonth} ${day}, ${monthData.nepaliYear}`;
-            englishTodayDisplay.textContent = `${monthData.englishMonth} ${day}, ${monthData.englishYear}`;
-          }
+const bsDayOffset = currentADDay - 14; 
+if (
+  monthData.englishYear === currentADYear &&
+  monthData.englishMonth === englishMonths[currentADMonth] &&
+  day === bsDayOffset
+) {
+  dayEl.classList.add('today');
+  nepaliTodayDisplay.textContent = `Today: ${monthData.nepaliMonth} ${bsDayOffset}, ${monthData.nepaliYear}`;
+  englishTodayDisplay.textContent = `${monthData.englishMonth} ${currentADDay}, ${monthData.englishYear}`;
+}
 
           calendarDays.appendChild(dayEl);
         }
