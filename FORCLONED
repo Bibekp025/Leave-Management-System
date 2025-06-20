@@ -1,4 +1,4 @@
 cd leave-management-syste
-
 docker compose build
+
 docker compose up -d
