@@ -105,23 +105,7 @@ The Leave Management System (LMS) is an intranet-based application designed to s
    # Run database migrations
    python manage.py makemigrations
    python manage.py migrate
-   
-   # Create superuser (admin)
-   python manage.py createsuperuser
-   ```
-
-5. **Configuration**
-   ```python
-   # Update database settings in settings.py if needed
-   # Default SQLite configuration:
-   DATABASES = {
-       'default': {
-           'ENGINE': 'django.db.backends.sqlite3',
-           'NAME': BASE_DIR / 'db.sqlite3',
-       }
-   }
-   ```
-
+  ```
 6. **Run Development Server**
    ```bash
    # Start the Django development server
