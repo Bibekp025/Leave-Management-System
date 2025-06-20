@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nepali Calendar 2082</title>
-    <style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Nepali Calendar 2082</title>
+  <style>
         * {
             margin: 0;
             padding: 0;
@@ -236,337 +236,319 @@
             color: #7f8c8d;
             font-size: 14px;
         }
-    </style>
+  </style>
 </head>
 <body>
-    <div class="calendar-container">
-        <div class="year-title">Nepali Calendar 2082 BS</div>
-        
-        <div class="header">
-            <div class="nav-buttons">
-                <button class="nav-btn" id="prev-month">&lt;</button>
-                <button class="nav-btn" id="next-month">&gt;</button>
-            </div>
-            <div class="date-display">
-                <span class="nepali-date" id="nepali-month">Asar 2082</span> / 
-                <span class="english-date" id="english-month">June 2025</span>
-            </div>
-            <div class="current-date-display">
-                <span class="current-nepali">Today: Asar 6, 2082</span><br>
-                <span class="current-english">June 20, 2025</span>
-            </div>
-        </div>
-        
-        <div class="calendar">
-            <div class="weekdays">
-                <div>Sun</div>
-                <div>Mon</div>
-                <div>Tue</div>
-                <div>Wed</div>
-                <div>Thu</div>
-                <div>Fri</div>
-                <div class="saturday">Sat</div>
-            </div>
-            
-            <div class="days" id="calendar-days">
-                <!-- Calendar days will be populated by JavaScript -->
-            </div>
-        </div>
-        
-        <div class="legend">
-            <div class="legend-item">
-                <div class="color-box saturday-color"></div>
-                <span>Saturday</span>
-            </div>
-            <div class="legend-item">
-                <div class="color-box holiday-color"></div>
-                <span>Holiday</span>
-            </div>
-            <div class="legend-item">
-                <div class="color-box today-color"></div>
-                <span>Today</span>
-            </div>
-        </div>
-        
-        <div class="footer">
-            Dates shown in English numerals
-        </div>
+  <div class="calendar-container">
+    <div class="year-title">Nepali Calendar 2082 BS</div>
+    <div class="header">
+      <div class="nav-buttons">
+        <button class="nav-btn" id="prev-month">&lt;</button>
+        <button class="nav-btn" id="next-month">&gt;</button>
+      </div>
+      <div class="date-display">
+        <span class="nepali-date" id="nepali-month">Asar 2082</span> /
+        <span class="english-date" id="english-month">June 2025</span>
+      </div>
+      <div class="current-date-display">
+        <span class="current-nepali" id="current-nepali">Today: Asar 6, 2082</span><br/>
+        <span class="current-english" id="current-english">June 20, 2025</span>
+      </div>
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            
-            const nepaliMonths = [
-                "Baisakh", "Jestha", "Asar", "Shrawan", 
-                "Bhadra", "Aswin", "Kartik", "Mangsir", 
-                "Poush", "Magh", "Falgun", "Chaitra"
-            ];
-            
-          
-            const englishMonths = [
-                "January", "February", "March", "April", 
-                "May", "June", "July", "August", 
-                "September", "October", "November", "December"
-            ];
-            
-           
-            const currentNepaliDate = {
-                year: 2082,
-                monthIndex: 2, // Asar (index 2)
-                day: 6
-            };
-            
-            const currentEnglishDate = {
-                year: 2025,
-                monthIndex: 5, 
-                day: 20
-            };
-            
-            
-            function formatEnglishDate(date) {
-                return `${englishMonths[date.monthIndex]} ${date.day}, ${date.year}`;
-            }
-            
-            
-            function formatNepaliDate(date) {
-                return `${nepaliMonths[date.monthIndex]} ${date.day}, ${date.year}`;
-            }
-            
-           
-            document.querySelector('.current-nepali').textContent = `Today: ${formatNepaliDate(currentNepaliDate)}`;
-            document.querySelector('.current-english').textContent = formatEnglishDate(currentEnglishDate);
-            
-            
-            const monthsData = [
-                { // Baisakh (April 2025)
-                    nepaliMonth: "Baisakh",
-                    nepaliYear: 2082,
-                    englishMonth: "April",
-                    englishYear: 2025,
-                    startDay: 0, // Sunday
-                    days: 32,
-                    holidays: {
-                        1: "Nepali New Year",
-                        8: "Loktantra Diwas",
-                        14: "Nawabarsha",
-                        22: "Ram Nawami",
-                        29: "Ghode Jatra"
-                    }
-                },
-                { // Jestha (May 2025)
-                    nepaliMonth: "Jestha",
-                    nepaliYear: 2082,
-                    englishMonth: "May",
-                    englishYear: 2025,
-                    startDay: 4, // Thursday
-                    days: 31,
-                    holidays: {
-                        15: "Buddha Jayanti",
-                        29: "Ganatantra Diwas"
-                    }
-                },
-                { // Asar (June 2025) - CURRENT MONTH
-                    nepaliMonth: "Asar",
-                    nepaliYear: 2082,
-                    englishMonth: "June",
-                    englishYear: 2025,
-                    startDay: 0, // Sunday
-                    days: 32,
-                    holidays: {
-                        15: "Ropain Day",
-                        29: "Dahin"
-                    }
-                },
-                { // Shrawan (July 2025)
-                    nepaliMonth: "Shrawan",
-                    nepaliYear: 2082,
-                    englishMonth: "July",
-                    englishYear: 2025,
-                    startDay: 4, // Thursday
-                    days: 31,
-                    holidays: {
-                        5: "Nag Panchami",
-                        26: "Janai Purnima"
-                    }
-                },
-                { // Bhadra (August 2025)
-                    nepaliMonth: "Bhadra",
-                    nepaliYear: 2082,
-                    englishMonth: "August",
-                    englishYear: 2025,
-                    startDay: 0, // Sunday
-                    days: 31,
-                    holidays: {
-                        1: "Gai Jatra",
-                        15: "Krishna Janmashtami",
-                        30: "Haritalika Teej"
-                    }
-                },
-                { // Aswin (September 2025)
-                    nepaliMonth: "Aswin",
-                    nepaliYear: 2082,
-                    englishMonth: "September",
-                    englishYear: 2025,
-                    startDay: 3, // Wednesday
-                    days: 31,
-                    holidays: {
-                        1: "Ghatasthapana",
-                        7: "Fulpati",
-                        8: "Maha Asthami",
-                        9: "Maha Navami",
-                        10: "Vijaya Dashami",
-                        15: "Kojagrat Purnima"
-                    }
-                },
-                { // Kartik (October 2025)
-                    nepaliMonth: "Kartik",
-                    nepaliYear: 2082,
-                    englishMonth: "October",
-                    englishYear: 2025,
-                    startDay: 6, // Saturday
-                    days: 30,
-                    holidays: {
-                        1: "Kag Tihar",
-                        2: "Kukur Tihar",
-                        3: "Laxmi Puja",
-                        4: "Gobardhan Puja",
-                        5: "Bhai Tika"
-                    }
-                },
-                { // Mangsir (November 2025)
-                    nepaliMonth: "Mangsir",
-                    nepaliYear: 2082,
-                    englishMonth: "November",
-                    englishYear: 2025,
-                    startDay: 1, // Monday
-                    days: 30,
-                    holidays: {
-                        15: "Udhauli Parva",
-                        23: "Chhath Parva"
-                    }
-                },
-                { // Poush (December 2025)
-                    nepaliMonth: "Poush",
-                    nepaliYear: 2082,
-                    englishMonth: "December",
-                    englishYear: 2025,
-                    startDay: 3, // Wednesday
-                    days: 29,
-                    holidays: {
-                        1: "Poush Sankranti",
-                        15: "Yomari Punhi"
-                    }
-                },
-                { // Magh (January 2026)
-                    nepaliMonth: "Magh",
-                    nepaliYear: 2082,
-                    englishMonth: "January",
-                    englishYear: 2026,
-                    startDay: 4, // Thursday
-                    days: 29,
-                    holidays: {
-                        15: "Maghe Sankranti",
-                        30: "Shree Panchami"
-                    }
-                },
-                { // Falgun (February 2026)
-                    nepaliMonth: "Falgun",
-                    nepaliYear: 2082,
-                    englishMonth: "February",
-                    englishYear: 2026,
-                    startDay: 5, // Friday
-                    days: 30,
-                    holidays: {
-                        15: "Fagu Purnima",
-                        22: "Maha Shivaratri"
-                    }
-                },
-                { // Chaitra (March 2026)
-                    nepaliMonth: "Chaitra",
-                    nepaliYear: 2082,
-                    englishMonth: "March",
-                    englishYear: 2026,
-                    startDay: 0, // Sunday
-                    days: 30,
-                    holidays: {
-                        8: "Ghode Jatra",
-                        25: "Ram Navami",
-                        30: "Chaite Dashain"
-                    }
-                }
-            ];
-            
-            
-            let currentMonthIndex = 2;
-            const calendarDays = document.getElementById('calendar-days');
-            const nepaliMonthDisplay = document.getElementById('nepali-month');
-            const englishMonthDisplay = document.getElementById('english-month');
-            
-            
-            function renderCalendar() {
-                const monthData = monthsData[currentMonthIndex];
-                
-                
-                nepaliMonthDisplay.textContent = `${monthData.nepaliMonth} ${monthData.nepaliYear}`;
-                englishMonthDisplay.textContent = `${monthData.englishMonth} ${monthData.englishYear}`;
-                
-                
-                calendarDays.innerHTML = '';
-                
-               
-                for (let i = 0; i < monthData.startDay; i++) {
-                    const emptyDay = document.createElement('div');
-                    emptyDay.classList.add('day', 'empty');
-                    calendarDays.appendChild(emptyDay);
-                }
-                
-                
-                for (let day = 1; day <= monthData.days; day++) {
-                    const dayElement = document.createElement('div');
-                    dayElement.classList.add('day');
-                    dayElement.textContent = day;
-                    
-                    
-                    const dayOfWeek = (monthData.startDay + day - 1) % 7;
-                    
-                    
-                    if (dayOfWeek === 6) {
-                        dayElement.classList.add('saturday');
-                    }
-                    
-                   
-                    if (monthData.holidays[day]) {
-                        dayElement.classList.add('holiday');
-                        dayElement.title = monthData.holidays[day];
-                    }
-                    
-                    
-                    if (currentMonthIndex === currentNepaliDate.monthIndex && day === currentNepaliDate.day) {
-                        dayElement.classList.add('today');
-                    }
-                    
-                    calendarDays.appendChild(dayElement);
-                }
-            }
-            
-            
-            document.getElementById('prev-month').addEventListener('click', function() {
-                if (currentMonthIndex > 0) {
-                    currentMonthIndex--;
-                    renderCalendar();
-                }
-            });
-            
-            document.getElementById('next-month').addEventListener('click', function() {
-                if (currentMonthIndex < 11) {
-                    currentMonthIndex++;
-                    renderCalendar();
-                }
-            });
-            
-           
-            renderCalendar();
-        });
-    </script>
+    <div class="calendar">
+      <div class="weekdays">
+        <div>Sun</div>
+        <div>Mon</div>
+        <div>Tue</div>
+        <div>Wed</div>
+        <div>Thu</div>
+        <div>Fri</div>
+        <div class="saturday">Sat</div>
+      </div>
+      <div class="days" id="calendar-days">
+        <!-- JS will populate -->
+      </div>
+    </div>
+
+    <div class="legend">
+      <div class="legend-item">
+        <div class="color-box saturday-color"></div>
+        <span>Saturday</span>
+      </div>
+      <div class="legend-item">
+        <div class="color-box holiday-color"></div>
+        <span>Holiday</span>
+      </div>
+      <div class="legend-item">
+        <div class="color-box today-color"></div>
+        <span>Today</span>
+      </div>
+    </div>
+
+    <div class="footer">Dates shown in English numerals</div>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const nepaliMonths = [
+        "Baisakh", "Jestha", "Asar", "Shrawan",
+        "Bhadra", "Aswin", "Kartik", "Mangsir",
+        "Poush", "Magh", "Falgun", "Chaitra"
+      ];
+
+      const englishMonths = [
+        "January", "February", "March", "April",
+        "May", "June", "July", "August",
+        "September", "October", "November", "December"
+      ];
+
+      const monthsData = [
+        {
+          nepaliMonth: "Baisakh",
+          nepaliYear: 2082,
+          englishMonth: "April",
+          englishYear: 2025,
+          startDay: 0,
+          days: 32,
+          holidays: {
+            1: "Nepali New Year",
+            8: "Loktantra Diwas",
+            14: "Nawabarsha",
+            22: "Ram Nawami",
+            29: "Ghode Jatra"
+          }
+        },
+        {
+          nepaliMonth: "Jestha",
+          nepaliYear: 2082,
+          englishMonth: "May",
+          englishYear: 2025,
+          startDay: 4,
+          days: 31,
+          holidays: {
+            15: "Buddha Jayanti",
+            29: "Ganatantra Diwas"
+          }
+        },
+        {
+          nepaliMonth: "Asar",
+          nepaliYear: 2082,
+          englishMonth: "June",
+          englishYear: 2025,
+          startDay: 0,
+          days: 32,
+          holidays: {
+            15: "Ropain Day",
+            29: "Dahin"
+          }
+        },
+        {
+          nepaliMonth: "Shrawan",
+          nepaliYear: 2082,
+          englishMonth: "July",
+          englishYear: 2025,
+          startDay: 4,
+          days: 31,
+          holidays: {
+            5: "Nag Panchami",
+            26: "Janai Purnima"
+          }
+        },
+        {
+          nepaliMonth: "Bhadra",
+          nepaliYear: 2082,
+          englishMonth: "August",
+          englishYear: 2025,
+          startDay: 0,
+          days: 31,
+          holidays: {
+            1: "Gai Jatra",
+            15: "Krishna Janmashtami",
+            30: "Haritalika Teej"
+          }
+        },
+        {
+          nepaliMonth: "Aswin",
+          nepaliYear: 2082,
+          englishMonth: "September",
+          englishYear: 2025,
+          startDay: 3,
+          days: 31,
+          holidays: {
+            1: "Ghatasthapana",
+            7: "Fulpati",
+            8: "Maha Asthami",
+            9: "Maha Navami",
+            10: "Vijaya Dashami",
+            15: "Kojagrat Purnima"
+          }
+        },
+        {
+          nepaliMonth: "Kartik",
+          nepaliYear: 2082,
+          englishMonth: "October",
+          englishYear: 2025,
+          startDay: 6,
+          days: 30,
+          holidays: {
+            1: "Kag Tihar",
+            2: "Kukur Tihar",
+            3: "Laxmi Puja",
+            4: "Gobardhan Puja",
+            5: "Bhai Tika"
+          }
+        },
+        {
+          nepaliMonth: "Mangsir",
+          nepaliYear: 2082,
+          englishMonth: "November",
+          englishYear: 2025,
+          startDay: 1,
+          days: 30,
+          holidays: {
+            15: "Udhauli Parva",
+            23: "Chhath Parva"
+          }
+        },
+        {
+          nepaliMonth: "Poush",
+          nepaliYear: 2082,
+          englishMonth: "December",
+          englishYear: 2025,
+          startDay: 3,
+          days: 29,
+          holidays: {
+            1: "Poush Sankranti",
+            15: "Yomari Punhi"
+          }
+        },
+        {
+          nepaliMonth: "Magh",
+          nepaliYear: 2082,
+          englishMonth: "January",
+          englishYear: 2026,
+          startDay: 4,
+          days: 29,
+          holidays: {
+            15: "Maghe Sankranti",
+            30: "Shree Panchami"
+          }
+        },
+        {
+          nepaliMonth: "Falgun",
+          nepaliYear: 2082,
+          englishMonth: "February",
+          englishYear: 2026,
+          startDay: 5,
+          days: 30,
+          holidays: {
+            15: "Fagu Purnima",
+            22: "Maha Shivaratri"
+          }
+        },
+        {
+          nepaliMonth: "Chaitra",
+          nepaliYear: 2082,
+          englishMonth: "March",
+          englishYear: 2026,
+          startDay: 0,
+          days: 30,
+          holidays: {
+            8: "Ghode Jatra",
+            25: "Ram Navami",
+            30: "Chaite Dashain"
+          }
+        }
+      ];
+
+      const today = new Date();
+      const currentADYear = today.getFullYear();
+      const currentADMonth = today.getMonth();
+      const currentADDay = today.getDate();
+
+      let currentMonthIndex = monthsData.findIndex(month =>
+        month.englishYear === currentADYear &&
+        month.englishMonth === englishMonths[currentADMonth]
+      );
+
+      if (currentMonthIndex === -1) currentMonthIndex = 0;
+
+      const calendarDays = document.getElementById('calendar-days');
+      const nepaliMonthDisplay = document.getElementById('nepali-month');
+      const englishMonthDisplay = document.getElementById('english-month');
+      const nepaliTodayDisplay = document.getElementById('current-nepali');
+      const englishTodayDisplay = document.getElementById('current-english');
+
+      function renderCalendar() {
+        const monthData = monthsData[currentMonthIndex];
+        nepaliMonthDisplay.textContent = `${monthData.nepaliMonth} ${monthData.nepaliYear}`;
+        englishMonthDisplay.textContent = `${monthData.englishMonth} ${monthData.englishYear}`;
+
+        calendarDays.innerHTML = '';
+
+        for (let i = 0; i < monthData.startDay; i++) {
+          const empty = document.createElement('div');
+          empty.classList.add('day', 'empty');
+          calendarDays.appendChild(empty);
+        }
+
+        for (let day = 1; day <= monthData.days; day++) {
+          const dayEl = document.createElement('div');
+          dayEl.classList.add('day');
+          dayEl.textContent = day;
+
+          const dayOfWeek = (monthData.startDay + day - 1) % 7;
+
+          if (dayOfWeek === 6) dayEl.classList.add('saturday');
+          if (monthData.holidays[day]) {
+            dayEl.classList.add('holiday');
+            dayEl.title = monthData.holidays[day];
+          }
+
+          if (
+            monthData.englishYear === currentADYear &&
+            monthData.englishMonth === englishMonths[currentADMonth] &&
+            day === currentADDay
+          ) {
+            dayEl.classList.add('today');
+            nepaliTodayDisplay.textContent = `Today: ${monthData.nepaliMonth} ${day}, ${monthData.nepaliYear}`;
+            englishTodayDisplay.textContent = `${monthData.englishMonth} ${day}, ${monthData.englishYear}`;
+          }
+
+          calendarDays.appendChild(dayEl);
+        }
+      }
+
+      document.getElementById('prev-month').addEventListener('click', function () {
+        if (currentMonthIndex > 0) {
+          currentMonthIndex--;
+          renderCalendar();
+        }
+      });
+
+      document.getElementById('next-month').addEventListener('click', function () {
+        if (currentMonthIndex < 11) {
+          currentMonthIndex++;
+          renderCalendar();
+        }
+      });
+
+      renderCalendar();
+    });
+    let lastCheckedDate = new Date().getDate();
+
+setInterval(() => {
+    const now = new Date();
+    const currentDate = now.getDate();
+
+    if (currentDate !== lastCheckedDate) {
+    
+        lastCheckedDate = currentDate;
+
+        location.reload(); 
+    }
+}, 60000); 
+  </script>
 </body>
 </html>
