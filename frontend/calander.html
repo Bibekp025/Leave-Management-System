@@ -295,21 +295,21 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Nepali month names
+            
             const nepaliMonths = [
                 "Baisakh", "Jestha", "Asar", "Shrawan", 
                 "Bhadra", "Aswin", "Kartik", "Mangsir", 
                 "Poush", "Magh", "Falgun", "Chaitra"
             ];
             
-            // English month names
+          
             const englishMonths = [
                 "January", "February", "March", "April", 
                 "May", "June", "July", "August", 
                 "September", "October", "November", "December"
             ];
             
-            // Current dates
+           
             const currentNepaliDate = {
                 year: 2082,
                 monthIndex: 2, // Asar (index 2)
@@ -318,25 +318,25 @@
             
             const currentEnglishDate = {
                 year: 2025,
-                monthIndex: 5, // June (index 5)
+                monthIndex: 5, 
                 day: 20
             };
             
-            // Format English date as "Month Day, Year"
+            
             function formatEnglishDate(date) {
                 return `${englishMonths[date.monthIndex]} ${date.day}, ${date.year}`;
             }
             
-            // Format Nepali date as "Month Day, Year"
+            
             function formatNepaliDate(date) {
                 return `${nepaliMonths[date.monthIndex]} ${date.day}, ${date.year}`;
             }
             
-            // Set current date display
+           
             document.querySelector('.current-nepali').textContent = `Today: ${formatNepaliDate(currentNepaliDate)}`;
             document.querySelector('.current-english').textContent = formatEnglishDate(currentEnglishDate);
             
-            // Month data for Nepali year 2082
+            
             const monthsData = [
                 { // Baisakh (April 2025)
                     nepaliMonth: "Baisakh",
@@ -496,51 +496,51 @@
                 }
             ];
             
-            // Start at current month (Asar)
+            
             let currentMonthIndex = 2;
             const calendarDays = document.getElementById('calendar-days');
             const nepaliMonthDisplay = document.getElementById('nepali-month');
             const englishMonthDisplay = document.getElementById('english-month');
             
-            // Render calendar for current month
+            
             function renderCalendar() {
                 const monthData = monthsData[currentMonthIndex];
                 
-                // Update month displays
+                
                 nepaliMonthDisplay.textContent = `${monthData.nepaliMonth} ${monthData.nepaliYear}`;
                 englishMonthDisplay.textContent = `${monthData.englishMonth} ${monthData.englishYear}`;
                 
-                // Clear calendar
+                
                 calendarDays.innerHTML = '';
                 
-                // Create empty slots for days before the first day
+               
                 for (let i = 0; i < monthData.startDay; i++) {
                     const emptyDay = document.createElement('div');
                     emptyDay.classList.add('day', 'empty');
                     calendarDays.appendChild(emptyDay);
                 }
                 
-                // Create days for the month
+                
                 for (let day = 1; day <= monthData.days; day++) {
                     const dayElement = document.createElement('div');
                     dayElement.classList.add('day');
                     dayElement.textContent = day;
                     
-                    // Calculate day of week (0 = Sunday, 6 = Saturday)
+                    
                     const dayOfWeek = (monthData.startDay + day - 1) % 7;
                     
-                    // Check if Saturday
+                    
                     if (dayOfWeek === 6) {
                         dayElement.classList.add('saturday');
                     }
                     
-                    // Check if holiday
+                   
                     if (monthData.holidays[day]) {
                         dayElement.classList.add('holiday');
                         dayElement.title = monthData.holidays[day];
                     }
                     
-                    // Check if today
+                    
                     if (currentMonthIndex === currentNepaliDate.monthIndex && day === currentNepaliDate.day) {
                         dayElement.classList.add('today');
                     }
@@ -549,7 +549,7 @@
                 }
             }
             
-            // Navigation event listeners
+            
             document.getElementById('prev-month').addEventListener('click', function() {
                 if (currentMonthIndex > 0) {
                     currentMonthIndex--;
@@ -564,7 +564,7 @@
                 }
             });
             
-            // Initial render
+           
             renderCalendar();
         });
     </script>
