@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nepali Calendar 2082</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 20px;
+        }
+        
+        .calendar-container {
+            background-color: #fff;
+            border-radius: 20px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+            padding: 25px;
+            width: 100%;
+            max-width: 350px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        
+        .calendar-container:hover {
+            transform: translateY(-5px);
+        }
+        
+        .header {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+            position: relative;
+        }
+        
+        .year-title {
+            margin: 10px 0;
+            color: #2c3e50;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        
+        .date-display {
+            font-size: 18px;
+            color: #7f8c8d;
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+        
+        .nepali-date {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        
+        .current-date-display {
+            font-size: 16px;
+            margin-top: 10px;
+            padding: 8px;
+            background-color: #f8f9fa;
+            border-radius: 10px;
+        }
+        
+        .current-nepali {
+            color: #e74c3c;
+            font-weight: 500;
+        }
+        
+        .current-english {
+            color: #3498db;
+            font-weight: 500;
+        }
+        
+        .nav-buttons {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 10px;
+        }
+        
+        .nav-btn {
+            background: #3498db;
+            color: white;
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: all 0.2s;
+        }
+        
+        .nav-btn:hover {
+            background: #2980b9;
+            transform: scale(1.1);
+        }
+        
+        .calendar {
+            width: 100%;
+        }
+        
+        .weekdays {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .weekdays div {
+            padding: 8px 0;
+        }
+        
+        .days {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+        }
+        
+        .day {
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: default;
+            transition: all 0.2s ease;
+            position: relative;
+            background-color: #f8f9fa;
+        }
+        
+        .day:hover {
+            background-color: #e3e8f0;
+            transform: scale(1.1);
+        }
+        
+        .day.empty {
+            background-color: transparent;
+            cursor: default;
+        }
+        
+        .day.empty:hover {
+            transform: none;
+            background-color: transparent;
+        }
+        
+        .saturday, .holiday {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        
+        .holiday::after {
+            content: '';
+            position: absolute;
+            bottom: 5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 5px;
+            height: 5px;
+            background-color: #e74c3c;
+            border-radius: 50%;
+        }
+        
+        .today {
+            background-color: #3498db;
+            color: white;
+            box-shadow: 0 0 10px rgba(52, 152, 219, 0.5);
+        }
+        
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 2px solid #f0f0f0;
+            font-size: 13px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .color-box {
+            width: 12px;
+            height: 12px;
+            border-radius: 3px;
+        }
+        
+        .saturday-color {
+            background-color: #e74c3c;
+        }
+        
+        .holiday-color {
+            background-color: #e74c3c;
+            position: relative;
+        }
+        
+        .holiday-color::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 5px;
+            height: 5px;
+            background-color: white;
+            border-radius: 50%;
+        }
+        
+        .today-color {
+            background-color: #3498db;
+        }
+        
+        .footer {
+            margin-top: 15px;
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="calendar-container">
+        <div class="year-title">Nepali Calendar 2082 BS</div>
+        
+        <div class="header">
+            <div class="nav-buttons">
+                <button class="nav-btn" id="prev-month">&lt;</button>
+                <button class="nav-btn" id="next-month">&gt;</button>
+            </div>
+            <div class="date-display">
+                <span class="nepali-date" id="nepali-month">Asar 2082</span> / 
+                <span class="english-date" id="english-month">June 2025</span>
+            </div>
+            <div class="current-date-display">
+                <span class="current-nepali">Today: Asar 6, 2082</span><br>
+                <span class="current-english">June 20, 2025</span>
+            </div>
+        </div>
+        
+        <div class="calendar">
+            <div class="weekdays">
+                <div>Sun</div>
+                <div>Mon</div>
+                <div>Tue</div>
+                <div>Wed</div>
+                <div>Thu</div>
+                <div>Fri</div>
+                <div class="saturday">Sat</div>
+            </div>
+            
+            <div class="days" id="calendar-days">
+                <!-- Calendar days will be populated by JavaScript -->
+            </div>
+        </div>
+        
+        <div class="legend">
+            <div class="legend-item">
+                <div class="color-box saturday-color"></div>
+                <span>Saturday</span>
+            </div>
+            <div class="legend-item">
+                <div class="color-box holiday-color"></div>
+                <span>Holiday</span>
+            </div>
+            <div class="legend-item">
+                <div class="color-box today-color"></div>
+                <span>Today</span>
+            </div>
+        </div>
+        
+        <div class="footer">
+            Dates shown in English numerals
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Nepali month names
+            const nepaliMonths = [
+                "Baisakh", "Jestha", "Asar", "Shrawan", 
+                "Bhadra", "Aswin", "Kartik", "Mangsir", 
+                "Poush", "Magh", "Falgun", "Chaitra"
+            ];
+            
+            // English month names
+            const englishMonths = [
+                "January", "February", "March", "April", 
+                "May", "June", "July", "August", 
+                "September", "October", "November", "December"
+            ];
+            
+            // Current dates
+            const currentNepaliDate = {
+                year: 2082,
+                monthIndex: 2, // Asar (index 2)
+                day: 6
+            };
+            
+            const currentEnglishDate = {
+                year: 2025,
+                monthIndex: 5, // June (index 5)
+                day: 20
+            };
+            
+            // Format English date as "Month Day, Year"
+            function formatEnglishDate(date) {
+                return `${englishMonths[date.monthIndex]} ${date.day}, ${date.year}`;
+            }
+            
+            // Format Nepali date as "Month Day, Year"
+            function formatNepaliDate(date) {
+                return `${nepaliMonths[date.monthIndex]} ${date.day}, ${date.year}`;
+            }
+            
+            // Set current date display
+            document.querySelector('.current-nepali').textContent = `Today: ${formatNepaliDate(currentNepaliDate)}`;
+            document.querySelector('.current-english').textContent = formatEnglishDate(currentEnglishDate);
+            
+            // Month data for Nepali year 2082
+            const monthsData = [
+                { // Baisakh (April 2025)
+                    nepaliMonth: "Baisakh",
+                    nepaliYear: 2082,
+                    englishMonth: "April",
+                    englishYear: 2025,
+                    startDay: 0, // Sunday
+                    days: 32,
+                    holidays: {
+                        1: "Nepali New Year",
+                        8: "Loktantra Diwas",
+                        14: "Nawabarsha",
+                        22: "Ram Nawami",
+                        29: "Ghode Jatra"
+                    }
+                },
+                { // Jestha (May 2025)
+                    nepaliMonth: "Jestha",
+                    nepaliYear: 2082,
+                    englishMonth: "May",
+                    englishYear: 2025,
+                    startDay: 4, // Thursday
+                    days: 31,
+                    holidays: {
+                        15: "Buddha Jayanti",
+                        29: "Ganatantra Diwas"
+                    }
+                },
+                { // Asar (June 2025) - CURRENT MONTH
+                    nepaliMonth: "Asar",
+                    nepaliYear: 2082,
+                    englishMonth: "June",
+                    englishYear: 2025,
+                    startDay: 0, // Sunday
+                    days: 32,
+                    holidays: {
+                        15: "Ropain Day",
+                        29: "Dahin"
+                    }
+                },
+                { // Shrawan (July 2025)
+                    nepaliMonth: "Shrawan",
+                    nepaliYear: 2082,
+                    englishMonth: "July",
+                    englishYear: 2025,
+                    startDay: 4, // Thursday
+                    days: 31,
+                    holidays: {
+                        5: "Nag Panchami",
+                        26: "Janai Purnima"
+                    }
+                },
+                { // Bhadra (August 2025)
+                    nepaliMonth: "Bhadra",
+                    nepaliYear: 2082,
+                    englishMonth: "August",
+                    englishYear: 2025,
+                    startDay: 0, // Sunday
+                    days: 31,
+                    holidays: {
+                        1: "Gai Jatra",
+                        15: "Krishna Janmashtami",
+                        30: "Haritalika Teej"
+                    }
+                },
+                { // Aswin (September 2025)
+                    nepaliMonth: "Aswin",
+                    nepaliYear: 2082,
+                    englishMonth: "September",
+                    englishYear: 2025,
+                    startDay: 3, // Wednesday
+                    days: 31,
+                    holidays: {
+                        1: "Ghatasthapana",
+                        7: "Fulpati",
+                        8: "Maha Asthami",
+                        9: "Maha Navami",
+                        10: "Vijaya Dashami",
+                        15: "Kojagrat Purnima"
+                    }
+                },
+                { // Kartik (October 2025)
+                    nepaliMonth: "Kartik",
+                    nepaliYear: 2082,
+                    englishMonth: "October",
+                    englishYear: 2025,
+                    startDay: 6, // Saturday
+                    days: 30,
+                    holidays: {
+                        1: "Kag Tihar",
+                        2: "Kukur Tihar",
+                        3: "Laxmi Puja",
+                        4: "Gobardhan Puja",
+                        5: "Bhai Tika"
+                    }
+                },
+                { // Mangsir (November 2025)
+                    nepaliMonth: "Mangsir",
+                    nepaliYear: 2082,
+                    englishMonth: "November",
+                    englishYear: 2025,
+                    startDay: 1, // Monday
+                    days: 30,
+                    holidays: {
+                        15: "Udhauli Parva",
+                        23: "Chhath Parva"
+                    }
+                },
+                { // Poush (December 2025)
+                    nepaliMonth: "Poush",
+                    nepaliYear: 2082,
+                    englishMonth: "December",
+                    englishYear: 2025,
+                    startDay: 3, // Wednesday
+                    days: 29,
+                    holidays: {
+                        1: "Poush Sankranti",
+                        15: "Yomari Punhi"
+                    }
+                },
+                { // Magh (January 2026)
+                    nepaliMonth: "Magh",
+                    nepaliYear: 2082,
+                    englishMonth: "January",
+                    englishYear: 2026,
+                    startDay: 4, // Thursday
+                    days: 29,
+                    holidays: {
+                        15: "Maghe Sankranti",
+                        30: "Shree Panchami"
+                    }
+                },
+                { // Falgun (February 2026)
+                    nepaliMonth: "Falgun",
+                    nepaliYear: 2082,
+                    englishMonth: "February",
+                    englishYear: 2026,
+                    startDay: 5, // Friday
+                    days: 30,
+                    holidays: {
+                        15: "Fagu Purnima",
+                        22: "Maha Shivaratri"
+                    }
+                },
+                { // Chaitra (March 2026)
+                    nepaliMonth: "Chaitra",
+                    nepaliYear: 2082,
+                    englishMonth: "March",
+                    englishYear: 2026,
+                    startDay: 0, // Sunday
+                    days: 30,
+                    holidays: {
+                        8: "Ghode Jatra",
+                        25: "Ram Navami",
+                        30: "Chaite Dashain"
+                    }
+                }
+            ];
+            
+            // Start at current month (Asar)
+            let currentMonthIndex = 2;
+            const calendarDays = document.getElementById('calendar-days');
+            const nepaliMonthDisplay = document.getElementById('nepali-month');
+            const englishMonthDisplay = document.getElementById('english-month');
+            
+            // Render calendar for current month
+            function renderCalendar() {
+                const monthData = monthsData[currentMonthIndex];
+                
+                // Update month displays
+                nepaliMonthDisplay.textContent = `${monthData.nepaliMonth} ${monthData.nepaliYear}`;
+                englishMonthDisplay.textContent = `${monthData.englishMonth} ${monthData.englishYear}`;
+                
+                // Clear calendar
+                calendarDays.innerHTML = '';
+                
+                // Create empty slots for days before the first day
+                for (let i = 0; i < monthData.startDay; i++) {
+                    const emptyDay = document.createElement('div');
+                    emptyDay.classList.add('day', 'empty');
+                    calendarDays.appendChild(emptyDay);
+                }
+                
+                // Create days for the month
+                for (let day = 1; day <= monthData.days; day++) {
+                    const dayElement = document.createElement('div');
+                    dayElement.classList.add('day');
+                    dayElement.textContent = day;
+                    
+                    // Calculate day of week (0 = Sunday, 6 = Saturday)
+                    const dayOfWeek = (monthData.startDay + day - 1) % 7;
+                    
+                    // Check if Saturday
+                    if (dayOfWeek === 6) {
+                        dayElement.classList.add('saturday');
+                    }
+                    
+                    // Check if holiday
+                    if (monthData.holidays[day]) {
+                        dayElement.classList.add('holiday');
+                        dayElement.title = monthData.holidays[day];
+                    }
+                    
+                    // Check if today
+                    if (currentMonthIndex === currentNepaliDate.monthIndex && day === currentNepaliDate.day) {
+                        dayElement.classList.add('today');
+                    }
+                    
+                    calendarDays.appendChild(dayElement);
+                }
+            }
+            
+            // Navigation event listeners
+            document.getElementById('prev-month').addEventListener('click', function() {
+                if (currentMonthIndex > 0) {
+                    currentMonthIndex--;
+                    renderCalendar();
+                }
+            });
+            
+            document.getElementById('next-month').addEventListener('click', function() {
+                if (currentMonthIndex < 11) {
+                    currentMonthIndex++;
+                    renderCalendar();
+                }
+            });
+            
+            // Initial render
+            renderCalendar();
+        });
+    </script>
+</body>
+</html>
