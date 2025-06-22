@@ -7,12 +7,14 @@
   <link rel="stylesheet" href="./css/index.css">
   <link rel="stylesheet" href="./css/my-leaves.css" />
     <script src="./js/auth-check.js"></script>
+    <script src="./js/hr.js"></script>
+
 
   
 </head>
 <body>
 
-<nav class="navbar" role="navigation" aria-label="Primary Navigation">
+ <nav class="navbar" role="navigation" aria-label="Primary Navigation">
   <a href="#" class="navbar-brand" aria-label="Leave Portal Home">Leave Portal</a>
 
   <button class="navbar-toggler" aria-controls="navbarMenu" aria-expanded="false" aria-label="Toggle navigation" onclick="toggleMenu()">
@@ -24,7 +26,7 @@
   <ul class="navbar-menu" id="navbarMenu" role="menubar">
     <li role="none"><a href="index.html" role="menuitem" tabindex="0">Home</a></li>
     <li role="none"><a href="my-leaves.html" role="menuitem" tabindex="0">Applied Leaves</a></li>
-    <li role="none"><a href="apply-leave.html" role="menuitem" tabindex="0">Apply</a></li>
+    <li role="none"><a href="apply-leave.html" id="applyLeaveLink" role="menuitem" tabindex="0">Apply</a></li>
     <li class="user-dropdown-container" role="none">
       <button class="user-dropdown-btn" id="userDropdownBtn" aria-haspopup="true" aria-expanded="false">
         <img id="profileImage" src="./img/Default_pfp.jpg" alt="Profile" class="profile-avatar" />
@@ -43,15 +45,16 @@
 </nav>
 <section></section>
 <table class="leaves-table" aria-label="List of your leave requests">
-  <thead>
+<thead>
   <tr>
-    <th>Username</th>
+    <th>User</th>
     <th>Leave Type</th>
     <th>From</th>
     <th>To</th>
     <th>Reason</th>
+    <th>Assigned</th>
     <th>Status</th>
-    <th>Actions</th> 
+    <th>Action</th>
   </tr>
 </thead>
 

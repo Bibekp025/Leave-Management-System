@@ -1,7 +1,5 @@
 from django.db import models
-
-# Create your models here.
-from django.db import models
+from django.conf import settings
 
 class EventCategory(models.Model):
     name = models.CharField(max_length=100)
@@ -9,8 +7,7 @@ class EventCategory(models.Model):
 
     def __str__(self):
         return self.name
-from django.conf import settings
-from django.db import models
+
 
 class Event(models.Model):
     STATUS_CHOICES = [
@@ -29,6 +26,8 @@ class Event(models.Model):
     location = models.CharField(max_length=255)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='upcoming')
     created_at = models.DateTimeField(auto_now_add=True)
+
+    image = models.ImageField(upload_to='event_images/', null=True, blank=True)  # <== Added this line
 
     def __str__(self):
         return self.title

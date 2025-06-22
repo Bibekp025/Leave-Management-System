@@ -1,3 +1,4 @@
+// 🔐 Fetch current user info with token
 async function getCurrentUser() {
   try {
     const response = await fetch('http://127.0.0.1:8000/user/self/', {
@@ -13,6 +14,7 @@ async function getCurrentUser() {
   }
 }
 
+// 📥 Load dropdown options for assigned users based on current user category
 async function loadAssignedUsers() {
   try {
     const currentUser = await getCurrentUser();
@@ -40,7 +42,7 @@ async function loadAssignedUsers() {
     const users = await response.json();
 
     const select = document.getElementById('assignedTeachers');
-    select.innerHTML = ''; 
+    select.innerHTML = '';
 
     users.forEach(user => {
       const option = document.createElement('option');
@@ -53,6 +55,7 @@ async function loadAssignedUsers() {
   }
 }
 
+// 📅 Validate from/to dates
 function validateDates(fromDateStr, toDateStr) {
   const errorFromDate = document.getElementById('error-fromDate');
   const errorToDate = document.getElementById('error-toDate');
@@ -79,9 +82,9 @@ function validateDates(fromDateStr, toDateStr) {
   return true;
 }
 
-// date select garne fxn
+// 📅 Setup date pickers with min date
 function setupDatePickers() {
-  const today = new Date().toISOString().split('T')[0]; 
+  const today = new Date().toISOString().split('T')[0];
   const fromDateInput = document.getElementById('fromDate');
   const toDateInput = document.getElementById('toDate');
 
@@ -95,73 +98,80 @@ function setupDatePickers() {
         toDateInput.value = fromDateInput.value;
       }
     } else {
-      
       toDateInput.min = today;
     }
   });
 }
 
+// 🚀 Load everything on page ready
 window.addEventListener('DOMContentLoaded', () => {
   loadAssignedUsers();
   setupDatePickers();
 });
 
+// 📤 Submit leave form
 document.querySelector('.leave-form').addEventListener('submit', async function (e) {
   e.preventDefault();
 
-  
+  // Clear errors
   document.querySelectorAll('.error-message').forEach(el => el.textContent = '');
 
   const leaveType = document.getElementById('leaveType').value;
   const fromDate = document.getElementById('fromDate').value;
   const toDate = document.getElementById('toDate').value;
   const reason = document.getElementById('reason').value.trim();
-
   const selectedOptions = document.getElementById('assignedTeachers').selectedOptions;
-  const assignedTeachers = Array.from(selectedOptions).map(option => option.value);
+const assignedUsers = Array.from(selectedOptions).map(option => parseInt(option.value));
 
   let valid = true;
 
-  
   if (!leaveType) {
     document.getElementById('error-leaveType').textContent = 'Please select a leave type.';
     valid = false;
   }
 
-  
   if (!validateDates(fromDate, toDate)) {
     valid = false;
   }
 
-  
   if (!reason) {
     document.getElementById('error-reason').textContent = 'Please enter a reason.';
     valid = false;
   }
 
-
-  if (assignedTeachers.length === 0) {
+  if (assignedUsers.length === 0) {
     document.getElementById('error-assignedTeachers').textContent = 'Please select at least one assigned user.';
     valid = false;
   }
 
-  if (!valid) {
-    return; 
+  if (!valid) return;
+
+  const currentUser = await getCurrentUser();
+  if (!currentUser) {
+    alert("Unable to fetch current user.");
+    return;
   }
 
-  const formData = {
-    leave_type_id: leaveType,
-    start_date: fromDate,
-    end_date: toDate,
-    reason: reason,
-    assigned_teachers: assignedTeachers
-  };
+  // 📦 Prepare payload dynamically
+const formData = {
+  leave_type: leaveType,
+  from_date: fromDate,
+  to_date: toDate,
+  reason: reason
+};
+
+if (currentUser.category === 'student') {
+  formData.assigned_teachers = assignedUsers; // ✅ already correct
+} else if (currentUser.category === 'teacher') {
+  formData.assigned_hrs = assignedUsers; // ✅ fix: use 'assigned_hrs'
+}
+console.log('Submitting leave with data:', formData);
 
   const submitBtn = e.target.querySelector('button[type="submit"]');
-  submitBtn.disabled = true; 
+  submitBtn.disabled = true;
 
   try {
-    const response = await fetch('http://127.0.0.1:8000/leave/leaves/', {
+    const response = await fetch('http://127.0.0.1:8000/leave/', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -177,7 +187,7 @@ document.querySelector('.leave-form').addEventListener('submit', async function 
       e.target.reset();
       window.location.href = "my-leaves.html";
     } else {
-
+      // 🧾 Show validation errors from backend
       if (data.leave_type_id) {
         document.getElementById('error-leaveType').textContent = data.leave_type_id.join(' ');
       }
@@ -193,12 +203,15 @@ document.querySelector('.leave-form').addEventListener('submit', async function 
       if (data.assigned_teachers) {
         document.getElementById('error-assignedTeachers').textContent = data.assigned_teachers.join(' ');
       }
+      if (data.assigned_hr) {
+        document.getElementById('error-assignedTeachers').textContent = data.assigned_hr.join(' ');
+      }
     }
   } catch (error) {
     console.error('Error submitting leave:', error);
     alert('There was an error submitting your leave. Please try again.');
     console.log('Submitted Data:', formData);
   } finally {
-    submitBtn.disabled = false; 
+    submitBtn.disabled = false;
   }
 });

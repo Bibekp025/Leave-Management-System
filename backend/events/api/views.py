@@ -14,7 +14,7 @@ from notification.models import Notification
 class EventCategoryListCreateAPIView(generics.ListCreateAPIView):
     queryset = EventCategory.objects.all()
     serializer_class = EventCategorySerializer
-    permission_classes = [permissions.IsAuthenticated, permissions.IsAdminUser]  # Replace with custom if needed
+    permission_classes = [permissions.IsAuthenticated]  # Replace with custom if needed
 
 
 # -------------------------------

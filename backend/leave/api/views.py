@@ -62,7 +62,7 @@ class UserLeaveListCreateAPIView(generics.ListCreateAPIView):
                 sender=self.request.user,
                 notification_type='leave',
                 title=f"New Leave Request from {self.request.user.username}",
-                message=f"{self.request.user.username} has requested leave from {leave.start_date} to {leave.end_date}.",
+                message=f"{self.request.user.username} has requested leave from {leave.from_date} to {leave.to_date}.",
                 link=f"/leaves/{leave.id}/"
             )
 

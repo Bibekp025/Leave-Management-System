@@ -21,7 +21,7 @@ class EventSerializer(serializers.ModelSerializer):
     class Meta:
         model = Event
         fields = [
-            'id', 'title', 'description', 'category', 'category_id',
+            'id', 'title','image', 'description', 'category', 'category_id',
             'organizer', 'start_time', 'end_time',
             'location', 'status', 'created_at'
         ]

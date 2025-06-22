@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="./css/event.css">
     <script src="./js/auth-check.js"></script>
     <script src="js/index.js"></script>
+    <script src="./js/hr.js"></script>
 </head>
 <body>
 
@@ -23,7 +24,7 @@
   <ul class="navbar-menu" id="navbarMenu" role="menubar">
     <li role="none"><a href="index.html" role="menuitem" tabindex="0">Home</a></li>
     <li role="none"><a href="my-leaves.html" role="menuitem" tabindex="0">Applied Leaves</a></li>
-    <li role="none"><a href="apply-leave.html" role="menuitem" tabindex="0">Apply</a></li>
+    <li role="none"><a href="apply-leave.html" id="applyLeaveLink" role="menuitem" tabindex="0">Apply</a></li>
     <li class="user-dropdown-container" role="none">
       <button class="user-dropdown-btn" id="userDropdownBtn" aria-haspopup="true" aria-expanded="false">
         <img id="profileImage" src="./img/Default_pfp.jpg" alt="Profile" class="profile-avatar" />
@@ -48,6 +49,21 @@
   <button class="scroll-now-btn" onclick="scrollToEvents()" aria-label="Scroll to events">
     Scroll Now &#8595;
   </button>
+
+  <div class="search-filter-bar">
+  <input type="text" id="searchInput" placeholder="Search by title..." />
+  <select id="categoryFilter">
+    <option value="">All Categories</option>
+  </select>
+  <select id="statusFilter">
+    <option value="">All Statuses</option>
+    <option value="upcoming">Upcoming</option>
+    <option value="ongoing">Ongoing</option>
+    <option value="completed">Completed</option>
+    <option value="cancelled">Cancelled</option>
+  </select>
+  <button id="filterButton">Filter</button>
+</div>
 
   <div id="eventsContainer" class="event-cards">
   </div>
@@ -122,6 +138,7 @@
     }
 });
   </script>
+  
   <script src="./js/event.js"></script>
 </body>
 </html>

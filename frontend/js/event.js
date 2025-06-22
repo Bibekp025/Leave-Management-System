@@ -1,10 +1,36 @@
 document.addEventListener("DOMContentLoaded", function () {
+  fetchCategories();
   fetchEvents();
+
+  // Attach filter button click handler
+  document.getElementById("filterButton").addEventListener("click", fetchEvents);
 });
 
 function fetchEvents() {
-  fetch("http://127.0.0.1:8000/events/events/")
-    .then((response) => response.json())
+  const token = localStorage.getItem("authToken");
+
+  const search = document.getElementById("searchInput").value.trim();
+  const category = document.getElementById("categoryFilter").value;
+  const status = document.getElementById("statusFilter").value;
+
+  let url = new URL("http://127.0.0.1:8000/events/");
+
+  if (category) url.searchParams.append("category", category);
+  if (status) url.searchParams.append("status", status);
+  if (search) url.searchParams.append("search", search);
+
+  fetch(url, {
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Token ${token}`
+    }
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Failed to fetch events");
+      }
+      return response.json();
+    })
     .then((data) => {
       const eventsContainer = document.getElementById("eventsContainer");
       eventsContainer.innerHTML = "";
@@ -37,7 +63,6 @@ function fetchEvents() {
           });
         }
 
-        // Image modal
         const img = eventCard.querySelector(".event-image");
         img.addEventListener("click", () => openModal(event.image || './img/placeholder.jpg'));
       });
@@ -45,6 +70,27 @@ function fetchEvents() {
     .catch((error) => {
       console.error("Error fetching events:", error);
     });
+}
+
+function fetchCategories() {
+  const token = localStorage.getItem("authToken");
+
+  fetch("http://127.0.0.1:8000/events/categories/", {
+    headers: {
+      "Authorization": `Token ${token}`
+    }
+  })
+    .then(response => response.json())
+    .then(categories => {
+      const categoryFilter = document.getElementById("categoryFilter");
+      categories.forEach(category => {
+        const option = document.createElement("option");
+        option.value = category.id;
+        option.textContent = category.name;
+        categoryFilter.appendChild(option);
+      });
+    })
+    .catch(error => console.error("Error fetching categories:", error));
 }
 
 function formatDateTime(dateTimeStr) {
@@ -68,9 +114,6 @@ function openModal(imageUrl) {
 function closeModal() {
   document.getElementById("imageModal").style.display = "none";
 }
-
-
-
 
 function scrollToEvents() {
   document.getElementById("eventsContainer").scrollIntoView({ behavior: "smooth", block: "start" });
