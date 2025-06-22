@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Leave Management System</title>
+  <link rel="stylesheet" href="/frontend/css/index1.css">
+  <link href='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.min.css' rel='stylesheet' />
+  <script src="./js/auth-check.js"></script>
+</head>
+<body>
+  <div class="container">
+    <aside class="sidebar">
+      <div class="logo">
+        <img src="IMG_4588.jpg" alt="LM" />
+      </div>
+
+      <nav class="main-nav">
+        <a href="index.html" class="active">Dashboard</a>
+        <a href="my-leaves.html">Applied Leaves</a>
+        <a href="apply-leave.html">Apply Leaves</a>
+      </nav>
+
+      <div class="bottom-nav">
+        <button id="logoutBtn" class="logout">Logout</button>
+        
+        <nav class="extra-nav">
+          <button id="profileBtn">Profile</button>
+        </nav>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header>
+        <div class="system-header">
+          <h1 class="animated-title">Leave Management System</h1>
+          <p id="slogan" class="slogan-text">Managing your time, efficiently.</p>
+        </div>
+        <div class="profile">
+          <img id="profileImage" src="./img/Default_pfp.jpg" alt="Profile" class="profile-avatar" />
+          <span id="userFirstName">User</span>
+        </div>
+      </header>
+
+      <div class="dashboard-body">
+        <div class="left-column">
+          <section class="cards">
+            <div class="card green">
+              <h1>10</h1>
+              <p>Available Leaves</p>
+              <button>Apply</button>
+            </div>
+            <div class="card red">
+              <h1>4</h1>
+              <p>Missing Swipe card</p>
+              <button>Regularize</button>
+            </div>
+            <div class="card pink">
+              <h1>3</h1>
+              <p>Missing Timesheet</p>
+              <button>Apply</button>
+            </div>
+          </section>
+          
+          <section class="alerts">
+            <div>You were absent on 10 Feb 2025 <button>Apply Leave</button></div>
+            <div>2 Comp‑off days expire on 5 Mar 2025 <button>Apply Leave</button></div>
+          </section>
+
+          <section class="holiday">
+            <h3>Next Holidays</h3>
+            <p>Holi - 22 Mar DIwas(Mon)</p>
+          </section>
+        
+        </div>
+        <div class="right-column">
+    <section class="calendar-container">
+      <div id='calendar'>
+         <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 20px;
+        }
+        
+        .calendar-container {
+            background-color: #fff;
+            border-radius: 20px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+            padding: 25px;
+            width: 100%;
+            max-width: 350px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        
+        .calendar-container:hover {
+            transform: translateY(-5px);
+        }
+        
+        .header {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+            position: relative;
+        }
+        
+        .year-title {
+            margin: 10px 0;
+            color: #2c3e50;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        
+        .date-display {
+            font-size: 18px;
+            color: #7f8c8d;
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+        
+        .nepali-date {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        
+        .current-date-display {
+            font-size: 16px;
+            margin-top: 10px;
+            padding: 8px;
+            background-color: #f8f9fa;
+            border-radius: 10px;
+        }
+        
+        .current-nepali {
+            color: #e74c3c;
+            font-weight: 500;
+        }
+        
+        .current-english {
+            color: #3498db;
+            font-weight: 500;
+        }
+        
+        .nav-buttons {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 10px;
+        }
+        
+        .nav-btn {
+            background: #3498db;
+            color: white;
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: all 0.2s;
+        }
+        
+        .nav-btn:hover {
+            background: #2980b9;
+            transform: scale(1.1);
+        }
+        
+        .calendar {
+            width: 100%;
+        }
+        
+        .weekdays {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .weekdays div {
+            padding: 8px 0;
+        }
+        
+        .days {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+        }
+        
+        .day {
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: default;
+            transition: all 0.2s ease;
+            position: relative;
+            background-color: #f8f9fa;
+        }
+        
+        .day:hover {
+            background-color: #e3e8f0;
+            transform: scale(1.1);
+        }
+        
+        .day.empty {
+            background-color: transparent;
+            cursor: default;
+        }
+        
+        .day.empty:hover {
+            transform: none;
+            background-color: transparent;
+        }
+        
+        .saturday, .holiday {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        
+        .holiday::after {
+            content: '';
+            position: absolute;
+            bottom: 5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 5px;
+            height: 5px;
+            background-color: #e74c3c;
+            border-radius: 50%;
+        }
+        
+        .today {
+            background-color: #3498db;
+            color: white;
+            box-shadow: 0 0 10px rgba(52, 152, 219, 0.5);
+        }
+        
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 2px solid #f0f0f0;
+            font-size: 13px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .color-box {
+            width: 12px;
+            height: 12px;
+            border-radius: 3px;
+        }
+        
+        .saturday-color {
+            background-color: #e74c3c;
+        }
+        
+        .holiday-color {
+            background-color: #e74c3c;
+            position: relative;
+        }
+        
+        .holiday-color::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 5px;
+            height: 5px;
+            background-color: white;
+            border-radius: 50%;
+        }
+        
+        .today-color {
+            background-color: #3498db;
+        }
+        
+        .footer {
+            margin-top: 15px;
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+  </style>
+</head>
+<body>
+  <div class="calendar-container">
+    <div class="year-title">Nepali Calendar 2082 BS</div>
+    <div class="header">
+      <div class="nav-buttons">
+        <button class="nav-btn" id="prev-month">&lt;</button>
+        <button class="nav-btn" id="next-month">&gt;</button>
+      </div>
+      <div class="date-display">
+        <span class="nepali-date" id="nepali-month">Asar 2082</span> /
+        <span class="english-date" id="english-month">June 2025</span>
+      </div>
+      <div class="current-date-display">
+        <span class="current-nepali" id="current-nepali">Today: Asar 6, 2082</span><br/>
+        <span class="current-english" id="current-english">June 20, 2025</span>
+      </div>
+    </div>
+
+    <div class="calendar">
+      <div class="weekdays">
+        <div>Sun</div>
+        <div>Mon</div>
+        <div>Tue</div>
+        <div>Wed</div>
+        <div>Thu</div>
+        <div>Fri</div>
+        <div class="saturday">Sat</div>
+      </div>
+      <div class="days" id="calendar-days">
+        <!-- JS will populate -->
+      </div>
+    </div>
+
+    <div class="legend">
+      <div class="legend-item">
+        <div class="color-box saturday-color"></div>
+        <span>Saturday</span>
+      </div>
+      <div class="legend-item">
+        <div class="color-box holiday-color"></div>
+        <span>Holiday</span>
+      </div>
+      <div class="legend-item">
+        <div class="color-box today-color"></div>
+        <span>Today</span>
+      </div>
+    </div>
+
+    <div class="footer">Dates shown in English numerals</div>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const nepaliMonths = [
+        "Baisakh", "Jestha", "Asar", "Shrawan",
+        "Bhadra", "Aswin", "Kartik", "Mangsir",
+        "Poush", "Magh", "Falgun", "Chaitra"
+      ];
+
+      const englishMonths = [
+        "January", "February", "March", "April",
+        "May", "June", "July", "August",
+        "September", "October", "November", "December"
+      ];
+
+      const monthsData = [
+        {
+          nepaliMonth: "Baisakh",
+          nepaliYear: 2082,
+          englishMonth: "April",
+          englishYear: 2025,
+          startDay: 0,
+          days: 32,
+          holidays: {
+            1: "Nepali New Year",
+            8: "Loktantra Diwas",
+            14: "Nawabarsha",
+            22: "Ram Nawami",
+            29: "Ghode Jatra"
+          }
+        },
+        {
+          nepaliMonth: "Jestha",
+          nepaliYear: 2082,
+          englishMonth: "May",
+          englishYear: 2025,
+          startDay: 4,
+          days: 31,
+          holidays: {
+            15: "Buddha Jayanti",
+            29: "Ganatantra Diwas"
+          }
+        },
+        {
+          nepaliMonth: "Asar",
+          nepaliYear: 2082,
+          englishMonth: "June",
+          englishYear: 2025,
+          startDay: 0,
+          days: 32,
+          holidays: {
+            15: "Ropain Day",
+            29: "Dahin"
+          }
+        },
+        {
+          nepaliMonth: "Shrawan",
+          nepaliYear: 2082,
+          englishMonth: "July",
+          englishYear: 2025,
+          startDay: 4,
+          days: 31,
+          holidays: {
+            5: "Nag Panchami",
+            26: "Janai Purnima"
+          }
+        },
+        {
+          nepaliMonth: "Bhadra",
+          nepaliYear: 2082,
+          englishMonth: "August",
+          englishYear: 2025,
+          startDay: 0,
+          days: 31,
+          holidays: {
+            1: "Gai Jatra",
+            15: "Krishna Janmashtami",
+            30: "Haritalika Teej"
+          }
+        },
+        {
+          nepaliMonth: "Aswin",
+          nepaliYear: 2082,
+          englishMonth: "September",
+          englishYear: 2025,
+          startDay: 3,
+          days: 31,
+          holidays: {
+            1: "Ghatasthapana",
+            7: "Fulpati",
+            8: "Maha Asthami",
+            9: "Maha Navami",
+            10: "Vijaya Dashami",
+            15: "Kojagrat Purnima"
+          }
+        },
+        {
+          nepaliMonth: "Kartik",
+          nepaliYear: 2082,
+          englishMonth: "October",
+          englishYear: 2025,
+          startDay: 6,
+          days: 30,
+          holidays: {
+            1: "Kag Tihar",
+            2: "Kukur Tihar",
+            3: "Laxmi Puja",
+            4: "Gobardhan Puja",
+            5: "Bhai Tika"
+          }
+        },
+        {
+          nepaliMonth: "Mangsir",
+          nepaliYear: 2082,
+          englishMonth: "November",
+          englishYear: 2025,
+          startDay: 1,
+          days: 30,
+          holidays: {
+            15: "Udhauli Parva",
+            23: "Chhath Parva"
+          }
+        },
+        {
+          nepaliMonth: "Poush",
+          nepaliYear: 2082,
+          englishMonth: "December",
+          englishYear: 2025,
+          startDay: 3,
+          days: 29,
+          holidays: {
+            1: "Poush Sankranti",
+            15: "Yomari Punhi"
+          }
+        },
+        {
+          nepaliMonth: "Magh",
+          nepaliYear: 2082,
+          englishMonth: "January",
+          englishYear: 2026,
+          startDay: 4,
+          days: 29,
+          holidays: {
+            15: "Maghe Sankranti",
+            30: "Shree Panchami"
+          }
+        },
+        {
+          nepaliMonth: "Falgun",
+          nepaliYear: 2082,
+          englishMonth: "February",
+          englishYear: 2026,
+          startDay: 5,
+          days: 30,
+          holidays: {
+            15: "Fagu Purnima",
+            22: "Maha Shivaratri"
+          }
+        },
+        {
+          nepaliMonth: "Chaitra",
+          nepaliYear: 2082,
+          englishMonth: "March",
+          englishYear: 2026,
+          startDay: 0,
+          days: 30,
+          holidays: {
+            8: "Ghode Jatra",
+            25: "Ram Navami",
+            30: "Chaite Dashain"
+          }
+        }
+      ];
+
+      const today = new Date();
+      const currentADYear = today.getFullYear();
+      const currentADMonth = today.getMonth();
+      const currentADDay = today.getDate();
+
+      let currentMonthIndex = monthsData.findIndex(month =>
+        month.englishYear === currentADYear &&
+        month.englishMonth === englishMonths[currentADMonth]
+      );
+
+      if (currentMonthIndex === -1) currentMonthIndex = 0;
+
+      const calendarDays = document.getElementById('calendar-days');
+      const nepaliMonthDisplay = document.getElementById('nepali-month');
+      const englishMonthDisplay = document.getElementById('english-month');
+      const nepaliTodayDisplay = document.getElementById('current-nepali');
+      const englishTodayDisplay = document.getElementById('current-english');
+
+      function renderCalendar() {
+        const monthData = monthsData[currentMonthIndex];
+        nepaliMonthDisplay.textContent = `${monthData.nepaliMonth} ${monthData.nepaliYear}`;
+        englishMonthDisplay.textContent = `${monthData.englishMonth} ${monthData.englishYear}`;
+
+        calendarDays.innerHTML = '';
+
+        for (let i = 0; i < monthData.startDay; i++) {
+          const empty = document.createElement('div');
+          empty.classList.add('day', 'empty');
+          calendarDays.appendChild(empty);
+        }
+
+        for (let day = 1; day <= monthData.days; day++) {
+          const dayEl = document.createElement('div');
+          dayEl.classList.add('day');
+          dayEl.textContent = day;
+
+          const dayOfWeek = (monthData.startDay + day - 1) % 7;
+
+          if (dayOfWeek === 6) dayEl.classList.add('saturday');
+          if (monthData.holidays[day]) {
+            dayEl.classList.add('holiday');
+            dayEl.title = monthData.holidays[day];
+          }
+
+const bsDayOffset = currentADDay - 14; 
+if (
+  monthData.englishYear === currentADYear &&
+  monthData.englishMonth === englishMonths[currentADMonth] &&
+  day === bsDayOffset
+) {
+  dayEl.classList.add('today');
+  nepaliTodayDisplay.textContent = `Today: ${monthData.nepaliMonth} ${bsDayOffset}, ${monthData.nepaliYear}`;
+  englishTodayDisplay.textContent = `${monthData.englishMonth} ${currentADDay}, ${monthData.englishYear}`;
+}
+
+          calendarDays.appendChild(dayEl);
+        }
+      }
+
+      document.getElementById('prev-month').addEventListener('click', function () {
+        if (currentMonthIndex > 0) {
+          currentMonthIndex--;
+          renderCalendar();
+        }
+      });
+
+      document.getElementById('next-month').addEventListener('click', function () {
+        if (currentMonthIndex < 11) {
+          currentMonthIndex++;
+          renderCalendar();
+        }
+      });
+
+      renderCalendar();
+    });
+    let lastCheckedDate = new Date().getDate();
+
+setInterval(() => {
+    const now = new Date();
+    const currentDate = now.getDate();
+
+    if (currentDate !== lastCheckedDate) {
+    
+        lastCheckedDate = currentDate;
+
+        location.reload(); 
+    }
+}, 60000); 
+  </script>
+      </div>
+    </section>
+  </div>
+
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // dynamic.js
+    const slogans = [
+      "Managing your time, efficiently.",
+      "Because every day counts.",
+      "Leave made simple and smart.",
+      "Track. Apply. Relax.",
+      "Your time, your control."
+    ];
+
+    let sloganIndex = 0;
+    const sloganElement = document.getElementById("slogan");
+
+    function rotateSlogan() {
+      sloganIndex = (sloganIndex + 1) % slogans.length;
+      sloganElement.style.opacity = 0;
+
+      setTimeout(() => {
+        sloganElement.textContent = slogans[sloganIndex];
+        sloganElement.style.opacity = 1;
+      }, 500);
+    }
+
+    // Change every 4 seconds
+    setInterval(rotateSlogan, 4000);
+
+    // Logout functionality
+    document.addEventListener("DOMContentLoaded", function () {
+      const logoutBtn = document.getElementById("logoutBtn");
+      const profileBtn = document.getElementById("profileBtn");
+
+      if (logoutBtn) {
+        logoutBtn.addEventListener("click", function () {
+          localStorage.removeItem("authToken");
+          window.location.href = "login.html"; // or your login page
+        });
+      }
+
+      if (profileBtn) {
+        profileBtn.addEventListener("click", function () {
+          window.location.href = "profile.html"; // or your profile page
+        });
+      }
+    });
+  </script>
+  <script src="/calander.js"></script>
+</body>
+</html>
