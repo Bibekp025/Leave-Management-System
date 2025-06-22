@@ -62,7 +62,7 @@ document.addEventListener("DOMContentLoaded", function () {
     .then(user => {
       const userCategory = user.category; 
       console.log(userCategory)
-      return fetch("http://127.0.0.1:8000/leave/", {
+      return fetch("http://127.0.0.1:8000/leave/leaves/", {
         headers: {
           "Authorization": `Token ${token}`,
           "Content-Type": "application/json"

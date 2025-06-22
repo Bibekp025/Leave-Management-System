@@ -39,11 +39,11 @@ class EventListCreateAPIView(generics.ListCreateAPIView):
         # Optionally notify all students or a specific group
         from django.contrib.auth import get_user_model
         User = get_user_model()
-        students = User.objects.filter(role='student')
+        recipients = User.objects.all()
 
-        for student in students:
+        for recipient in recipients:
             Notification.objects.create(
-                recipient=student,
+                recipient=recipient,
                 sender=self.request.user,
                 notification_type='event',
                 title=f"New Event: {event.title}",

@@ -2,17 +2,20 @@ from rest_framework import permissions
 from .serializers import LeaveSerializer, LeaveTypeSerializer
 from ..models import Leave, LeaveType
 from rest_framework import generics
-from rest_framework.response import Response
-from rest_framework import status
 from django.contrib.auth import get_user_model
-from .permissions import CanCreateLeavePermission, CanViewLeavePermission, CanUpdateLeavePermission, CanCreateLeaveTypePermission
+from .permissions import (
+    CanCreateLeavePermission,
+    CanViewLeavePermission,
+    CanUpdateLeavePermission,
+    CanCreateLeaveTypePermission,
+)
 from notification.models import Notification
 
 User = get_user_model()
 
+
 class LeaveTypeListCreateAPIView(generics.ListCreateAPIView):
     serializer_class = LeaveTypeSerializer
-    permission_classes = [permissions.IsAuthenticated]
     queryset = LeaveType.objects.all()
 
     def get_permissions(self):
@@ -20,14 +23,35 @@ class LeaveTypeListCreateAPIView(generics.ListCreateAPIView):
             return [CanCreateLeaveTypePermission()]
         return [permissions.IsAuthenticated()]
 
+
 class UserLeaveListCreateAPIView(generics.ListCreateAPIView):
     serializer_class = LeaveSerializer
-    permission_classes = [CanCreateLeaveTypePermission]
     queryset = Leave.objects.all()
+
     def get_permissions(self):
         if self.request.method == 'POST':
             return [CanCreateLeavePermission()]
-        return [CanViewLeavePermission]
+        return [permissions.IsAuthenticated()]  # Use IsAuthenticated for list view
+
+    def get_queryset(self):
+        user = self.request.user
+        if not user.is_authenticated:
+            return Leave.objects.none()
+
+        if user.category == 'student':
+            return Leave.objects.filter(user=user)
+
+        elif user.category == 'teacher':
+            return Leave.objects.filter(assigned_teachers=user)
+
+        elif user.category == 'hr':
+            return Leave.objects.filter(assigned_hrs=user)
+
+        elif user.category == 'admin' or user.is_superuser:
+            return Leave.objects.all()
+
+        return Leave.objects.none()
+
     def perform_create(self, serializer):
         leave = serializer.save(user=self.request.user)
 
@@ -38,7 +62,7 @@ class UserLeaveListCreateAPIView(generics.ListCreateAPIView):
                 sender=self.request.user,
                 notification_type='leave',
                 title=f"New Leave Request from {self.request.user.username}",
-                message=f"{self.request.user.username} has requested leave from {leave.from_date} to {leave.to_date}.",
+                message=f"{self.request.user.username} has requested leave from {leave.start_date} to {leave.end_date}.",
                 link=f"/leaves/{leave.id}/"
             )
 
@@ -47,6 +71,7 @@ class UserLeaveRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIVie
     serializer_class = LeaveSerializer
     permission_classes = [CanUpdateLeavePermission]
     queryset = Leave.objects.all()
+
     def perform_update(self, serializer):
         leave = serializer.save()
 
@@ -59,5 +84,3 @@ class UserLeaveRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIVie
             message=f"{self.request.user.username} has updated your leave request.",
             link=f"/leaves/{leave.id}/"
         )
-
-    
