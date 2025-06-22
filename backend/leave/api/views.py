@@ -12,8 +12,13 @@ User = get_user_model()
 
 class LeaveTypeListCreateAPIView(generics.ListCreateAPIView):
     serializer_class = LeaveTypeSerializer
-    permission_classes = [CanCreateLeaveTypePermission]
+    permission_classes = [permissions.IsAuthenticated]
     queryset = LeaveType.objects.all()
+
+    def get_permissions(self):
+        if self.request.method == 'POST':
+            return [CanCreateLeaveTypePermission()]
+        return [permissions.IsAuthenticated()]
 
 class UserLeaveListCreateAPIView(generics.ListCreateAPIView):
     serializer_class = LeaveSerializer
