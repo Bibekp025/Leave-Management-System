@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Dashboard</title>
+    <link rel="stylesheet" href="./css/index.css">
+
+</head>
+<body>
+    <div class="container">
+        <!-- Enhanced Sidebar -->
+        <div class="sidebar">
+            <div class="logo">LM</div>
+            <div class="nav-group">
+                <div class="nav-item active" data-page="dashboard">
+                    <div class="nav-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>
+                        </svg>
+                    </div>
+                    <div class="nav-label">Dashboard</div>
+                </div>
+                <div class="nav-item" data-page="employees">
+                    <div class="nav-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M16 4c0-1.11.89-2 2-2s2 .89 2 2-.89 2-2 2-2-.89-2-2zm4 18v-6h2.5l-2.54-7.63A1.5 1.5 0 0 0 18.54 8H17c-.8 0-1.54.37-2.01 1.01l-.74 1.48A2 2 0 0 0 16 12.5V16c0 .55.45 1 1 1s1-.45 1-1v-3.5c0-.28.22-.5.5-.5s.5.22.5.5V22h2zM12.5 11.5c.83 0 1.5-.67 1.5-1.5s-.67-1.5-1.5-1.5S11 9.17 11 10s.67 1.5 1.5 1.5zM5.5 6c1.11 0 2-.89 2-2s-.89-2-2-2-2 .89-2 2 .89 2 2 2zm1.5 16v-7H9l-1.5-4.5c-.28-.83-1.03-1.5-1.92-1.5H3.92c-.89 0-1.64.67-1.92 1.5L.5 15H3v7h4z"/>
+                        </svg>
+                    </div>
+                    <div class="nav-label">Apply Leave</div>
+                </div>
+                <div class="nav-item" data-page="leaves">
+                    <div class="nav-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>
+                        </svg>
+                    </div>
+                    <div class="nav-label">My Leaves</div>
+                </div>
+                <div class="nav-item" data-page="approve">
+                    <div class="nav-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+                        </svg>
+                    </div>
+                    <div class="nav-label">Approved leaves</div>
+                </div>
+            </div>
+            
+            <div class="logout-btn" onclick="handleSidebarLogout()">
+                <div class="nav-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.59L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/>
+                    </svg>
+                </div>
+                <div class="nav-label">Logout</div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Enhanced Header -->
+            <div class="header">
+                <div class="header-right">
+                    <div class="notification-btn">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/>
+                        </svg>
+                    </div>
+                    <div class="user-menu" onclick="toggleUserDropdown()">
+                        <div class="user-avatar">U</div>
+                        <span class="user-name">User</span>
+                        <span class="dropdown-arrow">▼</span>
+                        <div class="user-dropdown" id="userDropdown">
+                            <div class="dropdown-item" onclick="handleProfile()">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                                </svg>
+                                Profile
+                            </div>
+                            <div class="dropdown-divider"></div>
+                            <div class="dropdown-item logout-item" onclick="handleLogout()">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.59L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/>
+                                </svg>
+                                Logout
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Enhanced Dashboard Content -->
+            <div class="dashboard-content">
+                <!-- Left Section -->
+                <div class="left-section">
+                    <!-- Stats Cards -->
+                    <div class="stats-grid">
+                        <div class="stat-card total">
+                            <div class="stat-number">10</div>
+                            <div class="stat-label">Total</div>
+                            <div class="stat-sublabel">DAYS</div>
+                        </div>
+                        <div class="stat-card available">
+                            <div class="stat-number">10</div>
+                            <div class="stat-label">Available</div>
+                            <div class="stat-sublabel">Leave</div>
+                            <button class="apply-leave-btn">Apply Leave</button>
+                        </div>
+                        <div class="stat-card applied">
+                            <div class="stat-number">4</div>
+                            <div class="stat-label">Applied</div>
+                            <div class="stat-sublabel">Leave</div>
+                        </div>
+                        <div class="stat-card approved">
+                            <div class="stat-number">10</div>
+                            <div class="stat-label">Approved</div>
+                            <div class="stat-sublabel">Leave</div>
+                        </div>
+                    </div>
+
+                    <!-- Events Section -->
+                    <div class="events-section">
+                        <div class="events-header">
+                            <div class="search-container">
+                                <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+                                </svg>
+                                <input type="text" class="search-input" placeholder="Search Events" id="searchEvents">
+                            </div>
+                            <select class="category-select" id="eventCategory">
+                                <option value="">Event Category</option>
+                                <option value="party">Company Party</option>
+                                <option value="training">Training</option>
+                                <option value="meeting">Meetings</option>
+                            </select>
+                        </div>
+                        
+                        <div class="events-content">
+                            <div class="events-navigation">
+                                <button class="nav-button" onclick="previousEvents()">‹</button>
+                                <button class="nav-button" onclick="nextEvents()">›</button>
+                            </div>
+                            
+                            <div class="events-grid" id="eventsGrid">
+                                <!-- Events will be populated by JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Sidebar -->
+                <div class="right-sidebar">
+                    <!-- Calendar Widget -->
+                    <div class="calendar-widget">
+  <div class="calendar-header">
+    <span class="calendar-title">Nepali Calendar 2082</span>
+    <div class="calendar-nav">
+      <button class="calendar-nav-btn" id="prev-month">&lt;</button>
+      <div class="calendar-month-year">
+        <span class="nepali-date" id="nepali-month">Asar 2082</span>
+        <span>/</span>
+        <span class="english-date" id="english-month">June 2025</span>
+      </div>
+      <button class="calendar-nav-btn" id="next-month">&gt;</button>
+    </div>
+  </div>
+  <div class="calendar-content">
+    <div class="calendar-grid">
+      <div class="calendar-day-header">Sun</div>
+      <div class="calendar-day-header">Mon</div>
+      <div class="calendar-day-header">Tue</div>
+      <div class="calendar-day-header">Wed</div>
+      <div class="calendar-day-header">Thu</div>
+      <div class="calendar-day-header">Fri</div>
+      <div class="calendar-day-header">Sat</div>
+    </div>
+    <div class="calendar-grid" id="calendar-days"></div>
+    <div class="calendar-current-date">
+      <span class="current-nepali" id="current-nepali">Today: Asar 15, 2082</span>
+      <span class="current-english" id="current-english">June 15, 2025</span>
+    </div>
+
+  </div>
+</div>
+
+                    <!-- Holiday Widget -->
+                    <div class="holiday-widget">
+                        <div class="holiday-header">Next Holiday</div>
+                        <div id="nextHolidayContent">
+                            <div class="loading">Loading...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Calendar and Holiday Management
+     document.addEventListener("DOMContentLoaded", function () {
+      const nepaliMonths = [
+        "Baisakh", "Jestha", "Asar", "Shrawan",
+        "Bhadra", "Aswin", "Kartik", "Mangsir",
+        "Poush", "Magh", "Falgun", "Chaitra"
+      ];
+
+      const englishMonths = [
+        "January", "February", "March", "April",
+        "May", "June", "July", "August",
+        "September", "October", "November", "December"
+      ];
+
+      const monthsData = [
+        {
+          nepaliMonth: "Baisakh",
+          nepaliYear: 2082,
+          englishMonth: "April",
+          englishYear: 2025,
+          startDay: 0,
+          days: 32,
+          holidays: {
+            1: "Nepali New Year",
+            8: "Loktantra Diwas",
+            14: "Nawabarsha",
+            22: "Ram Nawami",
+            29: "Ghode Jatra"
+          }
+        },
+        {
+          nepaliMonth: "Jestha",
+          nepaliYear: 2082,
+          englishMonth: "May",
+          englishYear: 2025,
+          startDay: 4,
+          days: 31,
+          holidays: {
+            15: "Buddha Jayanti",
+            29: "Ganatantra Diwas"
+          }
+        },
+                {
+          nepaliMonth: "Asar",
+          nepaliYear: 2082,
+          englishMonth: "June-July",
+          englishYear: 2025,
+          startDay: 0,
+          days: 32,
+          holidays: {
+            15: "Ropain Day",
+            29: "Dahin"
+          }
+        },
+        {
+          nepaliMonth: "Shrawan",
+          nepaliYear: 2082,
+          englishMonth: "July",
+          englishYear: 2025,
+          startDay: 3,
+          days: 31,
+          holidays: {
+            5: "Nag Panchami",
+            26: "Janai Purnima"
+          }
+        },
+
+        {
+          nepaliMonth: "Bhadra",
+          nepaliYear: 2082,
+          englishMonth: "August",
+          englishYear: 2025,
+          startDay: 0,
+          days: 31,
+          holidays: {
+            1: "Gai Jatra",
+            15: "Krishna Janmashtami",
+            30: "Haritalika Teej"
+          }
+        },
+        {
+          nepaliMonth: "Aswin",
+          nepaliYear: 2082,
+          englishMonth: "September",
+          englishYear: 2025,
+          startDay: 3,
+          days: 31,
+          holidays: {
+            1: "Ghatasthapana",
+            7: "Fulpati",
+            8: "Maha Asthami",
+            9: "Maha Navami",
+            10: "Vijaya Dashami",
+            15: "Kojagrat Purnima"
+          }
+        },
+        {
+          nepaliMonth: "Kartik",
+          nepaliYear: 2082,
+          englishMonth: "October",
+          englishYear: 2025,
+          startDay: 6,
+          days: 30,
+          holidays: {
+            1: "Kag Tihar",
+            2: "Kukur Tihar",
+            3: "Laxmi Puja",
+            4: "Gobardhan Puja",
+            5: "Bhai Tika"
+          }
+        },
+        {
+          nepaliMonth: "Mangsir",
+          nepaliYear: 2082,
+          englishMonth: "November",
+          englishYear: 2025,
+          startDay: 1,
+          days: 30,
+          holidays: {
+            15: "Udhauli Parva",
+            23: "Chhath Parva"
+          }
+        },
+        {
+          nepaliMonth: "Poush",
+          nepaliYear: 2082,
+          englishMonth: "December",
+          englishYear: 2025,
+          startDay: 3,
+          days: 29,
+          holidays: {
+            1: "Poush Sankranti",
+            15: "Yomari Punhi"
+          }
+        },
+        {
+          nepaliMonth: "Magh",
+          nepaliYear: 2082,
+          englishMonth: "January",
+          englishYear: 2026,
+          startDay: 4,
+          days: 29,
+          holidays: {
+            15: "Maghe Sankranti",
+            30: "Shree Panchami"
+          }
+        },
+        {
+          nepaliMonth: "Falgun",
+          nepaliYear: 2082,
+          englishMonth: "February",
+          englishYear: 2026,
+          startDay: 5,
+          days: 30,
+          holidays: {
+            15: "Fagu Purnima",
+            22: "Maha Shivaratri"
+          }
+        },
+        {
+          nepaliMonth: "Chaitra",
+          nepaliYear: 2082,
+          englishMonth: "March",
+          englishYear: 2026,
+          startDay: 0,
+          days: 30,
+          holidays: {
+            8: "Ghode Jatra",
+            25: "Ram Navami",
+            30: "Chaite Dashain"
+          }
+        }
+      ];
+
+      const today = new Date();
+      const currentADYear = today.getFullYear();
+      const currentADMonth = today.getMonth();
+      const currentADDay = today.getDate();
+
+      // For July 1, 2025 (Asar 17, 2082), we need to show Asar month
+      // Since today is July 1, 2025, but Asar 17 falls in Asar month, show Asar
+      // For July 2025, we want to show Asar month since Asar 17 falls in Asar
+      let currentMonthIndex;
+      if (currentADYear === 2025 && currentADMonth === 6) {
+        // July 2025 - show Asar month (index 2)
+        currentMonthIndex = 2;
+      } else {
+        currentMonthIndex = monthsData.findIndex(month =>
+          month.englishYear === currentADYear &&
+          month.englishMonth === englishMonths[currentADMonth]
+        );
+      }
+
+      if (currentMonthIndex === -1) {
+        // If not found, default to Asar
+        currentMonthIndex = 2;
+      }
+
+      const calendarDays = document.getElementById('calendar-days');
+      const nepaliMonthDisplay = document.getElementById('nepali-month');
+      const englishMonthDisplay = document.getElementById('english-month');
+      const nepaliTodayDisplay = document.getElementById('current-nepali');
+      const englishTodayDisplay = document.getElementById('current-english');
+
+      function renderCalendar() {
+        const monthData = monthsData[currentMonthIndex];
+        nepaliMonthDisplay.textContent = `${monthData.nepaliMonth} ${monthData.nepaliYear}`;
+        englishMonthDisplay.textContent = `${monthData.englishMonth} ${monthData.englishYear}`;
+
+        calendarDays.innerHTML = '';
+
+        for (let i = 0; i < monthData.startDay; i++) {
+          const empty = document.createElement('div');
+          empty.classList.add('calendar-day', 'empty');
+          calendarDays.appendChild(empty);
+        }
+
+        for (let day = 1; day <= monthData.days; day++) {
+          const dayEl = document.createElement('div');
+          dayEl.classList.add('calendar-day');
+          dayEl.textContent = day;
+
+          const dayOfWeek = (monthData.startDay + day - 1) % 7;
+
+          if (dayOfWeek === 6) dayEl.classList.add('saturday');
+          if (monthData.holidays[day]) {
+            dayEl.classList.add('holiday');
+            dayEl.title = monthData.holidays[day];
+          }
+
+          // Check if this is today's date with proper Nepali-English mapping
+          let isToday = false;
+          
+          // Special mapping for July 1, 2025 = Asar 17, 2082
+          if (currentADYear === 2025 && currentADMonth === 6 && currentADDay === 1) {
+            if (monthData.nepaliMonth === "Asar" && monthData.nepaliYear === 2082 && day === 17) {
+              isToday = true;
+            }
+          } else {
+            // For other dates, use the standard logic
+            isToday = (
+              monthData.englishYear === currentADYear &&
+              monthData.englishMonth === englishMonths[currentADMonth] &&
+              day === currentADDay
+            );
+          }
+          
+          if (isToday) {
+            dayEl.classList.add('today');
+            if (currentADYear === 2025 && currentADMonth === 6 && currentADDay === 1) {
+              nepaliTodayDisplay.textContent = `Today: Asar 17, 2082`;
+              englishTodayDisplay.textContent = `July 1, 2025`;
+            } else {
+              nepaliTodayDisplay.textContent = `Today: ${monthData.nepaliMonth} ${day}, ${monthData.nepaliYear}`;
+              englishTodayDisplay.textContent = `${monthData.englishMonth} ${currentADDay}, ${monthData.englishYear}`;
+            }
+          }
+
+          calendarDays.appendChild(dayEl);
+        }
+      }
+
+      document.getElementById('prev-month').addEventListener('click', function () {
+        if (currentMonthIndex > 0) {
+          currentMonthIndex--;
+          renderCalendar();
+          findNextHoliday();
+        }
+      });
+
+      document.getElementById('next-month').addEventListener('click', function () {
+        if (currentMonthIndex < monthsData.length - 1) {
+          currentMonthIndex++;
+          renderCalendar();
+          findNextHoliday();
+        }
+      });
+
+      // Function to find the next holiday
+      function findNextHoliday() {
+        const today = new Date();
+        const currentADYear = today.getFullYear();
+        const currentADMonth = today.getMonth();
+        const currentADDay = today.getDate();
+        
+        // For July 1, 2025, we're on Asar 17, 2082
+        let currentNepaliDay = 17;
+        let currentNepaliMonth = "Asar";
+        let currentNepaliYear = 2082;
+        
+        // Find the next holiday from current date
+        let nextHoliday = null;
+        let nextHolidayDate = null;
+        
+        // Check current month first
+        const currentMonthData = monthsData[currentMonthIndex];
+        if (currentMonthData.holidays) {
+          for (let day = currentNepaliDay + 1; day <= currentMonthData.days; day++) {
+            if (currentMonthData.holidays[day]) {
+              nextHoliday = currentMonthData.holidays[day];
+              nextHolidayDate = `${currentMonthData.nepaliMonth} ${day}, ${currentMonthData.nepaliYear}`;
+              break;
+            }
+          }
+        }
+        
+        // If no holiday in current month, check next months
+        if (!nextHoliday) {
+          for (let i = currentMonthIndex + 1; i < monthsData.length; i++) {
+            const monthData = monthsData[i];
+            if (monthData.holidays) {
+              const firstHolidayDay = Math.min(...Object.keys(monthData.holidays).map(Number));
+              nextHoliday = monthData.holidays[firstHolidayDay];
+              nextHolidayDate = `${monthData.nepaliMonth} ${firstHolidayDay}, ${monthData.nepaliYear}`;
+              break;
+            }
+          }
+        }
+        
+        // Update the holiday widget
+        const nextHolidayContent = document.getElementById('nextHolidayContent');
+        if (nextHoliday && nextHolidayDate) {
+          nextHolidayContent.innerHTML = `
+            <div class="holiday-item">${nextHoliday}</div>
+            <div class="holiday-date">${nextHolidayDate}</div>
+          `;
+        } else {
+          nextHolidayContent.innerHTML = `
+            <div class="holiday-item">No upcoming holidays</div>
+            <div class="holiday-date">Check back later</div>
+          `;
+        }
+      }
+
+      renderCalendar();
+      findNextHoliday();
+    });
+    let lastCheckedDate = new Date().getDate();
+
+setInterval(() => {
+    const now = new Date();
+    const currentDate = now.getDate();
+
+    if (currentDate !== lastCheckedDate) {
+    
+        lastCheckedDate = currentDate;
+
+        location.reload(); 
+    }
+}, 60000); 
+        // Events Management
+        class EventsManager {
+            constructor() {
+                this.events = [
+                    { title: "Fresher's Party", date: "15 DEC 2025", location: "May 3 CMT Resort", category: "party" },
+                    { title: "Leadership Workshop", date: "22 DEC 2025", location: "Conference Hall", category: "training" },
+                    { title: "Annual Meeting", date: "28 DEC 2025", location: "Main Auditorium", category: "meeting" },
+                    { title: "Tech Innovation Summit", date: "5 JAN 2026", location: "Tech Center", category: "meeting" },
+                    { title: "Team Building Retreat", date: "12 JAN 2026", location: "Mountain Resort", category: "training" },
+                    { title: "New Year Celebration", date: "31 DEC 2025", location: "Rooftop Venue", category: "party" }
+                ];
+                this.currentIndex = 0;
+                this.eventsPerPage = 3;
+                this.filteredEvents = [...this.events];
+                this.displayEvents();
+                this.setupEventListeners();
+            }
+
+            displayEvents() {
+                const start = this.currentIndex;
+                const end = Math.min(start + this.eventsPerPage, this.filteredEvents.length);
+                const eventsToShow = this.filteredEvents.slice(start, end);
+                
+                let eventsHTML = '';
+                eventsToShow.forEach(event => {
+                    eventsHTML += `
+                        <div class="event-card">
+                            <div class="event-title">${event.title}</div>
+                            <div class="event-date">${event.date}</div>
+                            <div class="event-location">${event.location}</div>
+                        </div>
+                    `;
+                });
+                
+                // Fill empty slots to maintain grid layout
+                while (eventsToShow.length < 3) {
+                    eventsHTML += '<div class="event-card" style="opacity: 0; pointer-events: none;"></div>';
+                    eventsToShow.push({});
+                }
+                
+                document.getElementById('eventsGrid').innerHTML = eventsHTML;
+            }
+
+            nextEvents() {
+                if (this.currentIndex + this.eventsPerPage < this.filteredEvents.length) {
+                    this.currentIndex += this.eventsPerPage;
+                    this.displayEvents();
+                }
+            }
+
+            previousEvents() {
+                if (this.currentIndex > 0) {
+                    this.currentIndex = Math.max(0, this.currentIndex - this.eventsPerPage);
+                    this.displayEvents();
+                }
+            }
+
+            filterEvents() {
+                const searchTerm = document.getElementById('searchEvents').value.toLowerCase();
+                const category = document.getElementById('eventCategory').value;
+                
+                this.filteredEvents = this.events.filter(event => {
+                    const matchesSearch = event.title.toLowerCase().includes(searchTerm) ||
+                                        event.location.toLowerCase().includes(searchTerm);
+                    const matchesCategory = !category || event.category === category;
+                    return matchesSearch && matchesCategory;
+                });
+                
+                this.currentIndex = 0;
+                this.displayEvents();
+            }
+
+            setupEventListeners() {
+                document.getElementById('searchEvents').addEventListener('input', () => this.filterEvents());
+                document.getElementById('eventCategory').addEventListener('change', () => this.filterEvents());
+            }
+        }
+
+        // User Dropdown Functions
+        function toggleUserDropdown() {
+            const dropdown = document.getElementById('userDropdown');
+            dropdown.classList.toggle('show');
+        }
+
+        function handleProfile() {
+            alert('Profile functionality would go here');
+            closeUserDropdown();
+        }
+
+        function handleSettings() {
+            alert('Settings functionality would go here');
+            closeUserDropdown();
+        }
+
+        function handleSidebarLogout() {
+            if (confirm('Are you sure you want to logout?')) {
+                // Clear any stored authentication data
+                localStorage.removeItem('authToken');
+                localStorage.removeItem('userData');
+                
+                // Redirect to login page
+                window.location.href = 'login.html';
+            }
+        }
+
+        function handleLogout() {
+            if (confirm('Are you sure you want to logout?')) {
+                // Clear any stored authentication data
+                localStorage.removeItem('authToken');
+                localStorage.removeItem('userData');
+                
+                // Redirect to login page
+                window.location.href = 'login.html';
+            }
+            closeUserDropdown();
+        }
+
+        function closeUserDropdown() {
+            const dropdown = document.getElementById('userDropdown');
+            dropdown.classList.remove('show');
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            const userMenu = document.querySelector('.user-menu');
+            const dropdown = document.getElementById('userDropdown');
+            
+            if (!userMenu.contains(event.target) && dropdown.classList.contains('show')) {
+                closeUserDropdown();
+            }
+        });
+
+        // Initialize the dashboard
+        document.addEventListener('DOMContentLoaded', () => {
+            const calendarManager = new CalendarManager();
+            const eventsManager = new EventsManager();
+            
+            // Expose functions to global scope for button onclick handlers
+            window.changeMonth = (direction) => calendarManager.changeMonth(direction);
+            window.previousEvents = () => eventsManager.previousEvents();
+            window.nextEvents = () => eventsManager.nextEvents();
+            window.toggleUserDropdown = toggleUserDropdown;
+            window.handleProfile = handleProfile;
+            window.handleSettings = handleSettings;
+            window.handleLogout = handleLogout;
+            window.handleSidebarLogout = handleSidebarLogout;
+        });
+    </script>
+</body>
+</html>
