@@ -72,8 +72,8 @@ function updateProfileHeader(user) {
 function updateProfileForm(user) {
   const profileForm = document.getElementById("profileForm");
   
-  // Create full name from first and last name
-  const fullName = `${user.first_name || ''} ${user.last_name || ''}`.trim();
+  // Use only first name for the 'Full Name' field
+  const fullName = user.first_name || '';
   
   profileForm.innerHTML = `
     <div class="form-group">
@@ -188,8 +188,8 @@ async function saveChanges() {
     updateProfileHeader(updatedData);
     updateUserMenu(updatedData);
     
-    // Show success message
-    alert('Profile updated successfully!');
+    // Show in-page success message
+    showProfileMessage('Profile updated successfully!', 'success');
     
   } catch (error) {
     console.error('Error saving changes:', error);
@@ -249,4 +249,24 @@ async function saveChangesToBackend(updatedData) {
     console.error("Error updating profile:", error);
     throw error;
   }
+}
+
+// Show in-page message (success or error)
+function showProfileMessage(message, type = 'success') {
+  let msgElem = document.getElementById('profileMsg');
+  if (!msgElem) {
+    msgElem = document.createElement('div');
+    msgElem.id = 'profileMsg';
+    msgElem.style.marginBottom = '16px';
+    const form = document.getElementById('profileForm');
+    if (form && form.parentNode) {
+      form.parentNode.insertBefore(msgElem, form.nextSibling);
+    }
+  }
+  msgElem.textContent = message;
+  msgElem.className = type === 'success' ? 'profile-msg-success' : 'profile-msg-error';
+  msgElem.style.display = 'block';
+  setTimeout(() => {
+    msgElem.style.display = 'none';
+  }, 3000);
 }
