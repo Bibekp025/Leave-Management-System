@@ -1,17 +1,81 @@
-   // Calendar and Holiday Management
-   document.addEventListener("DOMContentLoaded", function () {
+// Authentication and Security Check
+document.addEventListener("DOMContentLoaded", function () {
+    const token = localStorage.getItem("authToken");
+    
+    if (!token) {
+      window.location.href = "login.html";
+      return;
+    }
+  
+    // Initialize user data
+    initializeUserData();
+    
+    // Initialize calendar and events
+    initializeCalendar();
+    initializeEvents();
+    
+    // Initialize user dropdown functionality
+    initializeUserDropdown();
+  });
+  
+  // User Data Management
+  async function initializeUserData() {
+    const token = localStorage.getItem("authToken");
+    
+    try {
+      const response = await fetch("http://127.0.0.1:8000/user/self/", {
+        headers: {
+          Authorization: `Token ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+      
+      if (!response.ok) {
+        throw new Error("Failed to fetch user info");
+      }
+      
+      const user = await response.json();
+      updateUserInterface(user);
+      
+    } catch (error) {
+      console.error("Error fetching user info:", error);
+      // Handle authentication error
+      if (error.message.includes("401") || error.message.includes("403")) {
+        localStorage.removeItem("authToken");
+        window.location.href = "login.html";
+      }
+    }
+  }
+  
+  function updateUserInterface(user) {
+    const userAvatar = document.querySelector(".user-avatar");
+    const userName = document.querySelector(".user-name");
+    
+    if (userAvatar) {
+      const displayName = user.first_name || user.username || "User";
+      userAvatar.textContent = displayName.charAt(0).toUpperCase();
+    }
+    
+    if (userName) {
+      const displayName = user.first_name || user.username || "User";
+      userName.textContent = displayName;
+    }
+  }
+  
+  // Calendar and Holiday Management
+  function initializeCalendar() {
     const nepaliMonths = [
       "Baisakh", "Jestha", "Asar", "Shrawan",
       "Bhadra", "Aswin", "Kartik", "Mangsir",
       "Poush", "Magh", "Falgun", "Chaitra"
     ];
-
+  
     const englishMonths = [
       "January", "February", "March", "April",
       "May", "June", "July", "August",
       "September", "October", "November", "December"
     ];
-
+  
     const monthsData = [
       {
         nepaliMonth: "Baisakh",
@@ -40,7 +104,7 @@
           29: "Ganatantra Diwas"
         }
       },
-              {
+      {
         nepaliMonth: "Asar",
         nepaliYear: 2082,
         englishMonth: "June-July",
@@ -64,7 +128,6 @@
           26: "Janai Purnima"
         }
       },
-
       {
         nepaliMonth: "Bhadra",
         nepaliYear: 2082,
@@ -171,15 +234,13 @@
         }
       }
     ];
-
+  
     const today = new Date();
     const currentADYear = today.getFullYear();
     const currentADMonth = today.getMonth();
     const currentADDay = today.getDate();
-
-    // For July 1, 2025 (Asar 17, 2082), we need to show Asar month
-    // Since today is July 1, 2025, but Asar 17 falls in Asar month, show Asar
-    // For July 2025, we want to show Asar month since Asar 17 falls in Asar
+  
+    // For July 2025 (Asar 2082), we need to show Asar month
     let currentMonthIndex;
     if (currentADYear === 2025 && currentADMonth === 6) {
       // July 2025 - show Asar month (index 2)
@@ -190,49 +251,63 @@
         month.englishMonth === englishMonths[currentADMonth]
       );
     }
-
+  
     if (currentMonthIndex === -1) {
       // If not found, default to Asar
       currentMonthIndex = 2;
     }
-
+  
     const calendarDays = document.getElementById('calendar-days');
     const nepaliMonthDisplay = document.getElementById('nepali-month');
     const englishMonthDisplay = document.getElementById('english-month');
     const nepaliTodayDisplay = document.getElementById('current-nepali');
     const englishTodayDisplay = document.getElementById('current-english');
-
+  
     function renderCalendar() {
       const monthData = monthsData[currentMonthIndex];
       nepaliMonthDisplay.textContent = `${monthData.nepaliMonth} ${monthData.nepaliYear}`;
       englishMonthDisplay.textContent = `${monthData.englishMonth} ${monthData.englishYear}`;
-
+      
+      // Update today's date display
+      const today = new Date();
+      const currentADYear = today.getFullYear();
+      const currentADMonth = today.getMonth();
+      
+      if (currentADYear === 2025 && currentADMonth === 6) {
+        nepaliTodayDisplay.textContent = `Today: Asar 17, 2082`;
+        englishTodayDisplay.textContent = `July 2, 2025`;
+      } else {
+        nepaliTodayDisplay.textContent = `Today: ${monthData.nepaliMonth} ${currentADDay}, ${monthData.nepaliYear}`;
+        englishTodayDisplay.textContent = `${monthData.englishMonth} ${currentADDay}, ${monthData.englishYear}`;
+      }
+  
       calendarDays.innerHTML = '';
-
+  
       for (let i = 0; i < monthData.startDay; i++) {
         const empty = document.createElement('div');
         empty.classList.add('calendar-day', 'empty');
         calendarDays.appendChild(empty);
       }
-
+  
       for (let day = 1; day <= monthData.days; day++) {
         const dayEl = document.createElement('div');
         dayEl.classList.add('calendar-day');
         dayEl.textContent = day;
-
+  
         const dayOfWeek = (monthData.startDay + day - 1) % 7;
-
+  
         if (dayOfWeek === 6) dayEl.classList.add('saturday');
         if (monthData.holidays[day]) {
           dayEl.classList.add('holiday');
           dayEl.title = monthData.holidays[day];
         }
-
+  
         // Check if this is today's date with proper Nepali-English mapping
         let isToday = false;
         
-        // Special mapping for July 1, 2025 = Asar 17, 2082
-        if (currentADYear === 2025 && currentADMonth === 6 && currentADDay === 1) {
+        // Special mapping for July 2025 = Asar 2082
+        if (currentADYear === 2025 && currentADMonth === 6) {
+          // July 2, 2025 = Asar 17, 2082
           if (monthData.nepaliMonth === "Asar" && monthData.nepaliYear === 2082 && day === 17) {
             isToday = true;
           }
@@ -247,19 +322,12 @@
         
         if (isToday) {
           dayEl.classList.add('today');
-          if (currentADYear === 2025 && currentADMonth === 6 && currentADDay === 1) {
-            nepaliTodayDisplay.textContent = `Today: Asar 17, 2082`;
-            englishTodayDisplay.textContent = `July 1, 2025`;
-          } else {
-            nepaliTodayDisplay.textContent = `Today: ${monthData.nepaliMonth} ${day}, ${monthData.nepaliYear}`;
-            englishTodayDisplay.textContent = `${monthData.englishMonth} ${currentADDay}, ${monthData.englishYear}`;
-          }
         }
-
+  
         calendarDays.appendChild(dayEl);
       }
     }
-
+  
     document.getElementById('prev-month').addEventListener('click', function () {
       if (currentMonthIndex > 0) {
         currentMonthIndex--;
@@ -267,7 +335,7 @@
         findNextHoliday();
       }
     });
-
+  
     document.getElementById('next-month').addEventListener('click', function () {
       if (currentMonthIndex < monthsData.length - 1) {
         currentMonthIndex++;
@@ -275,7 +343,7 @@
         findNextHoliday();
       }
     });
-
+  
     // Function to find the next holiday
     function findNextHoliday() {
       const today = new Date();
@@ -283,7 +351,7 @@
       const currentADMonth = today.getMonth();
       const currentADDay = today.getDate();
       
-      // For July 1, 2025, we're on Asar 17, 2082
+      // For July 2, 2025, we're on Asar 17, 2082
       let currentNepaliDay = 17;
       let currentNepaliMonth = "Asar";
       let currentNepaliYear = 2082;
@@ -331,167 +399,235 @@
         `;
       }
     }
-
+  
     renderCalendar();
     findNextHoliday();
-  });
-  let lastCheckedDate = new Date().getDate();
-
-setInterval(() => {
-  const now = new Date();
-  const currentDate = now.getDate();
-
-  if (currentDate !== lastCheckedDate) {
-  
-      lastCheckedDate = currentDate;
-
-      location.reload(); 
   }
-}, 60000); 
-      // Events Management
-      class EventsManager {
-          constructor() {
-              this.events = [
-                  { title: "Fresher's Party", date: "15 DEC 2025", location: "May 3 CMT Resort", category: "party" },
-                  { title: "Leadership Workshop", date: "22 DEC 2025", location: "Conference Hall", category: "training" },
-                  { title: "Annual Meeting", date: "28 DEC 2025", location: "Main Auditorium", category: "meeting" },
-                  { title: "Tech Innovation Summit", date: "5 JAN 2026", location: "Tech Center", category: "meeting" },
-                  { title: "Team Building Retreat", date: "12 JAN 2026", location: "Mountain Resort", category: "training" },
-                  { title: "New Year Celebration", date: "31 DEC 2025", location: "Rooftop Venue", category: "party" }
-              ];
-              this.currentIndex = 0;
-              this.eventsPerPage = 3;
-              this.filteredEvents = [...this.events];
-              this.displayEvents();
-              this.setupEventListeners();
-          }
-
-          displayEvents() {
-              const start = this.currentIndex;
-              const end = Math.min(start + this.eventsPerPage, this.filteredEvents.length);
-              const eventsToShow = this.filteredEvents.slice(start, end);
-              
-              let eventsHTML = '';
-              eventsToShow.forEach(event => {
-                  eventsHTML += `
-                      <div class="event-card">
-                          <div class="event-title">${event.title}</div>
-                          <div class="event-date">${event.date}</div>
-                          <div class="event-location">${event.location}</div>
-                      </div>
-                  `;
-              });
-              
-              // Fill empty slots to maintain grid layout
-              while (eventsToShow.length < 3) {
-                  eventsHTML += '<div class="event-card" style="opacity: 0; pointer-events: none;"></div>';
-                  eventsToShow.push({});
-              }
-              
-              document.getElementById('eventsGrid').innerHTML = eventsHTML;
-          }
-
-          nextEvents() {
-              if (this.currentIndex + this.eventsPerPage < this.filteredEvents.length) {
-                  this.currentIndex += this.eventsPerPage;
-                  this.displayEvents();
-              }
-          }
-
-          previousEvents() {
-              if (this.currentIndex > 0) {
-                  this.currentIndex = Math.max(0, this.currentIndex - this.eventsPerPage);
-                  this.displayEvents();
-              }
-          }
-
-          filterEvents() {
-              const searchTerm = document.getElementById('searchEvents').value.toLowerCase();
-              const category = document.getElementById('eventCategory').value;
-              
-              this.filteredEvents = this.events.filter(event => {
-                  const matchesSearch = event.title.toLowerCase().includes(searchTerm) ||
-                                      event.location.toLowerCase().includes(searchTerm);
-                  const matchesCategory = !category || event.category === category;
-                  return matchesSearch && matchesCategory;
-              });
-              
-              this.currentIndex = 0;
-              this.displayEvents();
-          }
-
-          setupEventListeners() {
-              document.getElementById('searchEvents').addEventListener('input', () => this.filterEvents());
-              document.getElementById('eventCategory').addEventListener('change', () => this.filterEvents());
-          }
+  
+  // Events Management with API Integration
+  async function initializeEvents() {
+    window.eventsManager = new EventsManager();
+    
+    // Auto-refresh calendar on date change
+    let lastCheckedDate = new Date().getDate();
+    setInterval(() => {
+      const now = new Date();
+      const currentDate = now.getDate();
+  
+      if (currentDate !== lastCheckedDate) {
+        lastCheckedDate = currentDate;
+        location.reload(); 
       }
-
-      // User Dropdown Functions
-      function toggleUserDropdown() {
-          const dropdown = document.getElementById('userDropdown');
-          dropdown.classList.toggle('show');
+    }, 60000);
+  }
+  
+  class EventsManager {
+    constructor() {
+      this.events = [];
+      this.currentIndex = 0;
+      this.eventsPerPage = 3;
+      this.filteredEvents = [];
+      this.loadEvents();
+      this.setupEventListeners();
+    }
+  
+    async loadEvents() {
+      const token = localStorage.getItem("authToken");
+      
+      try {
+        const response = await fetch("http://127.0.0.1:8000/events/", {
+          headers: {
+            Authorization: `Token ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
+        
+        if (!response.ok) {
+          throw new Error("Failed to fetch events");
+        }
+        
+        const eventsData = await response.json();
+        this.events = eventsData.results || eventsData || [];
+        this.filteredEvents = [...this.events];
+        this.displayEvents();
+        
+      } catch (error) {
+        console.error("Error loading events:", error);
+        // Fallback to static events if API fails
+        this.events = [
+          { title: "Fresher's Party", date: "15 DEC 2025", location: "May 3 CMT Resort", category: "party" },
+          { title: "Leadership Workshop", date: "22 DEC 2025", location: "Conference Hall", category: "training" },
+          { title: "Annual Meeting", date: "28 DEC 2025", location: "Main Auditorium", category: "meeting" },
+          { title: "Tech Innovation Summit", date: "5 JAN 2026", location: "Tech Center", category: "meeting" },
+          { title: "Team Building Retreat", date: "12 JAN 2026", location: "Mountain Resort", category: "training" },
+          { title: "New Year Celebration", date: "31 DEC 2025", location: "Rooftop Venue", category: "party" }
+        ];
+        this.filteredEvents = [...this.events];
+        this.displayEvents();
       }
-
-      function handleProfile() {
-          alert('Profile functionality would go here');
-          closeUserDropdown();
-      }
-
-      function handleSettings() {
-          alert('Settings functionality would go here');
-          closeUserDropdown();
-      }
-
-      function handleSidebarLogout() {
-          if (confirm('Are you sure you want to logout?')) {
-              // Clear any stored authentication data
-              localStorage.removeItem('authToken');
-              localStorage.removeItem('userData');
-              
-              // Redirect to login page
-              window.location.href = 'login.html';
-          }
-      }
-
-      function handleLogout() {
-          if (confirm('Are you sure you want to logout?')) {
-              // Clear any stored authentication data
-              localStorage.removeItem('authToken');
-              localStorage.removeItem('userData');
-              
-              // Redirect to login page
-              window.location.href = 'login.html';
-          }
-          closeUserDropdown();
-      }
-
-      function closeUserDropdown() {
-          const dropdown = document.getElementById('userDropdown');
-          dropdown.classList.remove('show');
-      }
-
-      // Close dropdown when clicking outside
-      document.addEventListener('click', function(event) {
-          const userMenu = document.querySelector('.user-menu');
-          const dropdown = document.getElementById('userDropdown');
-          
-          if (!userMenu.contains(event.target) && dropdown.classList.contains('show')) {
-              closeUserDropdown();
-          }
+    }
+  
+    displayEvents() {
+      const start = this.currentIndex;
+      const end = Math.min(start + this.eventsPerPage, this.filteredEvents.length);
+      const eventsToShow = this.filteredEvents.slice(start, end);
+      
+      let eventsHTML = '';
+      eventsToShow.forEach(event => {
+        eventsHTML += `
+          <div class="event-card">
+            <div class="event-title">${event.title}</div>
+            <div class="event-date">${event.date || event.event_date || 'TBD'}</div>
+            <div class="event-location">${event.location || event.venue || 'Location TBD'}</div>
+          </div>
+        `;
       });
-
-      // Initialize the dashboard
-      document.addEventListener('DOMContentLoaded', () => {
-          const calendarManager = new CalendarManager();
-          const eventsManager = new EventsManager();
-          
-          // Expose functions to global scope for button onclick handlers
-          window.changeMonth = (direction) => calendarManager.changeMonth(direction);
-          window.previousEvents = () => eventsManager.previousEvents();
-          window.nextEvents = () => eventsManager.nextEvents();
-          window.toggleUserDropdown = toggleUserDropdown;
-          window.handleProfile = handleProfile;
-          window.handleSettings = handleSettings;
-          window.handleLogout = handleLogout;
-          window.handleSidebarLogout = handleSidebarLogout;
+      
+      // Fill empty slots to maintain grid layout
+      while (eventsToShow.length < 3) {
+        eventsHTML += '<div class="event-card" style="opacity: 0; pointer-events: none;"></div>';
+        eventsToShow.push({});
+      }
+      
+      const eventsGrid = document.getElementById('eventsGrid');
+      if (eventsGrid) {
+        eventsGrid.innerHTML = eventsHTML;
+      }
+    }
+  
+    nextEvents() {
+      if (this.currentIndex + this.eventsPerPage < this.filteredEvents.length) {
+        this.currentIndex += this.eventsPerPage;
+        this.displayEvents();
+      }
+    }
+  
+    previousEvents() {
+      if (this.currentIndex > 0) {
+        this.currentIndex = Math.max(0, this.currentIndex - this.eventsPerPage);
+        this.displayEvents();
+      }
+    }
+  
+    filterEvents() {
+      const searchTerm = document.getElementById('searchEvents')?.value.toLowerCase() || '';
+      const category = document.getElementById('eventCategory')?.value || '';
+      
+      this.filteredEvents = this.events.filter(event => {
+        const matchesSearch = event.title?.toLowerCase().includes(searchTerm) ||
+                            event.location?.toLowerCase().includes(searchTerm) ||
+                            event.venue?.toLowerCase().includes(searchTerm);
+        const matchesCategory = !category || event.category === category;
+        return matchesSearch && matchesCategory;
       });
+      
+      this.currentIndex = 0;
+      this.displayEvents();
+    }
+  
+    setupEventListeners() {
+      const searchInput = document.getElementById('searchEvents');
+      const categorySelect = document.getElementById('eventCategory');
+      
+      if (searchInput) {
+        searchInput.addEventListener('input', () => this.filterEvents());
+      }
+      
+      if (categorySelect) {
+        categorySelect.addEventListener('change', () => this.filterEvents());
+      }
+    }
+  }
+  
+  // User Dropdown Functions with Security
+  function initializeUserDropdown() {
+    // User Dropdown Functions
+    function toggleUserDropdown() {
+      const dropdown = document.getElementById('userDropdown');
+      if (dropdown) {
+        dropdown.classList.toggle('show');
+      }
+    }
+  
+    function handleProfile() {
+      window.location.href = 'profile.html';
+      closeUserDropdown();
+    }
+  
+    function handleSettings() {
+      alert('Settings functionality would go here');
+      closeUserDropdown();
+    }
+  
+    function handleSidebarLogout() {
+      if (confirm('Are you sure you want to logout?')) {
+        // Clear any stored authentication data
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('userData');
+        
+        // Redirect to login page
+        window.location.href = 'login.html';
+      }
+    }
+  
+    function handleLogout() {
+      if (confirm('Are you sure you want to logout?')) {
+        // Clear any stored authentication data
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('userData');
+        
+        // Redirect to login page
+        window.location.href = 'login.html';
+      }
+      closeUserDropdown();
+    }
+  
+    function closeUserDropdown() {
+      const dropdown = document.getElementById('userDropdown');
+      if (dropdown) {
+        dropdown.classList.remove('show');
+      }
+    }
+  
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(event) {
+      const userMenu = document.querySelector('.user-menu');
+      const dropdown = document.getElementById('userDropdown');
+      
+      if (userMenu && dropdown && !userMenu.contains(event.target) && dropdown.classList.contains('show')) {
+        closeUserDropdown();
+      }
+    });
+  
+    // Expose functions to global scope for button onclick handlers
+    window.toggleUserDropdown = toggleUserDropdown;
+    window.handleProfile = handleProfile;
+    window.handleSettings = handleSettings;
+    window.handleLogout = handleLogout;
+    window.handleSidebarLogout = handleSidebarLogout;
+    window.previousEvents = () => {
+      const eventsManager = window.eventsManager;
+      if (eventsManager) {
+        eventsManager.previousEvents();
+      }
+    };
+    window.nextEvents = () => {
+      const eventsManager = window.eventsManager;
+      if (eventsManager) {
+        eventsManager.nextEvents();
+      }
+    };
+  }
+  
+  // Apply Leave Button Handler
+  function handleApplyLeave() {
+    const token = localStorage.getItem("authToken");
+    if (!token) {
+      window.location.href = "login.html";
+      return;
+    }
+    window.location.href = "apply-leave.html";
+  }
+  
+  // Expose apply leave function globally
+  window.handleApplyLeave = handleApplyLeave;
