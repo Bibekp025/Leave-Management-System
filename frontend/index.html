@@ -137,14 +137,11 @@
                         </div>
                         
                         <div class="events-content">
-                            <div class="events-navigation">
-                                <button class="nav-button" onclick="previousEvents()">‹</button>
-                                <button class="nav-button" onclick="nextEvents()">›</button>
-                            </div>
-                            
+                            <button class="nav-button" onclick="previousEvents()">‹</button>
                             <div class="events-grid" id="eventsGrid">
                                 <!-- Events will be populated by JavaScript -->
                             </div>
+                            <button class="nav-button" onclick="nextEvents()">›</button>
                         </div>
                     </div>
                 </div>
@@ -164,6 +161,10 @@
       </div>
       <button class="calendar-nav-btn" id="next-month">&gt;</button>
     </div>
+    <div class="calendar-current-date">
+      <span class="current-nepali" id="current-nepali">Today: Asar 17, 2082</span>
+      <span class="current-english" id="current-english">July 2, 2025</span>
+    </div>
   </div>
   <div class="calendar-content">
     <div class="calendar-grid">
@@ -176,11 +177,6 @@
       <div class="calendar-day-header">Sat</div>
     </div>
     <div class="calendar-grid" id="calendar-days"></div>
-    <div class="calendar-current-date">
-      <span class="current-nepali" id="current-nepali">Today: Asar 15, 2082</span>
-      <span class="current-english" id="current-english">June 15, 2025</span>
-    </div>
-
   </div>
 </div>
 
