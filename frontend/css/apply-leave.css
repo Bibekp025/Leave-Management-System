@@ -99,7 +99,6 @@ select.form-input {
     appearance: none;
     display: block;
     margin: 0;
-    vertical-align: middle;
     background-image: url('data:image/svg+xml;utf8,<svg fill="%231a3a8f" height="20" viewBox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
     background-repeat: no-repeat;
     background-position: right 14px center;
@@ -291,4 +290,8 @@ select.form-input option {
         width: 18px;
         height: 18px;
     }
+}
+
+html, body {
+    overflow-x: hidden;
 }

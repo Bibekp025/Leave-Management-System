@@ -68,7 +68,7 @@
 
 .leaves-table th {
     padding: 16px 12px;
-    text-align: left;
+    text-align: center;
     font-weight: 700;
     color: #1a3a8f;
     font-size: 13px;
@@ -88,33 +88,35 @@
     vertical-align: middle;
     color: #495057;
     font-weight: 500;
+    text-align: center;
 }
 
 .leaves-table td:last-child {
     border-right: none;
 }
 
-.leaves-table tbody tr {
-    transition: all 0.2s ease;
+.leaves-table td.status {
+    text-align: center !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-.leaves-table tbody tr:hover {
-    background-color: #f8f9fa;
-    transform: translateY(-1px);
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-}
-
-/* Status styling */
 .status {
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    padding: 6px 12px;
+    padding: 6px 18px;
     border-radius: 20px;
-    font-size: 11px;
+    font-size: 12px;
     display: inline-block;
+    vertical-align: middle;
     text-align: center;
     min-width: 80px;
+    margin: 0 auto;
+    line-height: 1.5;
+    box-shadow: 0 2px 8px rgba(58, 95, 190, 0.06);
+    border: none;
 }
 
 .status.pending {
@@ -409,4 +411,8 @@
     padding: 40px 20px;
     color: #dc3545;
     font-weight: 600;
+}
+
+html, body {
+    overflow-y: hidden;
 } 

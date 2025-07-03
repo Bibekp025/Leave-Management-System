@@ -140,6 +140,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
     tableBody.innerHTML = "";
 
+    // Hide or show the Actions column in the table header
+    const actionsTh = document.querySelector('.leaves-table th:last-child');
+    if (userCategory === 'student') {
+      if (actionsTh) actionsTh.style.display = 'none';
+    } else {
+      if (actionsTh) actionsTh.style.display = '';
+    }
+
     currentLeaves.forEach(leave => {
       const row = document.createElement("tr");
 
@@ -153,7 +161,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
       // Status or approval action buttons
       let actionButtons = "";
-      if (userCategory === "teacher" && leave.status === "pending") {
+      if ((userCategory === "teacher" || userCategory === "hr") && leave.status === "pending") {
         actionButtons = `
           <button class="btn-approve" onclick="updateLeaveStatus(${leave.id}, 'approved')">Approve</button>
           <button class="btn-reject" onclick="updateLeaveStatus(${leave.id}, 'rejected')">Reject</button>
@@ -167,16 +175,29 @@ document.addEventListener("DOMContentLoaded", function () {
             : "<small>⌛ Pending</small>";
       }
 
-      row.innerHTML = `
-        <td>${leave.user}</td>
-        <td>${leave.leave_type}</td>
-        <td>${leave.from_date}</td>
-        <td>${leave.to_date}</td>
-        <td>${leave.reason}</td>
-        <td>${assignedDisplay}</td>
-        <td class="status ${leave.status}">${capitalize(leave.status)}</td>
-        <td>${actionButtons}</td>
-      `;
+      // Hide the Actions column cell for students
+      if (userCategory === 'student') {
+        row.innerHTML = `
+          <td>${leave.user}</td>
+          <td>${leave.leave_type}</td>
+          <td>${leave.from_date}</td>
+          <td>${leave.to_date}</td>
+          <td>${leave.reason}</td>
+          <td>${assignedDisplay}</td>
+          <td class="status ${leave.status}">${capitalize(leave.status)}</td>
+        `;
+      } else {
+        row.innerHTML = `
+          <td>${leave.user}</td>
+          <td>${leave.leave_type}</td>
+          <td>${leave.from_date}</td>
+          <td>${leave.to_date}</td>
+          <td>${leave.reason}</td>
+          <td>${assignedDisplay}</td>
+          <td class="status ${leave.status}">${capitalize(leave.status)}</td>
+          <td>${actionButtons}</td>
+        `;
+      }
 
       tableBody.appendChild(row);
     });
