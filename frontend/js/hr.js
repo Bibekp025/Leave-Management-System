@@ -1,6 +1,5 @@
-
-    document.addEventListener('DOMContentLoaded', async () => {
-  const token = localStorage.getItem('authToken');
+document.addEventListener('DOMContentLoaded', async () => {
+  const token = sessionStorage.getItem('authToken');
   if (!token) return; // no token, do nothing
 
   try {

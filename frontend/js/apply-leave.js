@@ -3,7 +3,7 @@ async function getCurrentUser() {
   try {
     const response = await fetch('http://127.0.0.1:8000/user/self/', {
       headers: {
-        'Authorization': `Token ${localStorage.getItem('authToken')}`
+        'Authorization': `Token ${sessionStorage.getItem('authToken')}`
       }
     });
     if (!response.ok) throw new Error('Failed to fetch current user');
@@ -34,7 +34,7 @@ async function loadAssignedUsers() {
 
     const response = await fetch(url, {
       headers: {
-        'Authorization': `Token ${localStorage.getItem('authToken')}`
+        'Authorization': `Token ${sessionStorage.getItem('authToken')}`
       }
     });
     if (!response.ok) throw new Error('Failed to fetch users');
@@ -183,7 +183,7 @@ document.querySelector('.leave-form').addEventListener('submit', async function 
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Token ${localStorage.getItem('authToken')}`
+        'Authorization': `Token ${sessionStorage.getItem('authToken')}`
       },
       body: JSON.stringify(formData)
     });
@@ -269,7 +269,7 @@ function showSuccessMessage(message) {
 
 // User Data Management
 async function initializeUserData() {
-  const token = localStorage.getItem("authToken");
+  const token = sessionStorage.getItem("authToken");
   
   try {
     const response = await fetch("http://127.0.0.1:8000/user/self/", {
@@ -290,7 +290,7 @@ async function initializeUserData() {
     console.error("Error fetching user info:", error);
     // Handle authentication error
     if (error.message.includes("401") || error.message.includes("403")) {
-      localStorage.removeItem("authToken");
+      sessionStorage.removeItem("authToken");
       window.location.href = "login.html";
     }
   }
@@ -328,8 +328,8 @@ function initializeUserDropdown() {
 
   function handleLogout() {
     if (confirm('Are you sure you want to logout?')) {
-      localStorage.removeItem('authToken');
-      localStorage.removeItem('userData');
+      sessionStorage.removeItem('authToken');
+      sessionStorage.removeItem('userData');
       window.location.href = 'login.html';
     }
     closeUserDropdown();

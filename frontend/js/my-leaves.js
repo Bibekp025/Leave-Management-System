@@ -1,13 +1,17 @@
 document.addEventListener("DOMContentLoaded", function () {
-  const token = localStorage.getItem("authToken");
+  const token = sessionStorage.getItem("authToken");
   const tableBody = document.getElementById("leaveTableBody");
   
   // Pagination variables
   let allLeaves = [];
   let currentPage = 1;
-  const recordsPerPage = 10;
+  const recordsPerPage = 7;
   let totalPages = 0;
   let currentUser = null;
+
+  // Mappings for leave types and users
+  let leaveTypeMap = {};
+  let userMap = {};
 
   if (!token) {
     tableBody.innerHTML = '<tr><td colspan="8">Please log in to view your leaves.</td></tr>';
@@ -15,9 +19,32 @@ document.addEventListener("DOMContentLoaded", function () {
     return;
   }
 
+  // Fetch leave types and users before loading leaves
+  async function fetchMappings() {
+    // Fetch leave types
+    const leaveTypeRes = await fetch("http://127.0.0.1:8000/leave/leave-types/", {
+      headers: { "Authorization": `Token ${token}` }
+    });
+    if (leaveTypeRes.ok) {
+      const leaveTypes = await leaveTypeRes.json();
+      leaveTypes.forEach(type => { leaveTypeMap[type.id] = type.name; });
+    }
+    // Fetch all users (for mapping assigned IDs to names)
+    const userRes = await fetch("http://127.0.0.1:8000/user/", {
+      headers: { "Authorization": `Token ${token}` }
+    });
+    if (userRes.ok) {
+      const users = await userRes.json();
+      users.forEach(user => { userMap[user.id] = user.username || user.first_name || user.email || user.id; });
+    }
+  }
+
   // Initialize user data and load leaves
+  (async function init() {
+    await fetchMappings();
   initializeUserData();
   loadLeaves();
+  })();
 
   // User Data Management
   async function initializeUserData() {
@@ -40,7 +67,7 @@ document.addEventListener("DOMContentLoaded", function () {
       console.error("Error fetching user info:", error);
       // Handle authentication error
       if (error.message.includes("401") || error.message.includes("403")) {
-        localStorage.removeItem("authToken");
+        sessionStorage.removeItem("authToken");
         window.location.href = "login.html";
       }
     }
@@ -73,7 +100,7 @@ document.addEventListener("DOMContentLoaded", function () {
     };
 
     window.handleLogout = function() {
-      localStorage.removeItem("authToken");
+      sessionStorage.removeItem("authToken");
       window.location.href = "login.html";
     };
 
@@ -110,8 +137,9 @@ document.addEventListener("DOMContentLoaded", function () {
         }).then(res => res.json().then(leaves => ({ leaves, userCategory })));
       })
       .then(({ leaves, userCategory }) => {
-        allLeaves = leaves;
-        totalPages = Math.ceil(leaves.length / recordsPerPage);
+        // Sort leaves by created_at descending (newest first)
+        allLeaves = leaves.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+        totalPages = Math.ceil(allLeaves.length / recordsPerPage);
         currentPage = 1;
         
         if (leaves.length === 0) {
@@ -134,72 +162,149 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function displayCurrentPage(userCategory) {
+    tableBody.innerHTML = "";
+    // Debug: log all leaves to ensure all statuses are present
+    
+    // Always sort by created_at descending before paginating
+    const sortedLeaves = allLeaves.slice().sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
     const startIndex = (currentPage - 1) * recordsPerPage;
     const endIndex = startIndex + recordsPerPage;
-    const currentLeaves = allLeaves.slice(startIndex, endIndex);
+    const currentLeaves = sortedLeaves.slice(startIndex, endIndex);
 
-    tableBody.innerHTML = "";
-
-    // Hide or show the Actions column in the table header
-    const actionsTh = document.querySelector('.leaves-table th:last-child');
-    if (userCategory === 'student') {
-      if (actionsTh) actionsTh.style.display = 'none';
+    // Hide or show the Assigned To, Status, and Actions columns in the table header
+    const table = document.querySelector('.leaves-table');
+    const ths = table.querySelectorAll('th');
+    // 0:User, 1:Leave Type, 2:From, 3:To, 4:Reason, 5:Assigned To, 6:Status, 7:Actions
+    if (userCategory === 'teacher' || userCategory === 'hr') {
+      if (ths[5]) ths[5].style.display = 'none'; // Assigned To
+      if (ths[6]) ths[6].style.display = 'none'; // Status
+      if (ths[7]) ths[7].style.display = ''; // Actions (show)
     } else {
-      if (actionsTh) actionsTh.style.display = '';
+      if (ths[5]) ths[5].style.display = '';
+      if (ths[6]) ths[6].style.display = '';
+      if (ths[7]) ths[7].style.display = 'none'; // Actions (hide for student)
     }
 
     currentLeaves.forEach(leave => {
       const row = document.createElement("tr");
-
-      // Format assigned user list
+      let leaveTypeDisplay = leaveTypeMap[leave.leave_type] || leave.leave_type;
       let assignedDisplay = "-";
       if (userCategory === "student" && leave.assigned_teachers.length > 0) {
-        assignedDisplay = leave.assigned_teachers.join(", ");
+        assignedDisplay = leave.assigned_teachers.map(id => userMap[id] || id).join(", ");
       } else if (userCategory === "teacher" && leave.assigned_hrs.length > 0) {
-        assignedDisplay = leave.assigned_hrs.join(", ");
+        assignedDisplay = leave.assigned_hrs.map(id => userMap[id] || id).join(", ");
       }
-
-      // Status or approval action buttons
       let actionButtons = "";
       if ((userCategory === "teacher" || userCategory === "hr") && leave.status === "pending") {
         actionButtons = `
-          <button class="btn-approve" onclick="updateLeaveStatus(${leave.id}, 'approved')">Approve</button>
-          <button class="btn-reject" onclick="updateLeaveStatus(${leave.id}, 'rejected')">Reject</button>
+          <button class="btn-approve action-icon-btn" title="Approve">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="approveGradient" x1="0" y1="0" x2="0" y2="24" gradientUnits="userSpaceOnUse">
+                  <stop stop-color="#1a3a8f"/>
+                  <stop offset="1" stop-color="#3A5FBE"/>
+                </linearGradient>
+                <filter id="tickShadow" x="-2" y="-2" width="28" height="28" filterUnits="userSpaceOnUse">
+                  <feDropShadow dx="0" dy="1" stdDeviation="1.5" flood-color="#3A5FBE" flood-opacity="0.25"/>
+                </filter>
+              </defs>
+              <circle cx="12" cy="12" r="12" fill="url(#approveGradient)"/>
+              <path d="M7 13.5L11 17L17 9.5" stroke="#fff" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" filter="url(#tickShadow)"/>
+            </svg>
+          </button>
+          <button class="btn-reject action-icon-btn" title="Reject">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="rejectGradient" x1="0" y1="0" x2="0" y2="24" gradientUnits="userSpaceOnUse">
+                  <stop stop-color="#1a3a8f"/>
+                  <stop offset="1" stop-color="#3A5FBE"/>
+                </linearGradient>
+                <filter id="crossShadow" x="-2" y="-2" width="28" height="28" filterUnits="userSpaceOnUse">
+                  <feDropShadow dx="0" dy="1" stdDeviation="1.5" flood-color="#1a3a8f" flood-opacity="0.25"/>
+                </filter>
+              </defs>
+              <circle cx="12" cy="12" r="12" fill="url(#rejectGradient)"/>
+              <path d="M8 8L16 16" stroke="#fff" stroke-width="2.8" stroke-linecap="round" filter="url(#crossShadow)"/>
+              <path d="M16 8L8 16" stroke="#fff" stroke-width="2.8" stroke-linecap="round" filter="url(#crossShadow)"/>
+            </svg>
+          </button>
         `;
       } else {
         actionButtons =
           leave.status === "approved"
-            ? "<small>✔ Approved</small>"
+            ? `<span class="status-icon" title="Approved">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <defs>
+                    <linearGradient id="statusBlueGradient" x1="0" y1="0" x2="0" y2="24" gradientUnits="userSpaceOnUse">
+                      <stop stop-color="#1a3a8f"/>
+                      <stop offset="1" stop-color="#3A5FBE"/>
+                    </linearGradient>
+                  </defs>
+                  <circle cx="12" cy="12" r="12" fill="url(#statusBlueGradient)"/>
+                  <path d="M7 13.5L11 17L17 9.5" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span class="status-label">Approved</span>
+              </span>`
             : leave.status === "rejected"
-            ? "<small>❌ Rejected</small>"
-            : "<small>⌛ Pending</small>";
+            ? `<span class="status-icon" title="Rejected">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <defs>
+                    <linearGradient id="statusBlueGradient" x1="0" y1="0" x2="0" y2="24" gradientUnits="userSpaceOnUse">
+                      <stop stop-color="#1a3a8f"/>
+                      <stop offset="1" stop-color="#3A5FBE"/>
+                    </linearGradient>
+                  </defs>
+                  <circle cx="12" cy="12" r="12" fill="url(#statusBlueGradient)"/>
+                  <path d="M8 8L16 16" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/>
+                  <path d="M16 8L8 16" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/>
+                </svg>
+                <span class="status-label">Rejected</span>
+              </span>`
+            : `<span class="status-icon" title="Pending">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <defs>
+                    <linearGradient id="statusBlueGradient" x1="0" y1="0" x2="0" y2="24" gradientUnits="userSpaceOnUse">
+                      <stop stop-color="#1a3a8f"/>
+                      <stop offset="1" stop-color="#3A5FBE"/>
+                    </linearGradient>
+                  </defs>
+                  <circle cx="12" cy="12" r="12" fill="url(#statusBlueGradient)"/>
+                  <path d="M12 7V12L15 14" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span class="status-label">Pending</span>
+              </span>`;
       }
-
-      // Hide the Actions column cell for students
       if (userCategory === 'student') {
         row.innerHTML = `
           <td>${leave.user}</td>
-          <td>${leave.leave_type}</td>
+          <td>${leaveTypeDisplay}</td>
           <td>${leave.from_date}</td>
           <td>${leave.to_date}</td>
           <td>${leave.reason}</td>
           <td>${assignedDisplay}</td>
-          <td class="status ${leave.status}">${capitalize(leave.status)}</td>
+          <td class="status ${leave.status}">${actionButtons}</td>
         `;
       } else {
         row.innerHTML = `
           <td>${leave.user}</td>
-          <td>${leave.leave_type}</td>
+          <td>${leaveTypeDisplay}</td>
           <td>${leave.from_date}</td>
           <td>${leave.to_date}</td>
           <td>${leave.reason}</td>
-          <td>${assignedDisplay}</td>
-          <td class="status ${leave.status}">${capitalize(leave.status)}</td>
+          <td style="display:none"></td>
+          <td style="display:none"></td>
           <td>${actionButtons}</td>
         `;
       }
-
       tableBody.appendChild(row);
+
+      // Add event listeners for approve/reject after row is added
+      setTimeout(() => {
+        const approveBtn = row.querySelector('.btn-approve');
+        const rejectBtn = row.querySelector('.btn-reject');
+        if (approveBtn) approveBtn.onclick = () => updateLeaveStatus(leave.id, 'approved');
+        if (rejectBtn) rejectBtn.onclick = () => updateLeaveStatus(leave.id, 'rejected');
+      }, 0);
     });
   }
 

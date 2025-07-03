@@ -1,6 +1,6 @@
 // Authentication and Security Check
 document.addEventListener("DOMContentLoaded", function () {
-    const token = localStorage.getItem("authToken");
+    const token = sessionStorage.getItem("authToken");
     
     if (!token) {
       window.location.href = "login.html";
@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", function () {
   
   // User Data Management
   async function initializeUserData() {
-    const token = localStorage.getItem("authToken");
+    const token = sessionStorage.getItem("authToken");
     
     try {
       const response = await fetch("http://127.0.0.1:8000/user/self/", {
@@ -41,7 +41,7 @@ document.addEventListener("DOMContentLoaded", function () {
       console.error("Error fetching user info:", error);
       // Handle authentication error
       if (error.message.includes("401") || error.message.includes("403")) {
-        localStorage.removeItem("authToken");
+        sessionStorage.removeItem("authToken");
         window.location.href = "login.html";
       }
     }
@@ -512,7 +512,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   
     async loadEvents() {
-      const token = localStorage.getItem("authToken");
+      const token = sessionStorage.getItem("authToken");
       
       try {
         const response = await fetch("http://127.0.0.1:8000/events/", {
@@ -642,8 +642,8 @@ document.addEventListener("DOMContentLoaded", function () {
     function handleSidebarLogout() {
       if (confirm('Are you sure you want to logout?')) {
         // Clear any stored authentication data
-        localStorage.removeItem('authToken');
-        localStorage.removeItem('userData');
+        sessionStorage.removeItem('authToken');
+        sessionStorage.removeItem('userData');
         
         // Redirect to login page
         window.location.href = 'login.html';
@@ -653,8 +653,8 @@ document.addEventListener("DOMContentLoaded", function () {
     function handleLogout() {
       if (confirm('Are you sure you want to logout?')) {
         // Clear any stored authentication data
-        localStorage.removeItem('authToken');
-        localStorage.removeItem('userData');
+        sessionStorage.removeItem('authToken');
+        sessionStorage.removeItem('userData');
         
         // Redirect to login page
         window.location.href = 'login.html';
@@ -701,7 +701,7 @@ document.addEventListener("DOMContentLoaded", function () {
   
   // Apply Leave Button Handler
   function handleApplyLeave() {
-    const token = localStorage.getItem("authToken");
+    const token = sessionStorage.getItem("authToken");
     if (!token) {
       window.location.href = "login.html";
       return;

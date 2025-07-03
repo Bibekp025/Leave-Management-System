@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const token = localStorage.getItem("authToken");
+  const token = sessionStorage.getItem("authToken");
   if (!token) {
     window.location.href = "login.html";
     return;
@@ -112,7 +112,7 @@ function setupEventListeners() {
 
   // Sidebar logout
   window.handleSidebarLogout = function() {
-    localStorage.removeItem("authToken");
+    sessionStorage.removeItem("authToken");
     window.location.href = "login.html";
   };
 
@@ -129,7 +129,7 @@ function setupEventListeners() {
 
   // Logout
   window.handleLogout = function() {
-    localStorage.removeItem("authToken");
+    sessionStorage.removeItem("authToken");
     window.location.href = "login.html";
   };
 
@@ -227,7 +227,7 @@ function restoreOriginalValues() {
 
 // Function to save changes to backend
 async function saveChangesToBackend(updatedData) {
-  const token = localStorage.getItem("authToken");
+  const token = sessionStorage.getItem("authToken");
   
   try {
     const response = await fetch("http://127.0.0.1:8000/user/update/", {

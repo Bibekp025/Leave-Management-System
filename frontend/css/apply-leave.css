@@ -207,27 +207,30 @@ select.form-input option {
 }
 
 .confirm-btn {
-    background: linear-gradient(135deg, #20c997 0%, #17a2b8 100%);
+    background: linear-gradient(135deg, #3A5FBE 0%, #2a4aaf 100%);
     color: white;
     border: none;
-    padding: 13px 0;
-    border-radius: 10px;
+    padding: 14px 24px;
+    border-radius: 12px;
+    font-size: 15px;
     font-weight: 700;
-    font-size: 16px;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.2s;
+    box-shadow: 0 4px 12px rgba(58, 95, 190, 0.3);
+    min-width: 120px;
+    text-align: center;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
-    box-shadow: 0 2px 8px rgba(32, 201, 151, 0.10);
     width: 220px;
     margin: 0 auto;
 }
 
 .confirm-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(32, 201, 151, 0.18);
+    background: linear-gradient(135deg, #3254aa 0%, #1e3a8f 100%);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px rgba(58, 95, 190, 0.4);
 }
 
 .confirm-btn:disabled {

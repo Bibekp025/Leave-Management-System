@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', function () {
       const data = await response.json();
 
       if (response.ok && data.token) {
-        localStorage.setItem('authToken', data.token);
+        sessionStorage.setItem('authToken', data.token);
         showMessage(loginErrorDiv, 'Login successful! Redirecting...', true);
         // Small delay to show success message before redirect
         setTimeout(() => {
