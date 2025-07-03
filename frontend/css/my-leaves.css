@@ -1,0 +1,412 @@
+/* My Leaves Page Custom Styles */
+
+/* Full height layout */
+.leaves-page-content {
+    display: flex;
+    flex-direction: column;
+    min-height: calc(100vh - 80px); /* Subtract header height */
+    padding: 0;
+}
+
+.leaves-container {
+    padding: 24px 28px;
+    max-width: 1400px;
+    margin: 0 auto;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.leaves-header {
+    margin-bottom: 24px;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.leaves-header h2 {
+    font-size: 28px;
+    color: #1a3a8f;
+    font-weight: 800;
+    margin-bottom: 8px;
+    letter-spacing: 0.5px;
+}
+
+.leaves-subtitle {
+    color: #6c757d;
+    font-size: 16px;
+    font-weight: 500;
+    margin: 0;
+}
+
+.leaves-table-container {
+    background: white;
+    border-radius: 18px;
+    box-shadow: 0 4px 16px rgba(58, 95, 190, 0.08);
+    border: 1px solid #e1e7ed;
+    overflow: hidden;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 400px;
+}
+
+.leaves-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    flex: 1;
+}
+
+.leaves-table thead {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-bottom: 2px solid #e1e7ed;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.leaves-table th {
+    padding: 16px 12px;
+    text-align: left;
+    font-weight: 700;
+    color: #1a3a8f;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    border-right: 1px solid #e1e7ed;
+}
+
+.leaves-table th:last-child {
+    border-right: none;
+}
+
+.leaves-table td {
+    padding: 16px 12px;
+    border-bottom: 1px solid #f1f3f4;
+    border-right: 1px solid #f1f3f4;
+    vertical-align: middle;
+    color: #495057;
+    font-weight: 500;
+}
+
+.leaves-table td:last-child {
+    border-right: none;
+}
+
+.leaves-table tbody tr {
+    transition: all 0.2s ease;
+}
+
+.leaves-table tbody tr:hover {
+    background-color: #f8f9fa;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+/* Status styling */
+.status {
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    display: inline-block;
+    text-align: center;
+    min-width: 80px;
+}
+
+.status.pending {
+    background-color: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffeaa7;
+}
+
+.status.approved {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.status.rejected {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+/* Action buttons */
+.btn-approve, .btn-reject {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin: 2px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.btn-approve {
+    background: linear-gradient(135deg, #20c997 0%, #17a2b8 100%);
+    color: white;
+    box-shadow: 0 2px 6px rgba(32, 201, 151, 0.2);
+}
+
+.btn-approve:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(32, 201, 151, 0.3);
+}
+
+.btn-reject {
+    background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+    color: white;
+    box-shadow: 0 2px 6px rgba(220, 53, 69, 0.2);
+}
+
+.btn-reject:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
+}
+
+/* Status indicators for non-action rows */
+.leaves-table small {
+    font-weight: 600;
+    font-size: 12px;
+    padding: 4px 8px;
+    border-radius: 12px;
+    display: inline-block;
+}
+
+.leaves-table small:contains("✔") {
+    color: #155724;
+    background-color: #d4edda;
+}
+
+.leaves-table small:contains("❌") {
+    color: #721c24;
+    background-color: #f8d7da;
+}
+
+.leaves-table small:contains("⌛") {
+    color: #856404;
+    background-color: #fff3cd;
+}
+
+/* Empty state styling */
+.leaves-table tbody tr td[colspan] {
+    text-align: center;
+    padding: 40px 20px;
+    color: #6c757d;
+    font-style: italic;
+    font-size: 16px;
+}
+
+/* Pagination Styles */
+.pagination-container {
+    margin-top: 24px;
+    padding: 20px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(58, 95, 190, 0.06);
+    border: 1px solid #e1e7ed;
+    flex-shrink: 0;
+}
+
+.pagination-info {
+    color: #6c757d;
+    font-size: 14px;
+    font-weight: 500;
+    margin-left: 20px;
+}
+
+.pagination-controls {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-right: 20px;
+}
+
+.pagination-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 16px;
+    border: 1px solid #e1e7ed;
+    background: white;
+    color: #1a3a8f;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+}
+
+.pagination-btn:hover:not(:disabled) {
+    background: #f8f9fa;
+    border-color: #3A5FBE;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 6px rgba(58, 95, 190, 0.1);
+}
+
+.pagination-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.pagination-btn svg {
+    width: 16px;
+    height: 16px;
+}
+
+.page-numbers {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+}
+
+.page-number {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #e1e7ed;
+    background: white;
+    color: #1a3a8f;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+}
+
+.page-number:hover {
+    background: #f8f9fa;
+    border-color: #3A5FBE;
+    transform: translateY(-1px);
+}
+
+.page-number.active {
+    background: linear-gradient(135deg, #3A5FBE 0%, #2a4aaf 100%);
+    color: white;
+    border-color: #3A5FBE;
+    box-shadow: 0 2px 6px rgba(58, 95, 190, 0.2);
+}
+
+.page-number.active:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(58, 95, 190, 0.3);
+}
+
+/* Responsive design */
+@media (max-width: 1200px) {
+    .leaves-container {
+        padding: 20px 16px;
+    }
+    
+    .leaves-table {
+        font-size: 13px;
+    }
+    
+    .leaves-table th,
+    .leaves-table td {
+        padding: 12px 8px;
+    }
+    
+    .pagination-container {
+        flex-direction: column;
+        gap: 16px;
+        padding: 16px;
+    }
+    
+    .pagination-info {
+        margin-left: 0;
+        text-align: center;
+    }
+    
+    .pagination-controls {
+        margin-right: 0;
+    }
+}
+
+@media (max-width: 900px) {
+    .leaves-table-container {
+        overflow-x: auto;
+        border-radius: 12px;
+    }
+    
+    .leaves-table {
+        min-width: 800px;
+    }
+    
+    .leaves-header h2 {
+        font-size: 24px;
+    }
+    
+    .leaves-subtitle {
+        font-size: 14px;
+    }
+    
+    .pagination-btn {
+        padding: 8px 12px;
+        font-size: 13px;
+    }
+    
+    .page-number {
+        width: 32px;
+        height: 32px;
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 768px) {
+    .leaves-container {
+        padding: 16px 12px;
+    }
+    
+    .leaves-header h2 {
+        font-size: 22px;
+    }
+    
+    .btn-approve, .btn-reject {
+        padding: 6px 12px;
+        font-size: 11px;
+    }
+    
+    .pagination-controls {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    
+    .page-numbers {
+        order: 3;
+        width: 100%;
+        justify-content: center;
+        margin-top: 8px;
+    }
+}
+
+/* Loading state */
+.leaves-table tbody tr.loading td {
+    text-align: center;
+    padding: 40px 20px;
+    color: #6c757d;
+}
+
+/* Error state */
+.leaves-table tbody tr.error td {
+    text-align: center;
+    padding: 40px 20px;
+    color: #dc3545;
+    font-weight: 600;
+} 

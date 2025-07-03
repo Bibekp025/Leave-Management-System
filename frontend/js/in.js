@@ -75,6 +75,107 @@ document.addEventListener("DOMContentLoaded", function () {
       "May", "June", "July", "August",
       "September", "October", "November", "December"
     ];
+
+    // Dynamic Nepali calendar conversion function
+    function convertToNepaliDate(englishDate) {
+      const year = englishDate.getFullYear();
+      const month = englishDate.getMonth();
+      const day = englishDate.getDate();
+      
+      // Nepali calendar data with proper day mappings for 2025-2026
+      const nepaliCalendarData = {
+        2025: {
+          0: { month: "Poush", year: 2081, startDay: 3, days: 29 }, // January
+          1: { month: "Magh", year: 2081, startDay: 4, days: 29 },  // February
+          2: { month: "Falgun", year: 2081, startDay: 5, days: 30 }, // March
+          3: { month: "Chaitra", year: 2081, startDay: 0, days: 30 }, // April
+          4: { month: "Baisakh", year: 2082, startDay: 2, days: 32 }, // May
+          5: { month: "Jestha", year: 2082, startDay: 5, days: 31 },  // June
+          6: { month: "Asar", year: 2082, startDay: 1, days: 32 },   // July
+          7: { month: "Shrawan", year: 2082, startDay: 4, days: 31 }, // August
+          8: { month: "Bhadra", year: 2082, startDay: 0, days: 31 },  // September
+          9: { month: "Aswin", year: 2082, startDay: 3, days: 31 },  // October
+          10: { month: "Kartik", year: 2082, startDay: 6, days: 30 }, // November
+          11: { month: "Mangsir", year: 2082, startDay: 1, days: 30 } // December
+        },
+        2026: {
+          0: { month: "Poush", year: 2082, startDay: 3, days: 29 }, // January
+          1: { month: "Magh", year: 2082, startDay: 4, days: 29 },  // February
+          2: { month: "Falgun", year: 2082, startDay: 5, days: 30 }, // March
+          3: { month: "Chaitra", year: 2082, startDay: 0, days: 30 }, // April
+          4: { month: "Baisakh", year: 2083, startDay: 2, days: 32 }, // May
+          5: { month: "Jestha", year: 2083, startDay: 5, days: 31 },  // June
+          6: { month: "Asar", year: 2083, startDay: 1, days: 32 },   // July
+          7: { month: "Shrawan", year: 2083, startDay: 4, days: 31 }, // August
+          8: { month: "Bhadra", year: 2083, startDay: 0, days: 31 },  // September
+          9: { month: "Aswin", year: 2083, startDay: 3, days: 31 },  // October
+          10: { month: "Kartik", year: 2083, startDay: 6, days: 30 }, // November
+          11: { month: "Mangsir", year: 2083, startDay: 1, days: 30 } // December
+        }
+      };
+      
+      // Day-to-day mapping for July 2025 (English to Nepali)
+      const july2025Mapping = {
+        1: 17, 2: 18, 3: 19, 4: 20, 5: 21, 6: 22, 7: 23, 8: 24, 9: 25, 10: 26,
+        11: 27, 12: 28, 13: 29, 14: 30, 15: 1, 16: 2, 17: 3, 18: 4, 19: 5, 20: 6,
+        21: 7, 22: 8, 23: 9, 24: 10, 25: 11, 26: 12, 27: 13, 28: 14, 29: 15, 30: 16, 31: 17
+      };
+      
+      const yearData = nepaliCalendarData[year];
+      if (!yearData) {
+        // Fallback for years not in data
+        return {
+          nepaliMonth: "Baisakh",
+          nepaliYear: 2082,
+          nepaliDay: day,
+          startDay: 0,
+          days: 30
+        };
+      }
+      
+      const monthData = yearData[month];
+      if (!monthData) {
+        return {
+          nepaliMonth: "Baisakh",
+          nepaliYear: 2082,
+          nepaliDay: day,
+          startDay: 0,
+          days: 30
+        };
+      }
+      
+      // Special handling for July 2025 with proper day mapping
+      if (year === 2025 && month === 6) {
+        const nepaliDay = july2025Mapping[day] || day;
+        return {
+          nepaliMonth: monthData.month,
+          nepaliYear: monthData.year,
+          nepaliDay: nepaliDay,
+          startDay: monthData.startDay,
+          days: monthData.days
+        };
+      }
+      
+      // For other months, use a more accurate calculation
+      // Calculate days since the start of the year
+      const startOfYear = new Date(year, 0, 1);
+      const daysSinceStart = Math.floor((englishDate - startOfYear) / (1000 * 60 * 60 * 24));
+      
+      // Nepali year starts around mid-April, so adjust accordingly
+      const nepaliYearOffset = month < 3 ? -1 : 0; // Adjust year for early months
+      const nepaliYear = monthData.year + nepaliYearOffset;
+      
+      // Calculate Nepali day based on the month's start day and current day
+      const nepaliDay = Math.min(day, monthData.days);
+      
+      return {
+        nepaliMonth: monthData.month,
+        nepaliYear: nepaliYear,
+        nepaliDay: nepaliDay,
+        startDay: monthData.startDay,
+        days: monthData.days
+      };
+    }
   
     const monthsData = [
       {
@@ -235,26 +336,26 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     ];
   
-    const today = new Date();
-    const currentADYear = today.getFullYear();
-    const currentADMonth = today.getMonth();
-    const currentADDay = today.getDate();
+    let today = new Date();
+    let currentADYear = today.getFullYear();
+    let currentADMonth = today.getMonth();
+    let currentADDay = today.getDate();
   
-    // For July 2025 (Asar 2082), we need to show Asar month
-    let currentMonthIndex;
-    if (currentADYear === 2025 && currentADMonth === 6) {
-      // July 2025 - show Asar month (index 2)
-      currentMonthIndex = 2;
-    } else {
-      currentMonthIndex = monthsData.findIndex(month =>
-        month.englishYear === currentADYear &&
-        month.englishMonth === englishMonths[currentADMonth]
-      );
-    }
+    // Get current Nepali date dynamically
+    const currentNepaliDate = convertToNepaliDate(today);
+    
+    // Find the appropriate month in monthsData or create dynamic month
+    let currentMonthIndex = monthsData.findIndex(month =>
+      month.nepaliMonth === currentNepaliDate.nepaliMonth &&
+      month.nepaliYear === currentNepaliDate.nepaliYear
+    );
   
     if (currentMonthIndex === -1) {
-      // If not found, default to Asar
-      currentMonthIndex = 2;
+      // If not found, default to current month index based on English month
+      currentMonthIndex = currentADMonth;
+      if (currentMonthIndex >= monthsData.length) {
+        currentMonthIndex = 0; // Default to first month
+      }
     }
   
     const calendarDays = document.getElementById('calendar-days');
@@ -264,22 +365,20 @@ document.addEventListener("DOMContentLoaded", function () {
     const englishTodayDisplay = document.getElementById('current-english');
   
     function renderCalendar() {
-      const monthData = monthsData[currentMonthIndex];
+      // Recalculate today every render
+      today = new Date();
+      currentADYear = today.getFullYear();
+      currentADMonth = today.getMonth();
+      currentADDay = today.getDate();
+  
+      let monthData = monthsData[currentMonthIndex];
       nepaliMonthDisplay.textContent = `${monthData.nepaliMonth} ${monthData.nepaliYear}`;
       englishMonthDisplay.textContent = `${monthData.englishMonth} ${monthData.englishYear}`;
       
-      // Update today's date display
-      const today = new Date();
-      const currentADYear = today.getFullYear();
-      const currentADMonth = today.getMonth();
-      
-      if (currentADYear === 2025 && currentADMonth === 6) {
-        nepaliTodayDisplay.textContent = `Today: Asar 17, 2082`;
-        englishTodayDisplay.textContent = `July 2, 2025`;
-      } else {
-        nepaliTodayDisplay.textContent = `Today: ${monthData.nepaliMonth} ${currentADDay}, ${monthData.nepaliYear}`;
-        englishTodayDisplay.textContent = `${monthData.englishMonth} ${currentADDay}, ${monthData.englishYear}`;
-      }
+      // Update today's date display using dynamic conversion
+      const currentNepaliDate = convertToNepaliDate(today);
+      nepaliTodayDisplay.textContent = `Today: ${currentNepaliDate.nepaliMonth} ${currentNepaliDate.nepaliDay}, ${currentNepaliDate.nepaliYear}`;
+      englishTodayDisplay.textContent = `${englishMonths[currentADMonth]} ${currentADDay}, ${currentADYear}`;
   
       calendarDays.innerHTML = '';
   
@@ -302,22 +401,15 @@ document.addEventListener("DOMContentLoaded", function () {
           dayEl.title = monthData.holidays[day];
         }
   
-        // Check if this is today's date with proper Nepali-English mapping
+        // Check if this is today's date using dynamic conversion
         let isToday = false;
+        const currentNepaliDate = convertToNepaliDate(today);
         
-        // Special mapping for July 2025 = Asar 2082
-        if (currentADYear === 2025 && currentADMonth === 6) {
-          // July 2, 2025 = Asar 17, 2082
-          if (monthData.nepaliMonth === "Asar" && monthData.nepaliYear === 2082 && day === 17) {
-            isToday = true;
-          }
-        } else {
-          // For other dates, use the standard logic
-          isToday = (
-            monthData.englishYear === currentADYear &&
-            monthData.englishMonth === englishMonths[currentADMonth] &&
-            day === currentADDay
-          );
+        // Check if this day matches today's Nepali date
+        if (monthData.nepaliMonth === currentNepaliDate.nepaliMonth && 
+            monthData.nepaliYear === currentNepaliDate.nepaliYear && 
+            day === currentNepaliDate.nepaliDay) {
+          isToday = true;
         }
         
         if (isToday) {
@@ -328,33 +420,12 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     }
   
-    document.getElementById('prev-month').addEventListener('click', function () {
-      if (currentMonthIndex > 0) {
-        currentMonthIndex--;
-        renderCalendar();
-        findNextHoliday();
-      }
-    });
-  
-    document.getElementById('next-month').addEventListener('click', function () {
-      if (currentMonthIndex < monthsData.length - 1) {
-        currentMonthIndex++;
-        renderCalendar();
-        findNextHoliday();
-      }
-    });
-  
-    // Function to find the next holiday
     function findNextHoliday() {
       const today = new Date();
-      const currentADYear = today.getFullYear();
-      const currentADMonth = today.getMonth();
-      const currentADDay = today.getDate();
-      
-      // For July 2, 2025, we're on Asar 17, 2082
-      let currentNepaliDay = 17;
-      let currentNepaliMonth = "Asar";
-      let currentNepaliYear = 2082;
+      const currentNepaliDate = convertToNepaliDate(today);
+      const currentNepaliDay = currentNepaliDate.nepaliDay;
+      const currentNepaliMonth = currentNepaliDate.nepaliMonth;
+      const currentNepaliYear = currentNepaliDate.nepaliYear;
       
       // Find the next holiday from current date
       let nextHoliday = null;
@@ -400,25 +471,34 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     }
   
+    document.getElementById('prev-month').addEventListener('click', function () {
+      if (currentMonthIndex > 0) {
+        currentMonthIndex--;
+        renderCalendar();
+        findNextHoliday();
+      }
+    });
+  
+    document.getElementById('next-month').addEventListener('click', function () {
+      if (currentMonthIndex < monthsData.length - 1) {
+        currentMonthIndex++;
+        renderCalendar();
+        findNextHoliday();
+      }
+    });
+  
     renderCalendar();
     findNextHoliday();
+    // Add interval to update calendar every minute
+    setInterval(() => {
+      renderCalendar();
+      findNextHoliday();
+    }, 60000);
   }
   
   // Events Management with API Integration
   async function initializeEvents() {
     window.eventsManager = new EventsManager();
-    
-    // Auto-refresh calendar on date change
-    let lastCheckedDate = new Date().getDate();
-    setInterval(() => {
-      const now = new Date();
-      const currentDate = now.getDate();
-  
-      if (currentDate !== lastCheckedDate) {
-        lastCheckedDate = currentDate;
-        location.reload(); 
-      }
-    }, 60000);
   }
   
   class EventsManager {

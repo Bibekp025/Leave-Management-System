@@ -23,10 +23,10 @@ async function loadAssignedUsers() {
     let url = '';
     if (currentUser.category === 'student') {
       url = 'http://127.0.0.1:8000/user/?category=teacher';
-      document.getElementById('assignedLabel').textContent = "Select Teacher(s)";
+      document.getElementById('assignedLabel').textContent = "Select Teacher";
     } else if (currentUser.category === 'teacher') {
       url = 'http://127.0.0.1:8000/user/?category=hr';
-      document.getElementById('assignedLabel').textContent = "Select HR(s)";
+      document.getElementById('assignedLabel').textContent = "Select HR";
     } else {
       console.warn('Unknown category:', currentUser.category);
       return;
@@ -42,7 +42,11 @@ async function loadAssignedUsers() {
     const users = await response.json();
 
     const select = document.getElementById('assignedTeachers');
-    select.innerHTML = '';
+    if (currentUser.category === 'student') {
+      select.innerHTML = '<option value="">Select Teacher</option>';
+    } else if (currentUser.category === 'teacher') {
+      select.innerHTML = '<option value="">Select HR</option>';
+    }
 
     users.forEach(user => {
       const option = document.createElement('option');
@@ -113,15 +117,18 @@ window.addEventListener('DOMContentLoaded', () => {
 document.querySelector('.leave-form').addEventListener('submit', async function (e) {
   e.preventDefault();
 
-  // Clear errors
+  // Clear errors and success messages
   document.querySelectorAll('.error-message').forEach(el => el.textContent = '');
+  const successMessage = document.getElementById('success-message');
+  if (successMessage) {
+    successMessage.remove();
+  }
 
   const leaveType = document.getElementById('leaveType').value;
   const fromDate = document.getElementById('fromDate').value;
   const toDate = document.getElementById('toDate').value;
   const reason = document.getElementById('reason').value.trim();
-  const selectedOptions = document.getElementById('assignedTeachers').selectedOptions;
-const assignedUsers = Array.from(selectedOptions).map(option => parseInt(option.value));
+  const assignedUser = document.getElementById('assignedTeachers').value;
 
   let valid = true;
 
@@ -139,8 +146,8 @@ const assignedUsers = Array.from(selectedOptions).map(option => parseInt(option.
     valid = false;
   }
 
-  if (assignedUsers.length === 0) {
-    document.getElementById('error-assignedTeachers').textContent = 'Please select at least one assigned user.';
+  if (!assignedUser) {
+    document.getElementById('error-assignedTeachers').textContent = 'Please select an assigned user.';
     valid = false;
   }
 
@@ -153,19 +160,20 @@ const assignedUsers = Array.from(selectedOptions).map(option => parseInt(option.
   }
 
   // 📦 Prepare payload dynamically
-const formData = {
-  leave_type: leaveType,
-  from_date: fromDate,
-  to_date: toDate,
-  reason: reason
-};
+  const formData = {
+    leave_type: parseInt(leaveType),
+    from_date: fromDate,
+    to_date: toDate,
+    reason: reason
+  };
 
-if (currentUser.category === 'student') {
-  formData.assigned_teachers = assignedUsers; // ✅ already correct
-} else if (currentUser.category === 'teacher') {
-  formData.assigned_hrs = assignedUsers; // ✅ fix: use 'assigned_hrs'
-}
-console.log('Submitting leave with data:', formData);
+  if (currentUser.category === 'student') {
+    formData.assigned_teachers = [parseInt(assignedUser)];
+  } else if (currentUser.category === 'teacher') {
+    formData.assigned_hrs = [parseInt(assignedUser)];
+  }
+
+  console.log('Submitting leave with data:', formData);
 
   const submitBtn = e.target.querySelector('button[type="submit"]');
   submitBtn.disabled = true;
@@ -183,28 +191,39 @@ console.log('Submitting leave with data:', formData);
     const data = await response.json();
 
     if (response.ok) {
-      alert('Leave applied successfully!');
+      // Show success message below the form
+      showSuccessMessage('Leave applied successfully!');
+      
+      // Reset form
       e.target.reset();
-      window.location.href = "my-leaves.html";
+      
+      // Redirect after 5 seconds
+      setTimeout(() => {
+        window.location.href = "my-leaves.html";
+      }, 5000);
     } else {
+      console.error('Server response:', data);
       // 🧾 Show validation errors from backend
-      if (data.leave_type_id) {
-        document.getElementById('error-leaveType').textContent = data.leave_type_id.join(' ');
+      if (data.leave_type) {
+        document.getElementById('error-leaveType').textContent = Array.isArray(data.leave_type) ? data.leave_type.join(' ') : data.leave_type;
       }
-      if (data.start_date) {
-        document.getElementById('error-fromDate').textContent = data.start_date.join(' ');
+      if (data.from_date) {
+        document.getElementById('error-fromDate').textContent = Array.isArray(data.from_date) ? data.from_date.join(' ') : data.from_date;
       }
-      if (data.end_date) {
-        document.getElementById('error-toDate').textContent = data.end_date.join(' ');
+      if (data.to_date) {
+        document.getElementById('error-toDate').textContent = Array.isArray(data.to_date) ? data.to_date.join(' ') : data.to_date;
       }
       if (data.reason) {
-        document.getElementById('error-reason').textContent = data.reason.join(' ');
+        document.getElementById('error-reason').textContent = Array.isArray(data.reason) ? data.reason.join(' ') : data.reason;
       }
       if (data.assigned_teachers) {
-        document.getElementById('error-assignedTeachers').textContent = data.assigned_teachers.join(' ');
+        document.getElementById('error-assignedTeachers').textContent = Array.isArray(data.assigned_teachers) ? data.assigned_teachers.join(' ') : data.assigned_teachers;
       }
-      if (data.assigned_hr) {
-        document.getElementById('error-assignedTeachers').textContent = data.assigned_hr.join(' ');
+      if (data.assigned_hrs) {
+        document.getElementById('error-assignedTeachers').textContent = Array.isArray(data.assigned_hrs) ? data.assigned_hrs.join(' ') : data.assigned_hrs;
+      }
+      if (data.non_field_errors) {
+        alert('Error: ' + (Array.isArray(data.non_field_errors) ? data.non_field_errors.join(' ') : data.non_field_errors));
       }
     }
   } catch (error) {
@@ -214,4 +233,133 @@ console.log('Submitting leave with data:', formData);
   } finally {
     submitBtn.disabled = false;
   }
+});
+
+// Function to show success message
+function showSuccessMessage(message) {
+  // Remove any existing success message
+  const existingSuccess = document.getElementById('success-message');
+  if (existingSuccess) {
+    existingSuccess.remove();
+  }
+
+  // Create success message element
+  const successDiv = document.createElement('div');
+  successDiv.id = 'success-message';
+  successDiv.className = 'success-message';
+  successDiv.innerHTML = `
+    <div class="success-content">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+      </svg>
+      <span>${message}</span>
+    </div>
+  `;
+
+  // Insert after the form submit button row
+  const submitRow = document.querySelector('.form-row-submit');
+  if (submitRow) {
+    submitRow.parentNode.insertBefore(successDiv, submitRow.nextSibling);
+  } else {
+    // Fallback: insert after the form
+    const form = document.querySelector('.leave-form');
+    form.parentNode.insertBefore(successDiv, form.nextSibling);
+  }
+}
+
+// User Data Management
+async function initializeUserData() {
+  const token = localStorage.getItem("authToken");
+  
+  try {
+    const response = await fetch("http://127.0.0.1:8000/user/self/", {
+      headers: {
+        Authorization: `Token ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    
+    if (!response.ok) {
+      throw new Error("Failed to fetch user info");
+    }
+    
+    const user = await response.json();
+    updateUserInterface(user);
+    
+  } catch (error) {
+    console.error("Error fetching user info:", error);
+    // Handle authentication error
+    if (error.message.includes("401") || error.message.includes("403")) {
+      localStorage.removeItem("authToken");
+      window.location.href = "login.html";
+    }
+  }
+}
+
+function updateUserInterface(user) {
+  const userAvatar = document.querySelector(".user-avatar");
+  const userName = document.querySelector(".user-name");
+  
+  if (userAvatar) {
+    const displayName = user.first_name || user.username || "User";
+    userAvatar.textContent = displayName.charAt(0).toUpperCase();
+  }
+  
+  if (userName) {
+    const displayName = user.first_name || user.username || "User";
+    userName.textContent = displayName;
+  }
+}
+
+// User Dropdown Functions
+function initializeUserDropdown() {
+  // User Dropdown Functions
+  function toggleUserDropdown() {
+    const dropdown = document.getElementById('userDropdown');
+    if (dropdown) {
+      dropdown.classList.toggle('show');
+    }
+  }
+
+  function handleProfile() {
+    window.location.href = 'profile.html';
+    closeUserDropdown();
+  }
+
+  function handleLogout() {
+    if (confirm('Are you sure you want to logout?')) {
+      localStorage.removeItem('authToken');
+      localStorage.removeItem('userData');
+      window.location.href = 'login.html';
+    }
+    closeUserDropdown();
+  }
+
+  function closeUserDropdown() {
+    const dropdown = document.getElementById('userDropdown');
+    if (dropdown) {
+      dropdown.classList.remove('show');
+    }
+  }
+
+  // Close dropdown when clicking outside
+  document.addEventListener('click', function(event) {
+    const userMenu = document.querySelector('.user-menu');
+    const dropdown = document.getElementById('userDropdown');
+    
+    if (userMenu && dropdown && !userMenu.contains(event.target) && dropdown.classList.contains('show')) {
+      closeUserDropdown();
+    }
+  });
+
+  // Expose functions to global scope for button onclick handlers
+  window.toggleUserDropdown = toggleUserDropdown;
+  window.handleProfile = handleProfile;
+  window.handleLogout = handleLogout;
+}
+
+// Initialize user data and dropdown when page loads
+document.addEventListener("DOMContentLoaded", function() {
+  initializeUserData();
+  initializeUserDropdown();
 });

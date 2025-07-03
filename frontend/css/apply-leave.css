@@ -1,0 +1,294 @@
+/* Apply Leave Page Custom Styles */
+
+.leave-form {
+    background: white;
+    border-radius: 18px;
+    box-shadow: 0 4px 16px rgba(58, 95, 190, 0.08);
+    border: 1px solid #e1e7ed;
+    padding: 24px 40px 20px 40px;
+    max-width: 900px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin: 10px auto 0 auto;
+}
+
+.leave-form h2 {
+    font-size: 22px;
+    color: #1a3a8f;
+    font-weight: 800;
+    margin-bottom: 18px;
+    text-align: center;
+    letter-spacing: 0.5px;
+}
+
+.form-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 12px;
+    width: 100%;
+    min-height: 40px;
+}
+
+.form-label {
+    flex: 0 0 180px;
+    font-size: 14px;
+    font-weight: 700;
+    color: #6c757d;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 0;
+    text-align: right;
+    padding-right: 18px;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    height: 100%;
+    margin-top: -13px;
+}
+
+.form-field {
+    flex: 1 1 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.form-input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid #e1e7ed;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 500;
+    color: #1a3a8f;
+    background: white;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: #3A5FBE;
+    box-shadow: 0 0 0 3px rgba(58, 95, 190, 0.10);
+}
+
+textarea.form-input {
+    resize: vertical;
+    min-height: 100px;
+    max-height: 200px;
+    font-family: inherit;
+    line-height: 1.5;
+}
+
+/* Regular select styling - consistent with other form inputs */
+select.form-input {
+    width: 100%;
+    min-height: 44px;
+    padding: 12px 40px 12px 16px;
+    border: 2px solid #e1e7ed;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 500;
+    color: #1a3a8f;
+    background: white;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+    appearance: none;
+    display: block;
+    margin: 0;
+    vertical-align: middle;
+    background-image: url('data:image/svg+xml;utf8,<svg fill="%231a3a8f" height="20" viewBox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    background-size: 20px 20px;
+}
+
+.form-row select.form-input {
+    align-items: center;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+select.form-input option {
+    padding: 8px 12px;
+}
+
+.error-message {
+    color: #dc3545;
+    font-size: 13px;
+    font-weight: 600;
+    margin-top: 2px;
+    min-height: 18px;
+    letter-spacing: 0.2px;
+}
+
+/* Success Message Styling */
+.success-message {
+    background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+    color: #155724;
+    border: 2px solid #28a745;
+    border-radius: 16px;
+    padding: 20px 24px;
+    margin: 24px auto 16px auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 700;
+    font-size: 16px;
+    box-shadow: 0 8px 25px rgba(40, 167, 69, 0.2);
+    animation: successSlideIn 0.5s ease-out;
+    width: 100%;
+    max-width: 500px;
+    box-sizing: border-box;
+    position: relative;
+    overflow: hidden;
+}
+
+.success-message::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    animation: shimmer 2s infinite;
+}
+
+.success-content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    z-index: 1;
+    position: relative;
+}
+
+.success-message svg {
+    color: #28a745;
+    flex-shrink: 0;
+    filter: drop-shadow(0 2px 4px rgba(40, 167, 69, 0.3));
+}
+
+.success-message span {
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+@keyframes successSlideIn {
+    0% {
+        opacity: 0;
+        transform: translateY(-30px) scale(0.9);
+    }
+    50% {
+        transform: translateY(5px) scale(1.02);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes shimmer {
+    0% {
+        left: -100%;
+    }
+    100% {
+        left: 100%;
+    }
+}
+
+.form-row-submit {
+    justify-content: center;
+    margin-top: 12px;
+    margin-bottom: 0;
+}
+
+.confirm-btn {
+    background: linear-gradient(135deg, #20c997 0%, #17a2b8 100%);
+    color: white;
+    border: none;
+    padding: 13px 0;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    box-shadow: 0 2px 8px rgba(32, 201, 151, 0.10);
+    width: 220px;
+    margin: 0 auto;
+}
+
+.confirm-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(32, 201, 151, 0.18);
+}
+
+.confirm-btn:disabled {
+    background: #6c757d;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+@media (max-width: 900px) {
+    .leave-form {
+        padding: 18px 2vw 12px 2vw;
+        max-width: 98vw;
+    }
+    .form-label {
+        flex: 0 0 120px;
+        font-size: 13px;
+        padding-right: 10px;
+    }
+    .success-message {
+        padding: 18px 20px;
+        font-size: 15px;
+        margin: 20px auto 12px auto;
+        max-width: 450px;
+    }
+    .success-content {
+        gap: 10px;
+    }
+}
+
+@media (max-width: 700px) {
+    .leave-form {
+        padding: 8px 1vw;
+    }
+    .form-row {
+        flex-direction: column;
+        align-items: stretch;
+        min-height: unset;
+        margin-bottom: 10px;
+    }
+    .form-label {
+        text-align: left;
+        padding-right: 0;
+        margin-bottom: 4px;
+    }
+    .confirm-btn {
+        width: 100%;
+    }
+    .success-message {
+        padding: 16px 18px;
+        font-size: 14px;
+        margin: 16px auto 10px auto;
+        max-width: 400px;
+        border-radius: 12px;
+    }
+    .success-content {
+        gap: 8px;
+    }
+    .success-message svg {
+        width: 18px;
+        height: 18px;
+    }
+}
