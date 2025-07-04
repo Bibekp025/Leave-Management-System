@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
-  const token = localStorage.getItem("authToken");
+  const token = sessionStorage.getItem("authToken");
 
   const logoutBtn = document.getElementById("logoutBtn");
   const userDropdownBtn = document.getElementById("userDropdownBtn");
@@ -35,7 +35,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   if (logoutBtn) {
     logoutBtn.addEventListener("click", () => {
-      localStorage.removeItem("authToken");
+      sessionStorage.removeItem("authToken");
       window.location.href = "login.html";
     });
   }

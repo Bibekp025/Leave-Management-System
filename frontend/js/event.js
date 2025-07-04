@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 function fetchEvents() {
-  const token = localStorage.getItem("authToken");
+  const token = sessionStorage.getItem("authToken");
 
   const search = document.getElementById("searchInput").value.trim();
   const category = document.getElementById("categoryFilter").value;
@@ -43,7 +43,7 @@ function fetchEvents() {
         const truncated = description.length > 100 ? description.slice(0, 100) + "..." : description;
 
         eventCard.innerHTML = `
-          <img src="${event.image || './img/placeholder.jpg'}" alt="${event.title}" class="event-image" />
+          <img src="${event.image ? `http://127.0.0.1:8000${event.image}` : './img/freshers.jpg'}" alt="${event.title}" class="event-image" onerror="this.src='./img/freshers.jpg'" />
           <h3>${event.title}</h3>
           <p><strong>Location:</strong> ${event.location}</p>
           <p><strong>Time:</strong> ${formatDateTime(event.start_time)} - ${formatDateTime(event.end_time)}</p>
@@ -64,7 +64,7 @@ function fetchEvents() {
         }
 
         const img = eventCard.querySelector(".event-image");
-        img.addEventListener("click", () => openModal(event.image || './img/placeholder.jpg'));
+        img.addEventListener("click", () => openModal(event.image ? `http://127.0.0.1:8000${event.image}` : './img/freshers.jpg'));
       });
     })
     .catch((error) => {
@@ -73,7 +73,7 @@ function fetchEvents() {
 }
 
 function fetchCategories() {
-  const token = localStorage.getItem("authToken");
+  const token = sessionStorage.getItem("authToken");
 
   fetch("http://127.0.0.1:8000/events/categories/", {
     headers: {

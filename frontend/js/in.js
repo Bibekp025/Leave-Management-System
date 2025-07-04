@@ -16,6 +16,8 @@ document.addEventListener("DOMContentLoaded", function () {
     
     // Initialize user dropdown functionality
     initializeUserDropdown();
+    
+    fetchAndRenderCategories();
   });
   
   // User Data Management
@@ -501,6 +503,18 @@ document.addEventListener("DOMContentLoaded", function () {
     window.eventsManager = new EventsManager();
   }
   
+  // Add a date formatting function near the top or before EventsManager
+  function formatDateTime(dateString) {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    if (isNaN(date)) return dateString;
+    // Format: e.g., Jul 5, 2025 14:00
+    return date.toLocaleString(undefined, {
+      year: 'numeric', month: 'short', day: 'numeric',
+      hour: '2-digit', minute: '2-digit', hour12: false
+    });
+  }
+  
   class EventsManager {
     constructor() {
       this.events = [];
@@ -513,7 +527,6 @@ document.addEventListener("DOMContentLoaded", function () {
   
     async loadEvents() {
       const token = sessionStorage.getItem("authToken");
-      
       try {
         const response = await fetch("http://127.0.0.1:8000/events/", {
           headers: {
@@ -521,27 +534,27 @@ document.addEventListener("DOMContentLoaded", function () {
             "Content-Type": "application/json",
           },
         });
-        
         if (!response.ok) {
           throw new Error("Failed to fetch events");
         }
-        
         const eventsData = await response.json();
-        this.events = eventsData.results || eventsData || [];
+        // Reverse the events so the latest is first
+        this.events = (eventsData.results || eventsData || []).slice().reverse();
         this.filteredEvents = [...this.events];
         this.displayEvents();
-        
       } catch (error) {
         console.error("Error loading events:", error);
         // Fallback to static events if API fails
         this.events = [
-          { title: "Fresher's Party", date: "15 DEC 2025", location: "May 3 CMT Resort", category: "party" },
-          { title: "Leadership Workshop", date: "22 DEC 2025", location: "Conference Hall", category: "training" },
-          { title: "Annual Meeting", date: "28 DEC 2025", location: "Main Auditorium", category: "meeting" },
-          { title: "Tech Innovation Summit", date: "5 JAN 2026", location: "Tech Center", category: "meeting" },
-          { title: "Team Building Retreat", date: "12 JAN 2026", location: "Mountain Resort", category: "training" },
-          { title: "New Year Celebration", date: "31 DEC 2025", location: "Rooftop Venue", category: "party" }
+          { title: "Fresher's Party", date: "15 DEC 2025", location: "May 3 CMT Resort", category: "party", image: "./img/freshers.jpg" },
+          { title: "Leadership Workshop", date: "22 DEC 2025", location: "Conference Hall", category: "training", image: "./img/freshers.jpg" },
+          { title: "Annual Meeting", date: "28 DEC 2025", location: "Main Auditorium", category: "meeting", image: "./img/freshers.jpg" },
+          { title: "Tech Innovation Summit", date: "5 JAN 2026", location: "Tech Center", category: "meeting", image: "./img/freshers.jpg" },
+          { title: "Team Building Retreat", date: "12 JAN 2026", location: "Mountain Resort", category: "training", image: "./img/freshers.jpg" },
+          { title: "New Year Celebration", date: "31 DEC 2025", location: "Rooftop Venue", category: "party", image: "./img/freshers.jpg" }
         ];
+        // Reverse fallback events as well
+        this.events.reverse();
         this.filteredEvents = [...this.events];
         this.displayEvents();
       }
@@ -554,11 +567,26 @@ document.addEventListener("DOMContentLoaded", function () {
       
       let eventsHTML = '';
       eventsToShow.forEach(event => {
+        // Handle image URL - if image exists, use it, otherwise use a default
+        const imageUrl = event.image ? `http://127.0.0.1:8000${event.image}` : './img/freshers.jpg';
+        // Format event date using start_time and end_time
+        let eventDate = 'TBD';
+        if (event.start_time) {
+          eventDate = formatDateTime(event.start_time);
+          if (event.end_time) {
+            eventDate += ' - ' + formatDateTime(event.end_time);
+          }
+        }
         eventsHTML += `
           <div class="event-card">
-            <div class="event-title">${event.title}</div>
-            <div class="event-date">${event.date || event.event_date || 'TBD'}</div>
-            <div class="event-location">${event.location || event.venue || 'Location TBD'}</div>
+            <div class="event-image">
+              <img src="${imageUrl}" alt="${event.title}" onerror="this.src='./img/freshers.jpg'">
+            </div>
+            <div class="event-content">
+              <div class="event-title">${event.title}</div>
+              <div class="event-date">${eventDate}</div>
+              <div class="event-location">${event.location || event.venue || 'Location TBD'}</div>
+            </div>
           </div>
         `;
       });
@@ -591,16 +619,17 @@ document.addEventListener("DOMContentLoaded", function () {
   
     filterEvents() {
       const searchTerm = document.getElementById('searchEvents')?.value.toLowerCase() || '';
-      const category = document.getElementById('eventCategory')?.value || '';
-      
+      const categoryId = document.getElementById('eventCategory')?.value || '';
       this.filteredEvents = this.events.filter(event => {
         const matchesSearch = event.title?.toLowerCase().includes(searchTerm) ||
-                            event.location?.toLowerCase().includes(searchTerm) ||
-                            event.venue?.toLowerCase().includes(searchTerm);
-        const matchesCategory = !category || event.category === category;
+          event.location?.toLowerCase().includes(searchTerm) ||
+          event.venue?.toLowerCase().includes(searchTerm) ||
+          event.description?.toLowerCase().includes(searchTerm);
+        // Match by category id if present, fallback to name for static events
+        const matchesCategory = !categoryId ||
+          (event.category && (event.category.id == categoryId || event.category === categoryId || event.category.name == categoryId));
         return matchesSearch && matchesCategory;
       });
-      
       this.currentIndex = 0;
       this.displayEvents();
     }
@@ -616,6 +645,14 @@ document.addEventListener("DOMContentLoaded", function () {
       if (categorySelect) {
         categorySelect.addEventListener('change', () => this.filterEvents());
       }
+    }
+  
+    // Add a method to add a new event at the beginning
+    addEvent(newEvent) {
+      this.events.unshift(newEvent);
+      this.filteredEvents = [...this.events];
+      this.currentIndex = 0;
+      this.displayEvents();
     }
   }
   
@@ -711,3 +748,27 @@ document.addEventListener("DOMContentLoaded", function () {
   
   // Expose apply leave function globally
   window.handleApplyLeave = handleApplyLeave;
+
+  // Add this function to fetch categories and populate the dropdown
+  async function fetchAndRenderCategories() {
+    const token = sessionStorage.getItem("authToken");
+    try {
+      const response = await fetch("http://127.0.0.1:8000/events/categories/", {
+        headers: {
+          Authorization: `Token ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+      if (!response.ok) throw new Error("Failed to fetch categories");
+      const categories = await response.json();
+      const categorySelect = document.getElementById("eventCategory");
+      if (categorySelect) {
+        categorySelect.innerHTML = '<option value="">Event Category</option>';
+        categories.forEach(cat => {
+          categorySelect.innerHTML += `<option value="${cat.id}">${cat.name}</option>`;
+        });
+      }
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+    }
+  }
