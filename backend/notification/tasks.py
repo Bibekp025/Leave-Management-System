@@ -18,7 +18,7 @@ def notify_teachers_about_leave(leave_id, sender_id):
             notification_type='leave',
             title=f"New Leave Request from {sender.username}",
             message=f"{sender.username} has requested leave from {leave.from_date} to {leave.to_date}.",
-            link=f"/leaves/{leave.id}/"
+            link=f"/leave/{leave.id}/"
         )
 
     for hr in leave.assigned_hrs.all(): # Notify HRs as well
@@ -28,5 +28,5 @@ def notify_teachers_about_leave(leave_id, sender_id):
             notification_type='leave',
             title=f"New Leave Request from {sender.username}",
             message=f"{sender.username} has requested leave from {leave.from_date} to {leave.to_date}.",
-            link=f"/leaves/{leave.id}/"
+            link=f"/leave/{leave.id}/"
         )
