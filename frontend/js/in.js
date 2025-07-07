@@ -567,8 +567,17 @@ document.addEventListener("DOMContentLoaded", function () {
       
       let eventsHTML = '';
       eventsToShow.forEach(event => {
-        // Handle image URL - if image exists, use it, otherwise use a default
-        const imageUrl = event.image ? `http://127.0.0.1:8000${event.image}` : './img/freshers.jpg';
+        // Robust image URL logic
+        let imageUrl = './img/freshers.jpg';
+        if (event.image) {
+          if (event.image.startsWith('http')) {
+            imageUrl = event.image;
+          } else {
+            // Remove any leading slash to avoid double slashes
+            const cleanPath = event.image.startsWith('/') ? event.image : '/' + event.image;
+            imageUrl = `http://127.0.0.1:8000${cleanPath}`;
+          }
+        }
         // Format event date using start_time and end_time
         let eventDate = 'TBD';
         if (event.start_time) {
