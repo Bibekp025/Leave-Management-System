@@ -10,7 +10,7 @@ from .permissions import (
     CanCreateLeaveTypePermission,
 )
 from notification.models import Notification
-
+from notification.tasks import notify_teachers_about_leave
 User = get_user_model()
 
 
@@ -54,17 +54,27 @@ class UserLeaveListCreateAPIView(generics.ListCreateAPIView):
 
     def perform_create(self, serializer):
         leave = serializer.save(user=self.request.user)
-
+        notify_teachers_about_leave.delay(leave.id, self.request.user.id)
+        
         # Notify assigned teachers
-        for teacher in leave.assigned_teachers.all():
-            Notification.objects.create(
-                recipient=teacher,
-                sender=self.request.user,
-                notification_type='leave',
-                title=f"New Leave Request from {self.request.user.username}",
-                message=f"{self.request.user.username} has requested leave from {leave.from_date} to {leave.to_date}.",
-                link=f"/leaves/{leave.id}/"
-            )
+        # for teacher in leave.assigned_teachers.all():
+        #     Notification.objects.create(
+        #         recipient=teacher,
+        #         sender=self.request.user,
+        #         notification_type='leave',
+        #         title=f"New Leave Request from {self.request.user.username}",
+        #         message=f"{self.request.user.username} has requested leave from {leave.from_date} to {leave.to_date}.",
+        #         link=f"/leaves/{leave.id}/"
+        #     )
+        # for hr in leave.assigned_hrs.all():
+        #     Notification.objects.create(
+        #         recipient=hr,
+        #         sender=self.request.user,
+        #         notification_type='leave',
+        #         title=f"New Leave Request from {self.request.user.username}",
+        #         message=f"{self.request.user.username} has requested leave from {leave.from_date} to {leave.to_date}.",
+        #         link=f"/leaves/{leave.id}/"
+        #     )
 
 
 class UserLeaveRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
@@ -75,7 +85,7 @@ class UserLeaveRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIVie
     def perform_update(self, serializer):
         leave = serializer.save()
 
-        # Notify the leave owner about status update
+      
         Notification.objects.create(
             recipient=leave.user,
             sender=self.request.user,

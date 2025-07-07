@@ -41,7 +41,7 @@ function fetchEvents() {
 
         const description = event.description;
         const truncated = description.length > 100 ? description.slice(0, 100) + "..." : description;
-
+        console.log(event.image)
         eventCard.innerHTML = `
           <img src="${event.image ? `http://127.0.0.1:8000${event.image}` : './img/freshers.jpg'}" alt="${event.title}" class="event-image" onerror="this.src='./img/freshers.jpg'" />
           <h3>${event.title}</h3>
@@ -50,6 +50,7 @@ function fetchEvents() {
           <p class="event-description">${truncated}</p>
           ${description.length > 100 ? '<button class="read-more-btn">Read more</button>' : ''}
         `;
+        console.log(event.title)
 
         eventsContainer.appendChild(eventCard);
 

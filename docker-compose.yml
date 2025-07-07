@@ -1,7 +1,28 @@
-version: "3.9"
+version: '3.9'
+
 services:
   web:
     build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/app
+    working_dir: /app/backend
     ports:
       - "8000:8000"
-    command: python manage.py runserver 0.0.0.0:8000
+    depends_on:
+      - redis
+      - celery
+
+  redis:
+    image: redis:7
+    ports:
+      - "6379:6379"
+
+  celery:
+    build: .
+    command: celery -A core worker -l info
+    volumes:
+      - .:/app
+    working_dir: /app/backend
+    depends_on:
+      - redis
