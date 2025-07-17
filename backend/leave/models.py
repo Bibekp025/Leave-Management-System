@@ -25,6 +25,7 @@ class Leave(models.Model):
     leave_type = models.ForeignKey(LeaveType, on_delete=models.PROTECT)
     from_date = models.DateField()
     to_date = models.DateField()
+    days = models.IntegerField(default=0)
     reason = models.TextField(blank=True)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending')
     created_at = models.DateTimeField(auto_now_add=True)
@@ -32,3 +33,6 @@ class Leave(models.Model):
 
     def __str__(self):
         return f"{self.leave_type} leave for {self.user.username} from {self.from_date} to {self.to_date} - {self.status}"
+class LeaveBalance(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    total_leaves = models.IntegerField(default=30)

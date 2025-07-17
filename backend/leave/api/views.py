@@ -1,7 +1,11 @@
 from rest_framework import permissions
 from .serializers import LeaveSerializer, LeaveTypeSerializer
-from ..models import Leave, LeaveType
+from ..models import Leave, LeaveType, LeaveBalance
 from rest_framework import generics
+from rest_framework.views import APIView
+from django.db.models import Sum
+
+from rest_framework.response import Response
 from django.contrib.auth import get_user_model
 from .permissions import (
     CanCreateLeavePermission,
@@ -101,4 +105,22 @@ class UserLeaveRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIVie
         #     title="Your Leave Request was Updated",
         #     message=f"{self.request.user.username} has updated your leave request.",
         #     link=f"/leaves/{leave.id}/"
-        # )
+class LeaveSummaryView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        user = request.user
+        TOTAL_DAYS = 48
+        total_available = int(TOTAL_DAYS * 0.2)  # 80% of total days
+
+        # Total applied leave applications (excluding rejected)
+        applied_count = Leave.objects.filter(user=user).exclude(status='rejected').count()
+
+        # Total approved leave applications
+        approved_count = Leave.objects.filter(user=user, status='approved').count()
+
+        return Response({
+            'total_available_leave': total_available,
+            'total_applied_leave': applied_count,
+            'total_approved_leave': approved_count,
+        })
