@@ -1,10 +1,15 @@
 document.addEventListener("DOMContentLoaded", function () {
     const leaveTypeSelect = document.getElementById("leaveType");
 
-    const token = localStorage.getItem("authToken"); 
+    // Use sessionStorage first, fallback to localStorage
+    const token = sessionStorage.getItem("authToken") || localStorage.getItem("authToken");
+    if (!token) {
+      console.error("No auth token found in sessionStorage or localStorage");
+      return;
+    }
     fetch("http://127.0.0.1:8000/leave/leave-types/", {
       headers: {
-        "Authorization": `Token ${token}`, 
+        "Authorization": `Token ${token}`,
         "Content-Type": "application/json"
       }
     })
@@ -17,8 +22,8 @@ document.addEventListener("DOMContentLoaded", function () {
       .then(data => {
         data.forEach(item => {
           const option = document.createElement("option");
-          option.value = item.id; 
-          option.textContent = item.name; 
+          option.value = item.id;
+          option.textContent = item.name;
           leaveTypeSelect.appendChild(option);
         });
       })

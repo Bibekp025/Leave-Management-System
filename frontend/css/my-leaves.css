@@ -443,6 +443,10 @@ html, body {
     overflow-y: hidden;
 }
 
+body.hr-user #dashboardApplyLeaveBtn {
+  display: none !important;
+}
+
 .action-icon-btn {
     background: none;
     border: none;

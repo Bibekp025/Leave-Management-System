@@ -888,6 +888,16 @@
             font-weight: 500;
         }
 
+        body.hr-user #dashboardApplyLeaveBtn {
+          display: none !important;
+        }
+
+        #applyLeaveNav,
+        #myLeaveNav,
+        #approveLeaveNav {
+          display: none;
+        }
+
         /* Responsive Design */
         @media (max-width: 1200px) {
             .dashboard-content {
