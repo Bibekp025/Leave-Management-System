@@ -169,7 +169,9 @@ document.addEventListener("DOMContentLoaded", function () {
     const sortedLeaves = allLeaves.slice().sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
     const startIndex = (currentPage - 1) * recordsPerPage;
     const endIndex = startIndex + recordsPerPage;
-    const currentLeaves = sortedLeaves.slice(startIndex, endIndex);
+    // Temporary frontend fix: show all leaves, no filtering by user
+    let filteredLeaves = sortedLeaves;
+    const currentLeaves = filteredLeaves.slice(startIndex, endIndex);
 
     // Hide or show the Assigned To, Status, and Actions columns in the table header
     const table = document.querySelector('.leaves-table');
