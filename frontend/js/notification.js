@@ -48,10 +48,26 @@ async function fetchNotifications() {
           <small style="color:#999;">${new Date(n.created_at).toLocaleString()}</small>
         `;
 
-        // Add click event to go to full URL
-        item.addEventListener('click', () => {
-          const fullUrl = `http://127.0.0.1:8000${n.link}`;
-          window.location.href = fullUrl;
+        // Add click event to mark as read and redirect
+        item.addEventListener('click', async () => {
+          try {
+            const markReadResponse = await fetch(`http://127.0.0.1:8000/notification/${n.id}/read/`, {
+              method: 'PATCH',
+              headers: {
+                'Authorization': 'Token ' + token,
+                'Content-Type': 'application/json',
+              }
+            });
+
+            if (markReadResponse.ok) {
+              // After marking as read, redirect
+              window.location.href = 'my-leaves.html';
+            } else {
+              console.error('Failed to mark notification as read');
+            }
+          } catch (err) {
+            console.error('Error marking notification as read:', err);
+          }
         });
 
         dropdown.appendChild(item);
