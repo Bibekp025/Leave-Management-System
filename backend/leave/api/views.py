@@ -118,7 +118,7 @@ class LeaveSummaryView(APIView):
         # Total approved leave applications
         approved_count = Leave.objects.filter(user=user, status='approved').count()
         total_available = int(TOTAL_DAYS * 0.2) - approved_count  # 80% of total days
-    
+        
 
         return Response({
             'total_available_leave': total_available,

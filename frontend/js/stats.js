@@ -29,10 +29,14 @@ async function fetchLeaveSummary() {
 
     // Optional: Show apply leave button if user has available leaves
     const applyBtn = document.getElementById('dashboardApplyLeaveBtn');
+    const applyLeaveBtn = document.getElementById('applyLeaveBtn');
     if (data.total_available_leave > 0) {
       applyBtn.style.display = 'inline-block';
+      applyLeaveBtn.style.display = 'inline-block';
+      
     } else {
       applyBtn.style.display = 'none';
+      applyLeaveBtn.style.display = 'none';
     }
 
   } catch (error) {
