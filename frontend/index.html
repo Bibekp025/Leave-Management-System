@@ -8,6 +8,7 @@
     <script src="./js/hide-approveleave.js"></script>
     <script src="./js/hide-applyleave.js"></script>
     <script src="./js/hide-myleave.js"></script>
+    <script src="./js/stats.js"></script>
 </head>
 <body>
     <div class="container">
@@ -113,27 +114,28 @@
                     <!-- Stats Cards -->
                     <div class="stats-grid">
                         <div class="stat-card total">
-                            <div class="stat-number">48</div>
+                            <div class="stat-number" id="totalDays">48</div>
                             <div class="stat-label">Total</div>
                             <div class="stat-sublabel">DAYS</div>
                         </div>
                         <div class="stat-card available">
-                            <div class="stat-number">10</div>
+                            <div class="stat-number" id="availableLeave">10</div>
                             <div class="stat-label">Available</div>
                             <div class="stat-sublabel">Leave</div>
                             <a href="apply-leave.html"><button class="apply-leave-btn" id="dashboardApplyLeaveBtn" style="display:none">Apply Leave</button></a>
                         </div>
                         <div class="stat-card applied">
-                            <div class="stat-number">4</div>
+                            <div class="stat-number" id="appliedLeave">4</div>
                             <div class="stat-label">Applied</div>
                             <div class="stat-sublabel">Leave</div>
                         </div>
                         <div class="stat-card approved">
-                            <div class="stat-number">10</div>
+                            <div class="stat-number" id="approvedLeave">10</div>
                             <div class="stat-label">Approved</div>
                             <div class="stat-sublabel">Leave</div>
                         </div>
-                    </div>
+                        </div>
+
 
                     <!-- Events Section -->
                     <div class="events-section">
