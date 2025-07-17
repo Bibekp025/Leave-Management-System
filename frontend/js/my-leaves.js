@@ -197,7 +197,7 @@ document.addEventListener("DOMContentLoaded", function () {
         assignedDisplay = leave.assigned_hrs.map(id => userMap[id] || id).join(", ");
       }
       let actionButtons = "";
-      if ((userCategory === "teacher" || userCategory === "hr") && leave.status === "pending") {
+      if (userCategory === "hr" && leave.status === "pending") {
         actionButtons = `
           <button class="btn-approve action-icon-btn" title="Approve">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
