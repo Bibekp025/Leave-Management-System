@@ -32,7 +32,7 @@
                     </div>
                     <div class="nav-label">Apply Leave</div>
                 </div>
-                <div class="nav-item active" data-page="leaves" id="myLeaveNav">
+                <div class="nav-item" data-page="leaves" onclick="window.location.href='my-leaves.html'" id="myLeaveNav">
                     <div class="nav-icon">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
                             <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>
@@ -40,7 +40,7 @@
                     </div>
                     <div class="nav-label">My Leaves</div>
                 </div>
-                <div class="nav-item" data-page="approve-leave" onclick="window.location.href='approveleave.html'" id="approveLeaveNav">
+                <div class="nav-item active" data-page="approve-leave" onclick="window.location.href='approveleave.html'" id="approveLeaveNav">
                     <div class="nav-icon">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
                             <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
@@ -110,7 +110,7 @@
             <div class="dashboard-content leaves-page-content">
                 <div class="leaves-container">
                     <div class="leaves-header">
-                        <h2>My Leave Records</h2>
+                        <h2>Approve Leaves</h2>
                         
                     </div>
                     
@@ -162,7 +162,7 @@
         </div>
     </div>
 
-    <script src="./js/my-leaves.js"></script>
+    <script src="./js/approveleave.js"></script>
     <script src="./js/auth-check.js"></script>
     <script src="./js/notification.js"></script>
 

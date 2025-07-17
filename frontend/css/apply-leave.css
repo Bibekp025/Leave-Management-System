@@ -298,3 +298,7 @@ select.form-input option {
 html, body {
     overflow-x: hidden;
 }
+
+body.hr-user #dashboardApplyLeaveBtn {
+  display: none !important;
+}

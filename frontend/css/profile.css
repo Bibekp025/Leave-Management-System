@@ -342,3 +342,7 @@
     text-align: center;
     box-shadow: 0 2px 8px rgba(220, 53, 69, 0.08);
 }
+
+body.hr-user #dashboardApplyLeaveBtn {
+  display: none !important;
+}

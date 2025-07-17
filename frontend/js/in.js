@@ -80,100 +80,56 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Dynamic Nepali calendar conversion function
     function convertToNepaliDate(englishDate) {
-      const year = englishDate.getFullYear();
-      const month = englishDate.getMonth();
-      const day = englishDate.getDate();
-      
-      // Nepali calendar data with proper day mappings for 2025-2026
-      const nepaliCalendarData = {
-        2025: {
-          0: { month: "Poush", year: 2081, startDay: 3, days: 29 }, // January
-          1: { month: "Magh", year: 2081, startDay: 4, days: 29 },  // February
-          2: { month: "Falgun", year: 2081, startDay: 5, days: 30 }, // March
-          3: { month: "Chaitra", year: 2081, startDay: 0, days: 30 }, // April
-          4: { month: "Baisakh", year: 2082, startDay: 2, days: 32 }, // May
-          5: { month: "Jestha", year: 2082, startDay: 5, days: 31 },  // June
-          6: { month: "Asar", year: 2082, startDay: 1, days: 32 },   // July
-          7: { month: "Shrawan", year: 2082, startDay: 4, days: 31 }, // August
-          8: { month: "Bhadra", year: 2082, startDay: 0, days: 31 },  // September
-          9: { month: "Aswin", year: 2082, startDay: 3, days: 31 },  // October
-          10: { month: "Kartik", year: 2082, startDay: 6, days: 30 }, // November
-          11: { month: "Mangsir", year: 2082, startDay: 1, days: 30 } // December
-        },
-        2026: {
-          0: { month: "Poush", year: 2082, startDay: 3, days: 29 }, // January
-          1: { month: "Magh", year: 2082, startDay: 4, days: 29 },  // February
-          2: { month: "Falgun", year: 2082, startDay: 5, days: 30 }, // March
-          3: { month: "Chaitra", year: 2082, startDay: 0, days: 30 }, // April
-          4: { month: "Baisakh", year: 2083, startDay: 2, days: 32 }, // May
-          5: { month: "Jestha", year: 2083, startDay: 5, days: 31 },  // June
-          6: { month: "Asar", year: 2083, startDay: 1, days: 32 },   // July
-          7: { month: "Shrawan", year: 2083, startDay: 4, days: 31 }, // August
-          8: { month: "Bhadra", year: 2083, startDay: 0, days: 31 },  // September
-          9: { month: "Aswin", year: 2083, startDay: 3, days: 31 },  // October
-          10: { month: "Kartik", year: 2083, startDay: 6, days: 30 }, // November
-          11: { month: "Mangsir", year: 2083, startDay: 1, days: 30 } // December
-        }
-      };
-      
-      // Day-to-day mapping for July 2025 (English to Nepali)
-      const july2025Mapping = {
-        1: 17, 2: 18, 3: 19, 4: 20, 5: 21, 6: 22, 7: 23, 8: 24, 9: 25, 10: 26,
-        11: 27, 12: 28, 13: 29, 14: 30, 15: 1, 16: 2, 17: 3, 18: 4, 19: 5, 20: 6,
-        21: 7, 22: 8, 23: 9, 24: 10, 25: 11, 26: 12, 27: 13, 28: 14, 29: 15, 30: 16, 31: 17
-      };
-      
-      const yearData = nepaliCalendarData[year];
-      if (!yearData) {
-        // Fallback for years not in data
+      // Use UTC to avoid timezone issues
+      function toUTCDate(date) {
+        return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+      }
+      const nepaliNewYear = new Date(Date.UTC(2025, 3, 14)); // April 14, 2025 UTC
+      const inputDate = toUTCDate(englishDate);
+      const monthsData2082 = monthsData.filter(m => m.nepaliYear === 2082);
+      const monthsData2083 = monthsData.filter(m => m.nepaliYear === 2083);
+      let monthsList = monthsData2082;
+      let nepaliYear = 2082;
+      // If date is after the last month of 2082, switch to 2083
+      if (inputDate >= new Date(Date.UTC(2026, 3, 13))) { // After Chaitra 30, 2082
+        monthsList = monthsData2083;
+        nepaliYear = 2083;
+      }
+      // Calculate days since Nepali New Year
+      const daysSinceNewYear = Math.floor((inputDate - nepaliNewYear) / (1000 * 60 * 60 * 24));
+      if (daysSinceNewYear < 0) {
+        // Before supported range
         return {
           nepaliMonth: "Baisakh",
           nepaliYear: 2082,
-          nepaliDay: day,
+          nepaliDay: 1,
           startDay: 0,
-          days: 30
+          days: 32
         };
       }
-      
-      const monthData = yearData[month];
+      // Walk through months to find the current Nepali month and day
+      let dayCount = daysSinceNewYear;
+      let monthIdx = 0;
+      let monthData = monthsList[monthIdx];
+      while (monthData && dayCount >= monthData.days) {
+        dayCount -= monthData.days;
+        monthIdx++;
+        monthData = monthsList[monthIdx];
+      }
       if (!monthData) {
+        // After last month, roll over to next year
         return {
-          nepaliMonth: "Baisakh",
-          nepaliYear: 2082,
-          nepaliDay: day,
-          startDay: 0,
-          days: 30
+          nepaliMonth: monthsList[monthsList.length - 1].nepaliMonth,
+          nepaliYear: nepaliYear,
+          nepaliDay: monthsList[monthsList.length - 1].days,
+          startDay: monthsList[monthsList.length - 1].startDay,
+          days: monthsList[monthsList.length - 1].days
         };
       }
-      
-      // Special handling for July 2025 with proper day mapping
-      if (year === 2025 && month === 6) {
-        const nepaliDay = july2025Mapping[day] || day;
-        return {
-          nepaliMonth: monthData.month,
-          nepaliYear: monthData.year,
-          nepaliDay: nepaliDay,
-          startDay: monthData.startDay,
-          days: monthData.days
-        };
-      }
-      
-      // For other months, use a more accurate calculation
-      // Calculate days since the start of the year
-      const startOfYear = new Date(year, 0, 1);
-      const daysSinceStart = Math.floor((englishDate - startOfYear) / (1000 * 60 * 60 * 24));
-      
-      // Nepali year starts around mid-April, so adjust accordingly
-      const nepaliYearOffset = month < 3 ? -1 : 0; // Adjust year for early months
-      const nepaliYear = monthData.year + nepaliYearOffset;
-      
-      // Calculate Nepali day based on the month's start day and current day
-      const nepaliDay = Math.min(day, monthData.days);
-      
       return {
-        nepaliMonth: monthData.month,
-        nepaliYear: nepaliYear,
-        nepaliDay: nepaliDay,
+        nepaliMonth: monthData.nepaliMonth,
+        nepaliYear: monthData.nepaliYear,
+        nepaliDay: dayCount + 1,
         startDay: monthData.startDay,
         days: monthData.days
       };
@@ -186,7 +142,7 @@ document.addEventListener("DOMContentLoaded", function () {
         englishMonth: "April",
         englishYear: 2025,
         startDay: 0,
-        days: 32,
+        days: 31, // corrected
         holidays: {
           1: "Nepali New Year",
           8: "Loktantra Diwas",
@@ -200,8 +156,8 @@ document.addEventListener("DOMContentLoaded", function () {
         nepaliYear: 2082,
         englishMonth: "May",
         englishYear: 2025,
-        startDay: 4,
-        days: 31,
+        startDay: 3, // Baisakh 31 mod 7 = 3
+        days: 31, // corrected
         holidays: {
           15: "Buddha Jayanti",
           29: "Ganatantra Diwas"
@@ -213,8 +169,8 @@ document.addEventListener("DOMContentLoaded", function () {
         nepaliYear: 2082,
         englishMonth: "June-July",
         englishYear: 2025,
-        startDay: 0,
-        days: 32,
+        startDay: 6, // (Jestha 31 + startDay 3) mod 7 = 6
+        days: 32, // correct
         holidays: {
           15: "Ropain Day",
           29: "Dahi Chura Parva"
@@ -225,7 +181,7 @@ document.addEventListener("DOMContentLoaded", function () {
         nepaliYear: 2082,
         englishMonth: "July",
         englishYear: 2025,
-        startDay: 3,
+        startDay: 3, // (Asar 32 + startDay 6) mod 7 = 3
         days: 31,
         holidays: {
           5: "Nag Panchami",

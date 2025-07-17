@@ -42,8 +42,8 @@ document.addEventListener("DOMContentLoaded", function () {
   // Initialize user data and load leaves
   (async function init() {
     await fetchMappings();
-  initializeUserData();
-  loadLeaves();
+    initializeUserData();
+    loadLeaves();
   })();
 
   // User Data Management
@@ -169,9 +169,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const sortedLeaves = allLeaves.slice().sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
     const startIndex = (currentPage - 1) * recordsPerPage;
     const endIndex = startIndex + recordsPerPage;
-    // Temporary frontend fix: show all leaves, no filtering by user
-    let filteredLeaves = sortedLeaves;
-    const currentLeaves = filteredLeaves.slice(startIndex, endIndex);
+    const currentLeaves = sortedLeaves.slice(startIndex, endIndex);
 
     // Hide or show the Assigned To, Status, and Actions columns in the table header
     const table = document.querySelector('.leaves-table');
@@ -449,5 +447,4 @@ document.addEventListener("DOMContentLoaded", function () {
   function capitalize(str) {
     return str.charAt(0).toUpperCase() + str.slice(1);
   }
-});
-
+}); 
