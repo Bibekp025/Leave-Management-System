@@ -51,7 +51,7 @@ async function loadAssignedUsers() {
     users.forEach(user => {
       const option = document.createElement('option');
       option.value = user.id;
-      option.textContent = user.username;
+      option.textContent = user.first_name || user.username;
       select.appendChild(option);
     });
   } catch (error) {
