@@ -333,9 +333,9 @@
 
         .stat-card {
             background: white;
-            padding: 20px 24px;
-            border-radius: 16px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            padding: 24px 28px; /* reduced from 32px */
+            border-radius: 16px; /* reduced from 20px */
+            box-shadow: 0 5px 15px rgba(0,0,0,0.09);
             border: 1px solid #e1e7ed;
             position: relative;
             overflow: hidden;
@@ -363,10 +363,10 @@
         .stat-card.approved { --accent-color: #20c997; }
 
         .stat-number {
-            font-size: 28px;
+            font-size: 30px; /* reduced from 36px */
             font-weight: 800;
             color: var(--accent-color);
-            line-height: 1;
+            line-height: 1.1;
             margin-bottom: 8px;
         }
 
