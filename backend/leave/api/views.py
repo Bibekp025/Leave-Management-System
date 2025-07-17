@@ -23,6 +23,13 @@ class LeaveTypeListCreateAPIView(generics.ListCreateAPIView):
             return [CanCreateLeaveTypePermission()]
         return [permissions.IsAuthenticated()]
 
+class OwnLeaveListAPIView(generics.ListAPIView):
+    serializer_class = LeaveSerializer
+    permission_classes = [CanViewLeavePermission]
+
+    def get_queryset(self):
+        user = self.request.user
+        return Leave.objects.all().filter(user=user)
 
 class UserLeaveListCreateAPIView(generics.ListCreateAPIView):
     serializer_class = LeaveSerializer
@@ -84,13 +91,14 @@ class UserLeaveRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIVie
 
     def perform_update(self, serializer):
         leave = serializer.save()
-
+        notify_teachers_about_leave.delay(leave.id, self.request.user.id)
+        
       
-        Notification.objects.create(
-            recipient=leave.user,
-            sender=self.request.user,
-            notification_type='leave',
-            title="Your Leave Request was Updated",
-            message=f"{self.request.user.username} has updated your leave request.",
-            link=f"/leaves/{leave.id}/"
-        )
+        # Notification.objects.create(
+        #     recipient=leave.user,
+        #     sender=self.request.user,
+        #     notification_type='leave',
+        #     title="Your Leave Request was Updated",
+        #     message=f"{self.request.user.username} has updated your leave request.",
+        #     link=f"/leaves/{leave.id}/"
+        # )

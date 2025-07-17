@@ -205,6 +205,7 @@ document.addEventListener("DOMContentLoaded", function () {
         holidays: {
           15: "Buddha Jayanti",
           29: "Ganatantra Diwas"
+          
         }
       },
       {
@@ -216,7 +217,7 @@ document.addEventListener("DOMContentLoaded", function () {
         days: 32,
         holidays: {
           15: "Ropain Day",
-          29: "Dahin"
+          29: "Dahi Chura Parva"
         }
       },
       {
