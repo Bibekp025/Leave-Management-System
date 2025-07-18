@@ -6,6 +6,7 @@
     <title>Apply Leave - Leave Management System</title>
     <link rel="stylesheet" href="./css/index.css">
     <link rel="stylesheet" href="./css/apply-leave.css">
+    <link rel="stylesheet" href="./css/choices.min.css">
     <script src="./js/hide-approveleave.js"></script>
     <script src="./js/hide-applyleave.js"></script>
     <script src="./js/hide-myleave.js"></script>
@@ -142,8 +143,8 @@
                     <div class="form-row">
                         <label id="assignedLabel" for="assignedTeachers" class="form-label">Select Teachers</label>
                         <div class="form-field">
-                            <select id="assignedTeachers" class="form-input">
-                                <option value="">Select Teachers</option>
+                            <select id="assignedTeachers" class="form-input" multiple>
+                                <!-- No placeholder option here; Choices.js will show placeholder -->
                             </select>
                             <div class="error-message" id="error-assignedTeachers"></div>
                         </div>
@@ -164,5 +165,6 @@
     <script src="./js/apply-leave.js"></script>
     <script src="./js/auth-check.js"></script>
     <script src="./js/notification.js"></script>
+    <script src="./js/choices.min.js"></script>
 </body>
 </html> 
