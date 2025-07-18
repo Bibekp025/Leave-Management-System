@@ -194,22 +194,6 @@
     box-shadow: 0 6px 16px rgba(58, 95, 190, 0.3);
 }
 
-@media (max-width: 768px) {
-    .profile-container {
-        padding: 20px 16px;
-    }
-
-    .profile-actions {
-        flex-direction: column;
-        gap: 12px;
-    }
-
-    .profile-actions > * {
-        width: 100%;
-        justify-content: center;
-    }
-}
-
 /* --- Profile Page Unified Layout & Alignment Fixes --- */
 .compact-profile {
     max-width: 480px;
@@ -297,25 +281,438 @@
 }
 
 @media (max-width: 768px) {
+    .profile-container {
+        padding: 20px 16px;
+        max-width: 100%;
+        margin: 0 auto;
+    }
+
     .compact-profile {
         max-width: 100%;
-        padding: 10px 2px 8px 2px;
+        margin: 16px auto 0 auto;
+        border-radius: 0;
+        box-shadow: none;
+        border: none;
     }
+
+    .profile-header {
+        padding: 24px 20px;
+        margin-bottom: 20px;
+        border-radius: 0;
+        box-shadow: none;
+        border: none;
+    }
+
+    .profile-form {
+        padding: 24px 20px;
+        margin-bottom: 20px;
+        border-radius: 0;
+        box-shadow: none;
+        border: none;
+    }
+
+    .profile-actions {
+        border-radius: 0;
+        box-shadow: none;
+        border: none;
+        background: none;
+    }
+
+    .profile-avatar {
+        width: 80px;
+        height: 80px;
+        font-size: 28px;
+        margin-bottom: 16px;
+    }
+
+    .profile-name {
+        font-size: 24px;
+    }
+
+    .profile-role {
+        font-size: 13px;
+        padding: 5px 14px;
+    }
+
+    .form-title {
+        font-size: 20px;
+        margin-bottom: 20px;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-label {
+        font-size: 13px;
+        margin-bottom: 6px;
+    }
+
+    .form-input {
+        font-size: 15px;
+        padding: 10px 14px;
+    }
+
+    .profile-actions {
+        flex-direction: column;
+        gap: 12px;
+        padding: 20px;
+    }
+
+    .profile-actions > * {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .confirm-btn, .dashboard-btn {
+        padding: 12px 24px;
+        font-size: 14px;
+    }
+
+    /* Compact profile mobile styles */
     .profile-header-form {
         flex-direction: column;
         align-items: center;
-        gap: 10px;
+        gap: 12px;
     }
+
+    .profile-avatar {
+        min-width: 70px;
+        min-height: 70px;
+        width: 70px;
+        height: 70px;
+        font-size: 28px;
+    }
+
     .profile-info-fields {
         width: 100%;
+        gap: 6px;
     }
+
+    .profile-name-role {
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+        margin-bottom: 6px;
+    }
+
+    .profile-name {
+        font-size: 20px;
+        text-align: center;
+    }
+
+    .profile-role {
+        font-size: 12px;
+        padding: 4px 12px;
+    }
+
+    .form-title {
+        font-size: 16px;
+        margin-bottom: 8px;
+    }
+
     .profile-actions {
+        margin-top: 16px;
         flex-direction: column;
         align-items: stretch;
         gap: 8px;
     }
+
+    .confirm-btn, .dashboard-btn {
+        min-width: auto;
+        width: 100%;
+        padding: 10px 20px;
+        font-size: 14px;
+    }
 }
-/* --- End Profile Page Unified Layout & Alignment Fixes --- */
+
+@media (max-width: 480px) {
+    .profile-container {
+        padding: 16px 12px;
+        max-width: 100%;
+        margin: 0 auto;
+    }
+
+    .compact-profile {
+        max-width: 100%;
+        margin: 12px auto 0 auto;
+        border-radius: 0;
+        box-shadow: none;
+        border: none;
+    }
+
+    .profile-header {
+        padding: 20px 16px;
+        margin-bottom: 16px;
+        border-radius: 0;
+        box-shadow: none;
+        border: none;
+    }
+
+    .profile-form {
+        padding: 20px 16px;
+        margin-bottom: 16px;
+        border-radius: 0;
+        box-shadow: none;
+        border: none;
+    }
+
+    .profile-actions {
+        border-radius: 0;
+        box-shadow: none;
+        border: none;
+        background: none;
+    }
+
+    .profile-avatar {
+        width: 70px;
+        height: 70px;
+        font-size: 24px;
+        margin-bottom: 12px;
+    }
+
+    .profile-name {
+        font-size: 20px;
+    }
+
+    .profile-role {
+        font-size: 12px;
+        padding: 4px 12px;
+    }
+
+    .form-title {
+        font-size: 18px;
+        margin-bottom: 16px;
+    }
+
+    .form-group {
+        margin-bottom: 16px;
+    }
+
+    .form-label {
+        font-size: 12px;
+        margin-bottom: 5px;
+        letter-spacing: 0.6px;
+    }
+
+    .form-input {
+        font-size: 14px;
+        padding: 9px 12px;
+        border-radius: 8px;
+    }
+
+    .profile-actions {
+        padding: 16px;
+        border-radius: 0;
+    }
+
+    .confirm-btn, .dashboard-btn {
+        padding: 10px 20px;
+        font-size: 13px;
+        border-radius: 8px;
+    }
+
+    /* Compact profile small mobile styles */
+    .profile-header-form {
+        gap: 10px;
+    }
+
+    .profile-avatar {
+        min-width: 60px;
+        min-height: 60px;
+        width: 60px;
+        height: 60px;
+        font-size: 24px;
+    }
+
+    .profile-name {
+        font-size: 18px;
+    }
+
+    .profile-role {
+        font-size: 11px;
+        padding: 3px 10px;
+    }
+
+    .form-title {
+        font-size: 15px;
+        margin-bottom: 6px;
+    }
+
+    .form-group {
+        margin-bottom: 12px;
+    }
+
+    .form-label {
+        font-size: 11px;
+        margin-bottom: 4px;
+    }
+
+    .form-input {
+        font-size: 13px;
+        padding: 8px 10px;
+        border-radius: 6px;
+    }
+
+    .profile-actions {
+        margin-top: 12px;
+        gap: 6px;
+    }
+
+    .confirm-btn, .dashboard-btn {
+        padding: 8px 16px;
+        font-size: 12px;
+        border-radius: 6px;
+    }
+
+    .profile-msg-success, .profile-msg-error {
+        font-size: 14px;
+        padding: 8px 14px;
+        border-radius: 6px;
+        margin-bottom: 10px;
+    }
+}
+
+@media (max-width: 320px) {
+    .profile-container {
+        padding: 12px 8px;
+        max-width: 100%;
+        margin: 0 auto;
+    }
+
+    .compact-profile {
+        max-width: 100%;
+        margin: 8px auto 0 auto;
+        border-radius: 0;
+        box-shadow: none;
+        border: none;
+    }
+
+    .profile-header {
+        padding: 16px 12px;
+        margin-bottom: 12px;
+        border-radius: 0;
+        box-shadow: none;
+        border: none;
+    }
+
+    .profile-form {
+        padding: 16px 12px;
+        margin-bottom: 12px;
+        border-radius: 0;
+        box-shadow: none;
+        border: none;
+    }
+
+    .profile-actions {
+        border-radius: 0;
+        box-shadow: none;
+        border: none;
+        background: none;
+    }
+
+    .profile-avatar {
+        width: 60px;
+        height: 60px;
+        font-size: 20px;
+        margin-bottom: 10px;
+    }
+
+    .profile-name {
+        font-size: 18px;
+    }
+
+    .profile-role {
+        font-size: 10px;
+        padding: 3px 8px;
+    }
+
+    .form-title {
+        font-size: 16px;
+        margin-bottom: 12px;
+    }
+
+    .form-group {
+        margin-bottom: 12px;
+    }
+
+    .form-label {
+        font-size: 10px;
+        margin-bottom: 4px;
+    }
+
+    .form-input {
+        font-size: 12px;
+        padding: 7px 10px;
+    }
+
+    .profile-actions {
+        padding: 12px;
+        border-radius: 0;
+    }
+
+    .confirm-btn, .dashboard-btn {
+        padding: 8px 14px;
+        font-size: 11px;
+    }
+
+    /* Compact profile extra small mobile styles */
+    .profile-header-form {
+        gap: 8px;
+    }
+
+    .profile-avatar {
+        min-width: 50px;
+        min-height: 50px;
+        width: 50px;
+        height: 50px;
+        font-size: 20px;
+    }
+
+    .profile-name {
+        font-size: 16px;
+    }
+
+    .profile-role {
+        font-size: 10px;
+        padding: 2px 8px;
+    }
+
+    .form-title {
+        font-size: 14px;
+        margin-bottom: 4px;
+    }
+
+    .form-group {
+        margin-bottom: 8px;
+    }
+
+    .form-label {
+        font-size: 10px;
+        margin-bottom: 3px;
+    }
+
+    .form-input {
+        font-size: 11px;
+        padding: 6px 8px;
+    }
+
+    .profile-actions {
+        margin-top: 8px;
+        gap: 4px;
+    }
+
+    .confirm-btn, .dashboard-btn {
+        padding: 6px 12px;
+        font-size: 10px;
+    }
+
+    .profile-msg-success, .profile-msg-error {
+        font-size: 12px;
+        padding: 6px 10px;
+        margin-bottom: 8px;
+    }
+}
 
 .profile-msg-success {
     background: #e6f9f0;
