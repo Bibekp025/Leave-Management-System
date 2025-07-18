@@ -940,14 +940,13 @@
                 display: flex;
                 flex-direction: column;
                 align-items: stretch;
-                gap: 18px;
+                gap: 0;
                 padding: 12px;
-                padding-top: 50px;
             }
             .stats-grid {
                 order: 1;
-                margin-bottom: 10px;
-                margin-top: 30px;
+                margin-bottom: 0;
+                margin-top: 0;
                 width: 100%;
                 max-width: 400px;
                 align-self: center;
@@ -957,7 +956,7 @@
                 margin-bottom: 16px;
                 max-width: 100%;
                 align-self: center;
-                margin-top: 200px;
+                margin-top: 0;
             }
             .right-sidebar {
                 order: 3;
@@ -1003,7 +1002,7 @@
                 padding: 0;
                 box-shadow: none;
                 border-radius: 10px;
-                margin-top: 150px;
+                margin-top: 0;
             }
             .calendar-widget, .holiday-widget {
                 margin: 0 auto 10px auto;
@@ -1040,7 +1039,7 @@
                 padding: 0;
                 box-shadow: none;
                 border-radius: 8px;
-                margin-top: 120px;
+                margin-top: 0;
             }
             .calendar-widget, .holiday-widget {
                 margin: 0 auto 6px auto;
@@ -1053,23 +1052,30 @@
             .events-grid {
                 grid-template-columns: 1fr !important;
                 gap: 0 !important;
+                display: flex !important;
+                justify-content: center !important;
             }
             .event-card {
                 min-width: 0;
                 width: 100%;
+                max-width: 340px;
                 margin: 0 auto;
+                display: block;
             }
             .events-content {
-                flex-direction: column;
+                flex-direction: row;
                 gap: 8px;
-                align-items: stretch;
+                align-items: center;
+                justify-content: center;
                 padding: 0;
             }
             .nav-button {
                 width: 38px;
                 height: 38px;
-                margin: 0 auto 8px auto;
-                display: block;
+                margin: 0 4px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
             }
         }
 
@@ -1233,89 +1239,7 @@
     }
 }
 
-/* --- Carousel Nav Buttons Left/Right of Event Card --- */
-@media (max-width: 900px) {
-    .events-content {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        justify-content: center;
-        gap: 0;
-        padding: 0;
-    }
-    .nav-button {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 32px;
-        height: 32px;
-        margin: 0 4px;
-        position: static;
-        background: #3A5FBE;
-        color: #fff;
-        border: none;
-        box-shadow: 0 2px 6px rgba(58,95,190,0.10);
-        z-index: 2;
-    }
-    .nav-button:hover {
-        background: #1a3a8f;
-        color: #fff;
-    }
-    .event-card {
-        flex: 1 1 0;
-        max-width: 340px;
-        margin: 0 4px;
-        display: flex;
-        flex-direction: column;
-        align-items: stretch;
-        justify-content: flex-start;
-    }
-    .event-image {
-        width: 100%;
-        height: 180px;
-        border-radius: 12px 12px 0 0;
-        overflow: hidden;
-        margin: 0 auto;
-        background: #f8f9fa;
-    }
-    .event-image img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        border-radius: 12px 12px 0 0;
-    }
-    .event-content {
-        padding: 16px 8px 8px 8px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: flex-start;
-        background: #fff;
-        border-radius: 0 0 12px 12px;
-    }
-    .event-title {
-        font-size: 16px;
-        font-weight: 700;
-        color: #2d3748;
-        margin-bottom: 8px;
-        line-height: 1.3;
-        text-align: center;
-    }
-    .event-date {
-        font-size: 13px;
-        color: #718096;
-        margin-bottom: 4px;
-        font-weight: 500;
-        text-align: center;
-    }
-    .event-location {
-        font-size: 13px;
-        color: #a0aec0;
-        font-weight: 500;
-        margin-bottom: 2px;
-        text-align: center;
-    }
-}
+
 
 @media (max-width: 900px) {
     .holiday-widget {
@@ -1331,33 +1255,4 @@
     }
 }
 
-@media (max-width: 900px) {
-    .event-card {
-        display: flex;
-        flex-direction: column-reverse;
-        align-items: stretch;
-        justify-content: flex-start;
-    }
-@media (max-width: 900px) {
-  .events-content {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    padding: 0;
-    margin: 0 auto;
-    width: 100%;
-    max-width: 100%;
-    box-sizing: border-box;
-  }
-}
 
-    .event-image img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        border-radius: 0 0 12px 12px;
-        display: block;
-    }
-}

@@ -518,8 +518,11 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   
     displayEvents() {
+      const isMobile = window.innerWidth <= 900;
+      const eventsPerPage = isMobile ? 1 : this.eventsPerPage;
+      
       const start = this.currentIndex;
-      const end = Math.min(start + this.eventsPerPage, this.filteredEvents.length);
+      const end = Math.min(start + eventsPerPage, this.filteredEvents.length);
       const eventsToShow = this.filteredEvents.slice(start, end);
       
       let eventsHTML = '';
@@ -544,7 +547,6 @@ document.addEventListener("DOMContentLoaded", function () {
           }
         }
         // Responsive: use different order for mobile
-        const isMobile = window.innerWidth <= 900;
         if (isMobile) {
           eventsHTML += `
             <div class="event-card mobile-event-card">
@@ -574,10 +576,12 @@ document.addEventListener("DOMContentLoaded", function () {
         }
       });
       
-      // Fill empty slots to maintain grid layout
-      while (eventsToShow.length < 3) {
-        eventsHTML += '<div class="event-card" style="opacity: 0; pointer-events: none;"></div>';
-        eventsToShow.push({});
+      // Fill empty slots to maintain grid layout only on desktop
+      if (!isMobile) {
+        while (eventsToShow.length < 3) {
+          eventsHTML += '<div class="event-card" style="opacity: 0; pointer-events: none;"></div>';
+          eventsToShow.push({});
+        }
       }
       
       const eventsGrid = document.getElementById('eventsGrid');
@@ -587,15 +591,21 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   
     nextEvents() {
-      if (this.currentIndex + this.eventsPerPage < this.filteredEvents.length) {
-        this.currentIndex += this.eventsPerPage;
+      const isMobile = window.innerWidth <= 900;
+      const eventsPerPage = isMobile ? 1 : this.eventsPerPage;
+      
+      if (this.currentIndex + eventsPerPage < this.filteredEvents.length) {
+        this.currentIndex += eventsPerPage;
         this.displayEvents();
       }
     }
   
     previousEvents() {
+      const isMobile = window.innerWidth <= 900;
+      const eventsPerPage = isMobile ? 1 : this.eventsPerPage;
+      
       if (this.currentIndex > 0) {
-        this.currentIndex = Math.max(0, this.currentIndex - this.eventsPerPage);
+        this.currentIndex = Math.max(0, this.currentIndex - eventsPerPage);
         this.displayEvents();
       }
     }
@@ -628,6 +638,11 @@ document.addEventListener("DOMContentLoaded", function () {
       if (categorySelect) {
         categorySelect.addEventListener('change', () => this.filterEvents());
       }
+      
+      // Handle window resize to update display mode
+      window.addEventListener('resize', () => {
+        this.displayEvents();
+      });
     }
   
     // Add a method to add a new event at the beginning
