@@ -2,6 +2,7 @@
 from rest_framework import serializers
 from ..models import Leave, LeaveType
 from django.contrib.auth import get_user_model
+from .utils import get_available_leaves
 
 User = get_user_model()
 
@@ -37,6 +38,8 @@ class LeaveSerializer(serializers.ModelSerializer):
             leave.assigned_teachers.set(assigned_teachers)
         elif leave.user.category == 'teacher':
             leave.assigned_hrs.set(assigned_hrs)
+        
+        
         leave.save()
         return leave
 
@@ -45,3 +48,21 @@ class LeaveSerializer(serializers.ModelSerializer):
         instance.status = status
         instance.save()
         return instance
+
+# leave/serializers.py
+
+class LeaveSummarySerializer(serializers.Serializer):
+    total_available_leave = serializers.SerializerMethodField()
+    total_applied_leave = serializers.SerializerMethodField()
+    total_approved_leave = serializers.SerializerMethodField()
+
+    def get_total_available_leave(self, obj):
+        return get_available_leaves(self.context['request'].user)
+
+    def get_total_applied_leave(self, obj):
+        user = self.context['request'].user
+        return Leave.objects.filter(user=user).exclude(status='rejected').count()
+
+    def get_total_approved_leave(self, obj):
+        user = self.context['request'].user
+        return Leave.objects.filter(user=user, status='approved').count()

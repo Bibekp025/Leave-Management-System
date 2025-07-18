@@ -1,11 +1,12 @@
 from rest_framework import permissions
-from .serializers import LeaveSerializer, LeaveTypeSerializer
+from .serializers import LeaveSerializer, LeaveTypeSerializer,LeaveSummarySerializer
 from ..models import Leave, LeaveType, LeaveBalance
+from .utils import get_available_leaves
+from rest_framework import status
+from rest_framework.response import Response
 from rest_framework import generics
 from rest_framework.views import APIView
-from django.db.models import Sum
 
-from rest_framework.response import Response
 from django.contrib.auth import get_user_model
 from .permissions import (
     CanCreateLeavePermission,
@@ -66,6 +67,14 @@ class UserLeaveListCreateAPIView(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         leave = serializer.save(user=self.request.user)
         notify_teachers_about_leave.delay(leave.id, self.request.user.id)
+    def create(self, request, *args, **kwargs):
+        user = request.user
+        available = get_available_leaves(user)
+
+        if available <= 0:
+            return Response({"error": "You don't have any available leave."}, status=status.HTTP_403_FORBIDDEN)
+
+        return super().create(request, *args, **kwargs)
         
         # Notify assigned teachers
         # for teacher in leave.assigned_teachers.all():
@@ -101,27 +110,14 @@ class UserLeaveRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIVie
         # Notification.objects.create(
         #     recipient=leave.user,
         #     sender=self.request.user,
-        #     notification_type='leave',
+        #     notification_type='leave',§§
         #     title="Your Leave Request was Updated",
         #     message=f"{self.request.user.username} has updated your leave request.",
         #     link=f"/leaves/{leave.id}/"
+
+
 class LeaveSummaryView(APIView):
     permission_classes = [permissions.IsAuthenticated]
-
     def get(self, request):
-        user = request.user
-        TOTAL_DAYS = 48
-
-        # Total applied leave applications (excluding rejected)
-        applied_count = Leave.objects.filter(user=user).exclude(status='rejected').count()
-
-        # Total approved leave applications
-        approved_count = Leave.objects.filter(user=user, status='approved').count()
-        total_available = int(TOTAL_DAYS * 0.2) - approved_count  # 80% of total days
-        
-
-        return Response({
-            'total_available_leave': total_available,
-            'total_applied_leave': applied_count,
-            'total_approved_leave': approved_count,
-        })
+        serializer = LeaveSummarySerializer({}, context={'request': request})
+        return Response(serializer.data)
