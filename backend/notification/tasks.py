@@ -1,17 +1,20 @@
 from celery import shared_task
-from .models import Notification
 from django.contrib.auth import get_user_model
-from leave.models import Leave  # or wherever your Leave model is
+from leave.models import Leave
+from .models import Notification
 
 @shared_task
 def notify_teachers_about_leave(leave_id, sender_id):
-    from django.contrib.auth import get_user_model
     User = get_user_model()
 
-    leave = Leave.objects.get(id=leave_id)
-    sender = User.objects.get(id=sender_id)
+    try:
+        leave = Leave.objects.get(id=leave_id)
+        sender = User.objects.get(id=sender_id)
+    except (Leave.DoesNotExist, User.DoesNotExist):
+        return "Leave or sender not found."
 
-    for teacher in leave.assigned_teachers.all():
+    # Notify assigned teachers except the sender
+    for teacher in leave.assigned_teachers.exclude(id=sender.id):
         Notification.objects.create(
             recipient=teacher,
             sender=sender,
@@ -21,7 +24,8 @@ def notify_teachers_about_leave(leave_id, sender_id):
             link=f"/leave/{leave.id}/"
         )
 
-    for hr in leave.assigned_hrs.all(): # Notify HRs as well
+    # Notify HRs (regardless of sender)
+    for hr in leave.assigned_hrs.exclude(id=sender.id):  # Optional: exclude if HRs also submit leave
         Notification.objects.create(
             recipient=hr,
             sender=sender,
@@ -30,3 +34,5 @@ def notify_teachers_about_leave(leave_id, sender_id):
             message=f"{sender.username} has requested leave from {leave.from_date} to {leave.to_date}.",
             link=f"/leave/{leave.id}/"
         )
+
+    return "Notifications sent."
