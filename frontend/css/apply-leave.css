@@ -240,6 +240,141 @@ select.form-input option {
     box-shadow: none;
 }
 
+/* --- Multi-select dropdown style for assignedTeachers --- */
+#assignedTeachers[multiple] {
+    height: 44px;
+    min-height: 44px;
+    max-height: 120px;
+    overflow-y: auto;
+    background-image: url('data:image/svg+xml;utf8,<svg fill="%231a3a8f" height="20" viewBox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    background-size: 20px 20px;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    cursor: pointer;
+    padding-right: 40px;
+}
+#assignedTeachers[multiple]:focus {
+    border-color: #3A5FBE;
+    box-shadow: 0 0 0 3px rgba(58, 95, 190, 0.10);
+}
+#assignedTeachers[multiple] option {
+    padding: 8px 12px;
+    background: white;
+    color: #1a3a8f;
+}
+#assignedTeachers[multiple] option:checked {
+    background: #e1e7ed;
+    color: #1a3a8f;
+}
+/* Hide the default arrow for multi-select */
+#assignedTeachers[multiple]::-ms-expand {
+    display: none;
+}
+#assignedTeachers[multiple]::-webkit-scrollbar {
+    width: 6px;
+    background: #f1f1f1;
+}
+#assignedTeachers[multiple]::-webkit-scrollbar-thumb {
+    background: #c3e6cb;
+    border-radius: 4px;
+}
+/* Add a note for students */
+#assignedTeachersNote {
+    font-size: 12px;
+    color: #6c757d;
+    margin-top: 2px;
+    margin-bottom: 4px;
+    margin-left: 2px;
+}
+
+/* --- Choices.js custom theme for assignedTeachers --- */
+.choices[data-type*=select-multiple] .choices__inner,
+.choices[data-type*=select-one] .choices__inner {
+    background: #fff;
+    border: 2px solid #e1e7ed;
+    border-radius: 10px;
+    color: #1a3a8f;
+    min-height: 44px;
+    font-size: 16px;
+    font-weight: 500;
+    box-shadow: none;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+.choices.is-focused .choices__inner,
+.choices.is-open .choices__inner {
+    border-color: #3A5FBE;
+    box-shadow: 0 0 0 3px rgba(58, 95, 190, 0.10);
+}
+.choices__list--multiple .choices__item {
+    background: #fff !important;
+    color: #1a3a8f !important;
+    border: 2px solid #3A5FBE !important;
+    border-radius: 16px;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 6px 16px;
+    margin: 2px 4px 2px 0;
+    box-shadow: none;
+    transition: border 0.2s, color 0.2s, background 0.2s;
+}
+.choices__list--multiple .choices__item.is-highlighted {
+    background: #fff !important;
+    color: #1a3a8f !important;
+    border: 2px solid #3A5FBE !important;
+}
+.choices__list--dropdown, .choices__list[aria-expanded] {
+    border: 2px solid #e1e7ed;
+    border-radius: 0 0 10px 10px;
+    box-shadow: 0 4px 16px rgba(58, 95, 190, 0.08);
+    background: #fff;
+    color: #1a3a8f;
+    font-size: 15px;
+    z-index: 10;
+}
+.choices__list--dropdown .choices__item--selectable.is-highlighted,
+.choices__list[aria-expanded] .choices__item--selectable.is-highlighted {
+    background: #e1e7ed;
+    color: #1a3a8f;
+}
+.choices__list--dropdown .choices__item--selectable,
+.choices__list[aria-expanded] .choices__item--selectable {
+    padding: 10px 16px;
+    border-radius: 6px;
+    transition: background 0.2s;
+}
+.choices__input {
+    background: #fff;
+    color: #1a3a8f;
+    font-size: 15px;
+    border: none;
+    outline: none;
+}
+.choices__placeholder {
+    color: #6c757d;
+    opacity: 1;
+}
+.choices__button {
+    color: #1a3a8f;
+    background: none;
+    border: none;
+    margin-left: 8px;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+}
+.choices__button:hover {
+    opacity: 1;
+}
+.choices[data-type*=select-multiple] .choices__inner {
+    min-height: 44px;
+    padding: 8px 12px 4px 12px;
+}
+.choices {
+    margin-bottom: 0;
+}
+
 @media (max-width: 900px) {
     .leave-form {
         padding: 18px 2vw 12px 2vw;

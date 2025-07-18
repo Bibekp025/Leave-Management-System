@@ -42,17 +42,28 @@ async function loadAssignedUsers() {
     const users = await response.json();
 
     const select = document.getElementById('assignedTeachers');
-    if (currentUser.category === 'student') {
-      select.innerHTML = '<option value="">Select Teacher</option>';
-    } else if (currentUser.category === 'teacher') {
-      select.innerHTML = '<option value="">Select HR</option>';
-    }
+    // Remove placeholder option for Choices.js, only add real teachers
+    select.innerHTML = '';
 
     users.forEach(user => {
       const option = document.createElement('option');
       option.value = user.id;
       option.textContent = user.first_name || user.username;
       select.appendChild(option);
+    });
+    // Initialize Choices.js after options are loaded
+    if (window.assignedTeachersChoices) {
+      window.assignedTeachersChoices.destroy();
+    }
+    window.assignedTeachersChoices = new Choices(select, {
+      removeItemButton: true,
+      placeholder: true,
+      placeholderValue: 'Select Teacher(s)',
+      searchPlaceholderValue: 'Search teachers...',
+      shouldSort: false,
+      maxItemCount: -1,
+      searchEnabled: true,
+      itemSelectText: '',
     });
   } catch (error) {
     console.error('Error loading assigned users:', error);
@@ -128,7 +139,8 @@ document.querySelector('.leave-form').addEventListener('submit', async function 
   const fromDate = document.getElementById('fromDate').value;
   const toDate = document.getElementById('toDate').value;
   const reason = document.getElementById('reason').value.trim();
-  const assignedUser = document.getElementById('assignedTeachers').value;
+  const assignedUserSelect = document.getElementById('assignedTeachers');
+  let assignedUser = assignedUserSelect.value;
 
   let valid = true;
 
@@ -168,7 +180,11 @@ document.querySelector('.leave-form').addEventListener('submit', async function 
   };
 
   if (currentUser.category === 'student') {
-    formData.assigned_teachers = [parseInt(assignedUser)];
+    // Get all selected teacher IDs as integers
+    const selectedOptions = Array.from(assignedUserSelect.selectedOptions)
+      .filter(opt => opt.value)
+      .map(opt => parseInt(opt.value));
+    formData.assigned_teachers = selectedOptions;
   } else if (currentUser.category === 'teacher') {
     formData.assigned_hrs = [parseInt(assignedUser)];
   }
