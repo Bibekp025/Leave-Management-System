@@ -543,18 +543,35 @@ document.addEventListener("DOMContentLoaded", function () {
             eventDate += ' - ' + formatDateTime(event.end_time);
           }
         }
-        eventsHTML += `
-          <div class="event-card">
-            <div class="event-image">
-              <img src="${imageUrl}" alt="${event.title}" onerror="this.src='./img/freshers.jpg'">
+        // Responsive: use different order for mobile
+        const isMobile = window.innerWidth <= 900;
+        if (isMobile) {
+          eventsHTML += `
+            <div class="event-card mobile-event-card">
+              <div class="event-content">
+                <div class="event-title">${event.title}</div>
+                <div class="event-date">${eventDate}</div>
+                <div class="event-location">${event.location || event.venue || 'Location TBD'}</div>
+              </div>
+              <div class="event-image">
+                <img src="${imageUrl}" alt="${event.title}" onerror="this.src='./img/freshers.jpg'">
+              </div>
             </div>
-            <div class="event-content">
-              <div class="event-title">${event.title}</div>
-              <div class="event-date">${eventDate}</div>
-              <div class="event-location">${event.location || event.venue || 'Location TBD'}</div>
+          `;
+        } else {
+          eventsHTML += `
+            <div class="event-card">
+              <div class="event-image">
+                <img src="${imageUrl}" alt="${event.title}" onerror="this.src='./img/freshers.jpg'">
+              </div>
+              <div class="event-content">
+                <div class="event-title">${event.title}</div>
+                <div class="event-date">${eventDate}</div>
+                <div class="event-location">${event.location || event.venue || 'Location TBD'}</div>
+              </div>
             </div>
-          </div>
-        `;
+          `;
+        }
       });
       
       // Fill empty slots to maintain grid layout

@@ -898,62 +898,466 @@
           display: none;
         }
 
-        /* Responsive Design */
+        /* Responsive Design Enhancements for Dashboard Layout */
         @media (max-width: 1200px) {
             .dashboard-content {
                 grid-template-columns: 1fr;
                 gap: 24px;
-            }
-            
-            .right-sidebar {
-                flex-direction: row;
-                gap: 24px;
-            }
-            
-            .calendar-widget,
-            .holiday-widget {
-                flex: 1;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .sidebar {
-                width: 70px;
-            }
-            
-            .nav-label {
-                font-size: 8px;
-            }
-            
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .events-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .right-sidebar {
+                display: flex;
                 flex-direction: column;
-            }
-            
-            .events-header {
-                flex-direction: column;
-                gap: 16px;
                 align-items: stretch;
+                padding: 16px;
+            }
+            .right-sidebar {
+                flex-direction: column;
+                gap: 24px;
+                width: 100%;
             }
         }
 
         @media (max-width: 900px) {
-            .events-content {
-                flex-direction: column;
-                gap: 12px;
-            }
-            .events-navigation {
+            .container {
                 flex-direction: row;
-                gap: 12px;
+                height: auto;
+                min-height: 100vh;
             }
-            .events-grid {
-                grid-template-columns: 1fr;
+            .sidebar {
+                width: 60px;
+                min-width: 60px;
+                height: 100vh;
+                position: fixed;
+                left: 0;
+                top: 0;
+                z-index: 100;
+                box-shadow: 2px 0 15px rgba(0,0,0,0.15);
+            }
+            .main-content {
+                margin-left: 60px;
+                width: calc(100% - 60px);
+                min-width: 0;
+            }
+            .dashboard-content {
+                display: flex;
+                flex-direction: column;
+                align-items: stretch;
+                gap: 18px;
+                padding: 12px;
+                padding-top: 50px;
+            }
+            .stats-grid {
+                order: 1;
+                margin-bottom: 10px;
+                margin-top: 30px;
+                width: 100%;
+                max-width: 400px;
+                align-self: center;
+            }
+            .events-section {
+                order: 2;
+                margin-bottom: 16px;
+                max-width: 100%;
+                align-self: center;
+                margin-top: 200px;
+            }
+            .right-sidebar {
+                order: 3;
+                flex-direction: column;
+                gap: 16px;
+                width: 100%;
+                align-self: center;
+            }
+            .calendar-widget {
+                order: 1;
+                margin: 0 auto 16px auto;
+                max-width: 100%;
+            }
+            .holiday-widget {
+                order: 2;
+                margin: 0 auto 0 auto;
+                max-width: 100%;
             }
         }
+
+        @media (max-width: 700px) {
+            .container {
+                flex-direction: row;
+                height: auto;
+            }
+            .sidebar {
+                width: 48px;
+                min-width: 48px;
+            }
+            .main-content {
+                margin-left: 48px;
+                width: calc(100% - 48px);
+            }
+            .dashboard-content {
+                padding: 6px;
+                gap: 10px;
+            }
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 6px;
+            }
+            .events-section {
+                padding: 0;
+                box-shadow: none;
+                border-radius: 10px;
+                margin-top: 150px;
+            }
+            .calendar-widget, .holiday-widget {
+                margin: 0 auto 10px auto;
+                max-width: 100%;
+            }
+        }
+
+        @media (max-width: 500px) {
+            .container {
+                flex-direction: row;
+                height: auto;
+            }
+            .sidebar {
+                width: 40px;
+                min-width: 40px;
+            }
+            .main-content {
+                margin-left: 40px;
+                width: calc(100% - 40px);
+            }
+            .dashboard-content {
+                padding: 2px;
+                gap: 6px;
+            }
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 4px;
+            }
+            .stat-card {
+                padding: 12px 8px;
+                border-radius: 10px;
+            }
+            .events-section {
+                padding: 0;
+                box-shadow: none;
+                border-radius: 8px;
+                margin-top: 120px;
+            }
+            .calendar-widget, .holiday-widget {
+                margin: 0 auto 6px auto;
+                max-width: 100%;
+            }
+        }
+
+        /* Show only one event at a time in mobile, with carousel nav */
+        @media (max-width: 900px) {
+            .events-grid {
+                grid-template-columns: 1fr !important;
+                gap: 0 !important;
+            }
+            .event-card {
+                min-width: 0;
+                width: 100%;
+                margin: 0 auto;
+            }
+            .events-content {
+                flex-direction: column;
+                gap: 8px;
+                align-items: stretch;
+                padding: 0;
+            }
+            .nav-button {
+                width: 38px;
+                height: 38px;
+                margin: 0 auto 8px auto;
+                display: block;
+            }
+        }
+
+        /* Stack calendar and holiday below event on mobile */
+        @media (max-width: 900px) {
+            .right-sidebar {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+                width: 100%;
+                margin: 0;
+            }
+            .calendar-widget {
+                order: 1;
+                margin-top: 0;
+            }
+            .holiday-widget {
+                order: 2;
+                margin-top: 0;
+            }
+        }
+
+        /* --- Responsive Sidebar (Navbar) --- */
+        @media (max-width: 900px) {
+            .sidebar {
+                width: 48px;
+                min-width: 48px;
+                padding: 12px 0;
+            }
+            .logo {
+                width: 32px;
+                height: 32px;
+                font-size: 14px;
+                margin-bottom: 24px;
+            }
+            .nav-group {
+                gap: 10px;
+                padding-top: 10px;
+            }
+            .nav-item, .logout-btn {
+                width: 38px;
+                height: 38px;
+                border-radius: 8px;
+                padding: 4px 0;
+                font-size: 14px;
+            }
+            .nav-icon {
+                width: 16px;
+                height: 16px;
+                font-size: 16px;
+            }
+            .nav-label {
+                font-size: 7px;
+            }
+        }
+
+        /* --- Stats Cards 2x2 Grid, Centered --- */
+        @media (max-width: 900px) {
+            .stats-grid {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+                justify-items: center;
+                align-items: center;
+                margin: 0 auto 10px auto;
+                width: 100%;
+                max-width: 400px;
+            }
+            .stat-card {
+                width: 100%;
+                min-width: 0;
+                max-width: 180px;
+                margin: 0 auto;
+                padding: 16px 8px;
+                border-radius: 10px;
+                box-sizing: border-box;
+            }
+        }
+
+        /* --- Event Image and Carousel --- */
+        @media (max-width: 900px) {
+            .event-card {
+                margin: 0 auto;
+                border-radius: 12px;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+                max-width: 340px;
+                background: #fff;
+            }
+            .event-image {
+                width: 100%;
+                height: 180px;
+                border-radius: 12px 12px 0 0;
+                overflow: hidden;
+                margin: 0 auto;
+                background: #f8f9fa;
+            }
+            .event-image img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                border-radius: 12px 12px 0 0;
+            }
+            .events-content {
+                align-items: center;
+                padding: 0;
+            }
+            .nav-button {
+                display: inline-flex;
+                margin: 10px 8px 0 8px;
+                position: relative;
+                left: 0;
+                right: 0;
+                top: 0;
+                bottom: 0;
+                z-index: 2;
+                background: #3A5FBE;
+                color: #fff;
+                border: none;
+                box-shadow: 0 2px 6px rgba(58,95,190,0.10);
+            }
+            .nav-button:hover {
+                background: #1a3a8f;
+                color: #fff;
+            }
+        }
+
+        /* --- Next Holiday Widget Responsive --- */
+        @media (max-width: 900px) {
+            .holiday-widget {
+                max-width: 340px;
+                margin: 0 auto 10px auto;
+                padding: 16px 10px;
+                border-radius: 12px;
+                box-sizing: border-box;
+            }
+            .holiday-header {
+                font-size: 14px;
+                margin-bottom: 10px;
+            }
+            .holiday-item {
+                font-size: 16px;
+                margin-bottom: 6px;
+            }
+            .holiday-date {
+                font-size: 13px;
+            }
+        }
+
+/* --- Apply Leave Button Responsive --- */
+@media (max-width: 900px) {
+    .apply-leave-btn {
+        min-width: 60px;
+        font-size: 12px;
+        padding: 7px 0;
+        border-radius: 6px;
+        width:50%;
+        position: static;
+        margin: auto auto 0 auto;
+        display: block;
+        box-shadow: 0 2px 6px rgba(58,95,190,0.10);
+    }
+}
+
+/* --- Carousel Nav Buttons Left/Right of Event Card --- */
+@media (max-width: 900px) {
+    .events-content {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        gap: 0;
+        padding: 0;
+    }
+    .nav-button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        margin: 0 4px;
+        position: static;
+        background: #3A5FBE;
+        color: #fff;
+        border: none;
+        box-shadow: 0 2px 6px rgba(58,95,190,0.10);
+        z-index: 2;
+    }
+    .nav-button:hover {
+        background: #1a3a8f;
+        color: #fff;
+    }
+    .event-card {
+        flex: 1 1 0;
+        max-width: 340px;
+        margin: 0 4px;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        justify-content: flex-start;
+    }
+    .event-image {
+        width: 100%;
+        height: 180px;
+        border-radius: 12px 12px 0 0;
+        overflow: hidden;
+        margin: 0 auto;
+        background: #f8f9fa;
+    }
+    .event-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 12px 12px 0 0;
+    }
+    .event-content {
+        padding: 16px 8px 8px 8px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        background: #fff;
+        border-radius: 0 0 12px 12px;
+    }
+    .event-title {
+        font-size: 16px;
+        font-weight: 700;
+        color: #2d3748;
+        margin-bottom: 8px;
+        line-height: 1.3;
+        text-align: center;
+    }
+    .event-date {
+        font-size: 13px;
+        color: #718096;
+        margin-bottom: 4px;
+        font-weight: 500;
+        text-align: center;
+    }
+    .event-location {
+        font-size: 13px;
+        color: #a0aec0;
+        font-weight: 500;
+        margin-bottom: 2px;
+        text-align: center;
+    }
+}
+
+@media (max-width: 900px) {
+    .holiday-widget {
+        width: 100vw !important;
+        max-width: 100vw !important;
+        margin: 0 -24px 10px -24px !important;
+        border-radius: 0 !important;
+        box-sizing: border-box;
+        left: 0;
+        right: 0;
+        position: relative;
+        box-shadow: none;
+    }
+}
+
+@media (max-width: 900px) {
+    .event-card {
+        display: flex;
+        flex-direction: column-reverse;
+        align-items: stretch;
+        justify-content: flex-start;
+    }
+@media (max-width: 900px) {
+  .events-content {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 0;
+    margin: 0 auto;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+}
+
+    .event-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 0 0 12px 12px;
+        display: block;
+    }
+}
