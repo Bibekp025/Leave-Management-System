@@ -217,7 +217,16 @@ document.querySelector('.leave-form').addEventListener('submit', async function 
       setTimeout(() => {
         window.location.href = "my-leaves.html";
       }, 5000);
-    } else {
+    }
+    else if (response.status === 403) {
+      alert('You do not have enough available leave days.');
+    }
+    else if (response.status === 400) {
+      console.error('Validation errors:', data);
+      // 🧾 Show validation errors from backed
+    }
+    
+    else {
       console.error('Server response:', data);
       // 🧾 Show validation errors from backend
       if (data.leave_type) {
