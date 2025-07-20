@@ -15,7 +15,7 @@ from .permissions import (
     CanCreateLeaveTypePermission,
 )
 from notification.models import Notification
-from notification.tasks import notify_teachers_about_leave
+from notification.tasks import notify_teachers_about_leave, notify_leave_decision
 User = get_user_model()
 
 
@@ -103,9 +103,20 @@ class UserLeaveRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIVie
     queryset = Leave.objects.all()
 
     def perform_update(self, serializer):
+        leave_obj = self.get_object()
+        old_status = leave_obj.status
+
         leave = serializer.save()
+        new_status = leave.status
+        print("Old status:", old_status, "New status:", new_status)
+        # Notify teachers and HRs about the update
         notify_teachers_about_leave.delay(leave.id, self.request.user.id)
-        
+        # If status changed to approved/rejected, notify user and teachers
+        if old_status != new_status and new_status in ['approved', 'rejected']:
+            notify_leave_decision.delay(leave.id, self.request.user.id)
+        else:
+            # Optional: if it's just an update (reason, dates), notify teachers again
+            notify_teachers_about_leave.delay(leave.id, self.request.user.id)
       
         # Notification.objects.create(
         #     recipient=leave.user,
